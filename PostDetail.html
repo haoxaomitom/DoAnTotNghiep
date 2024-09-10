@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Listing</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .profile-card {
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .carousel-inner img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .title {
+            color: #00bfff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Carousel Section -->
+            <div class="col-md-8">
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="...">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Profile Section -->
+            <div class="col-md-4">
+                <div class="profile-card text-center">
+                    <img src="https://via.placeholder.com/50" class="rounded-circle mb-3" alt="Profile Picture">
+                    <h5>Họ và tên</h5>
+                    <p>Đã tham gia: tháng 8 năm 2024</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="bi bi-telephone-fill"></i>
+                        <span>SDT: 0123 456 789</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parking Info Section -->
+        <div class="mt-4">
+            <h4>Bãi đỗ xe KP1, QL1A Tân Chánh Hiệp cho thuê hàng tháng</h4>
+            <p>Phường Tân Chánh Hiệp, Quận 12, TPHCM</p>
+            <h5 class="title">Giá tiền</h5>
+
+            <!-- Parking Status -->
+            <h6>Tình trạng bãi</h6>
+            <ul class="list-unstyled">
+                <li><i class="bi bi-geo-fill"></i> Sức chứa: 50 chiếc</li>
+                <li><i class="bi bi-car-front-fill"></i> Chỗ trống hiện tại: 30 chiếc</li>
+                <li><i class="bi bi-clock-fill"></i> Giờ mở / đóng bãi: 6h00 - 22h00</li>
+            </ul>
+
+            <!-- Car Type -->
+            <h6>Các loại xe được gửi</h6>
+            <ul class="list-unstyled">
+                <li><i class="bi bi-car-front-fill"></i> Xe oto từ 8 chỗ trở xuống</li>
+                <li><i class="bi bi-truck"></i> Xe tải từ 2.5 tấn trở xuống</li>
+            </ul>
+
+            <!-- Amenities -->
+            <h6>Các tiện ích</h6>
+            <ul class="list-unstyled">
+                <li><i class="bi bi-camera-fill"></i> Camera 24/24</li>
+                <li><i class="bi bi-shield-lock-fill"></i> Bảo vệ 24/24</li>
+                <li><i class="bi bi-key-fill"></i> Có khóa riêng</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
