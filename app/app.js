@@ -50,4 +50,22 @@ app.controller('ParkingController', ['$scope', '$http', function($scope, $http) 
     
     // Lấy danh sách bài đăng khi tải trang
     $scope.getPosts();
+
+    $scope.provinces = [];
+    $scope.districts = [];
+    $scope.wards = [];
+
+    // Hàm lấy danh sách tỉnh/thành phố
+    $scope.loadProvinces = function() {
+        $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
+            .then(function(response) {
+                $scope.provinces = response.data;
+            })
+            .catch(function(error) {
+                console.error('Error loading provinces:', error);
+            });
+    };
+
+    // Gọi hàm để tải dữ liệu tỉnh/thành phố
+    $scope.loadProvinces();
 }]);
