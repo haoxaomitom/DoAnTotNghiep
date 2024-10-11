@@ -4,19 +4,28 @@ app.service('ItemService', function($http) {
     };
 });
 
-
-//API Location
+// API for fetching location data
 app.service('LocationService', ['$http', function($http) {
-    // Fetch provinces data from external JSON file
     this.getProvinces = function() {
         return $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
     };
 }]);
 
-//API Count post on district
+// API for fetching posts count by district and search
 app.service('PostService', ['$http', function($http) {
     this.getPostsCountByDistrict = function() {
         return $http.get('http://localhost:8080/api/posts/countByDistrict');
     };
-}]);
 
+    this.searchPosts = function(searchTerm, selectedDistrictName, page) {
+        return $http({
+            method: 'GET',
+            url: 'http://localhost:8080/api/posts/search',  // Ensure you include the full URL
+            params: { 
+                searchTerm: searchTerm,
+                district: selectedDistrictName,
+                page: page
+            }
+        });
+    };        
+}]);

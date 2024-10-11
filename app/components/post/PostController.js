@@ -1,91 +1,129 @@
-var app = angular.module('parkingApp', []);
+let app = angular.module('parkingApp', []);
 
-app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function($scope, $http, ItemService, LocationService, PostService) {
+app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
     $scope.posts = [];
-    $scope.currentPage = 0; // Bắt đầu từ trang đầu tiên
-    $scope.pageSize = 5; // Số lượng post trên mỗi trang
-    $scope.totalPagesCount = 0; // Tổng số trang từ API
+    $scope.searchTerm = '';
+    $scope.currentPage = 0; // Start from the first page
+    $scope.pageSize = 5; // Number of posts per page
+    $scope.totalPagesCount = 0; // Total pages returned from the API
 
-    // Hàm lấy dữ liệu post từ API với phân trang
-    $scope.getPosts = function() {
+    // Fetch posts with pagination
+    $scope.getPosts = function () {
         // Gọi API từ service
-        ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function(response) {
+        ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
             $scope.posts = response.data.content;
             $scope.totalPagesCount = response.data.totalPages;
             console.log($scope.posts);
         });
     };
 
-    // Chuyển đến trang tiếp theo
-    $scope.nextPage = function() {
+    // Go to the next page
+    $scope.nextPage = function () {
         if ($scope.currentPage < $scope.totalPagesCount - 1) {
             $scope.currentPage++;
-            $scope.getPosts();
         }
     };
 
-    // Quay lại trang trước
-    $scope.previousPage = function() {
+    // Go to the previous page
+    $scope.previousPage = function () {
         if ($scope.currentPage > 0) {
             $scope.currentPage--;
-            $scope.getPosts();
         }
     };
 
-    $scope.districts = [
-        { id: 1, name: 'Quận 1', count: 10 },
-        { id: 2, name: 'Quận 2', count: 15 },
-        { id: 3, name: 'Quận 3', count: 8 },
-        // Other districts
-    ];
-
     // Fetch provinces and set default selections
-    $scope.getProvinces = function() {
-        LocationService.getProvinces().then(function(response) {
+    $scope.getProvinces = function () {
+        LocationService.getProvinces().then(function (response) {
             $scope.provinces = response.data;
-            
-            // Tìm tỉnh thành "Thành phố Hồ Chí Minh"
-            $scope.selectedProvince = $scope.provinces.find(province => province.Name === 'Thành phố Hồ Chí Minh');
-            
-            $scope.selectedWard = null; // Giá trị mặc định
-            $scope.selectedDistrict = null; // Giá trị mặc định
-        }).catch(function(error) {
+
+            // Set TP HCM
+            $scope.selectedProvince = $scope.provinces.find(province => province.Name === "Thành phố Hồ Chí Minh");
+            if ($scope.selectedProvince) {
+                // Cập nhật quận/huyện khi chọn TP HCM
+                $scope.updateDistricts();
+            }
+        }).catch(function (error) {
             console.error('Error loading data:', error);
         });
     };
+
+
+    // Cập nhật danh sách quận/huyện tương ứng với tỉnh được chọn
+    $scope.updateDistricts = function () {
+        if ($scope.selectedProvince) {
+            $scope.districts = $scope.selectedProvince.Districts;
+        } else {
+            $scope.districts = []; // Nếu không có tỉnh nào được chọn
+        }
+    };
+
+    $scope.searchPosts = function () {
+        // Reset the dropdown selection when a manual search is performed
+        $scope.selectedDistrict = null;
+    
+        // Perform search using the manual input search term
+        PostService.searchPosts($scope.searchTerm, $scope.currentPage)
+            .then(function (response) {
+                if (response.data && response.data.content) {
+                    $scope.posts = response.data.content; // Update posts list with search results
+                    $scope.totalPagesCount = response.data.totalPages; // Update total pages
+                } else {
+                    $scope.posts = []; // Clear posts if no data found
+                }
+            })
+            .catch(function (error) {
+                console.error('Error fetching posts:', error);
+            });
+    };
+    
     
 
-    // Handle district change
-    $scope.onDistrictChange = function() {
-        $scope.selectedWard = null; // Reset ward when changing district
+    $scope.onDistrictChange = function () {
+        if ($scope.selectedDistrict && $scope.selectedDistrict.Name) {
+            // Use selected district for search
+            let searchTerm = $scope.selectedDistrict.Name;
+    
+            // Perform search using the selected district from dropdown
+            PostService.searchPosts(searchTerm, $scope.currentPage)
+                .then(function (response) {
+                    if (response.data && response.data.content) {
+                        $scope.posts = response.data.content; // Update posts list with search results
+                        $scope.totalPagesCount = response.data.totalPages; // Update total pages
+                    } else {
+                        $scope.posts = []; // Clear posts if no data found
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error fetching posts:', error);
+                });
+        }
     };
-    $scope.loadDistrictPostCounts = function() {
-        PostService.getPostsCountByDistrict().then(function(response) {
+    
+    // Load the count of posts by district
+    $scope.loadDistrictPostCounts = function () {
+        PostService.getPostsCountByDistrict().then(function (response) {
             $scope.districtPostCounts = response.data;
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.error('Error loading district post counts:', error);
         });
     };
-    
 
-    
     // Format time function
-    $scope.formatTimeAgo = function(date) {
+    $scope.formatTimeAgo = function (date) {
         let now = new Date();
-        let createdAt = new Date(date); // Chuyển đổi chuỗi thành đối tượng Date
+        let createdAt = new Date(date);
         let timeDiff = Math.floor((now - createdAt) / 1000);
-        
-        if (isNaN(timeDiff)) return "Thời gian không hợp lệ"; // Kiểm tra nếu timeDiff không hợp lệ
-        
-        if (timeDiff < 60) return timeDiff + " giây trước";
-        if (timeDiff < 3600) return Math.floor(timeDiff / 60) + " phút trước";
-        if (timeDiff < 86400) return Math.floor(timeDiff / 3600) + " giờ trước";
-        return Math.floor(timeDiff / 86400) + " ngày trước";
-    };
-    
 
+        if (isNaN(timeDiff)) return "Invalid time";
+
+        if (timeDiff < 60) return timeDiff + " seconds ago";
+        if (timeDiff < 3600) return Math.floor(timeDiff / 60) + " minutes ago";
+        if (timeDiff < 86400) return Math.floor(timeDiff / 3600) + " hours ago";
+        return Math.floor(timeDiff / 86400) + " days ago";
+    };
+
+    // Initial data load
     $scope.getPosts();
     $scope.getProvinces();
     $scope.loadDistrictPostCounts();
-    
 }]);

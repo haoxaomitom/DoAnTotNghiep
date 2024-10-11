@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="parkingApp">
 
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
     </style>
 </head>
 
-<body>
+<body ng-controller="PostController">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -64,7 +64,7 @@
                 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="...">
+                            <img ng-src="{{post.image}}" class="d-block w-100" alt="Parking Image">
                         </div>
                         <div class="carousel-item">
                             <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="...">
@@ -89,7 +89,7 @@
             <div class="col-md-4 mb-4">
                 <div class="profile-card text-center p-3 shadow-sm">
                     <img src="https://via.placeholder.com/50" class="rounded-circle mb-3" alt="Profile Picture">
-                    <h5>Họ và tên</h5>
+                    <h5>{{post.username}}</h5>
                     <p>Đã tham gia: tháng 8 năm 2024</p>
                     <div class="d-flex align-items-center justify-content-center">
                         <i class="bi bi-telephone-fill me-2"></i>
@@ -101,28 +101,35 @@
 
         <!-- Parking Info Section -->
         <div class="mt-4">
-            <h4 class="mb-3">Bãi đỗ xe KP1, QL1A Tân Chánh Hiệp cho thuê hàng tháng</h4>
-            <p class="mb-4">Phường Tân Chánh Hiệp, Quận 12, TPHCM</p>
+            <h4 class="mb-3">{{post.parking_name}}</h4>
+            <p class="mb-4">{{post.ward_name}}, {{post.district_name}}, {{post.province_name}}</p>
 
-            <h5 class="mb-3">Giá tiền</h5>
+            <h5 class="mb-3">Giá tiền: {{post.price}} {{post.price_per}}</h5>
 
             <!-- Parking Status -->
             <h4 class="mb-3">Tình trạng bãi</h4>
             <ul class="list-unstyled mb-4">
-                <li><i class="fa-solid fa-boxes-stacked"></i> Sức chứa: 50 chiếc</li>
-                <li><i class="fa-solid fa-diamond"></i> Chỗ trống hiện tại: 30 chiếc</li>
-                <li><i class="fa-regular fa-clock"></i> Giờ mở / đóng bãi: 6h00 - 22h00</li>
+                <li><i class="fa-solid fa-boxes-stacked"></i> Sức chứa: {{post.capacity}} chiếc</li>
+                <li><i class="fa-regular fa-clock"></i> Giờ mở / đóng bãi: {{post.opening_hours}}</li>
             </ul>
 
             <!-- Car Type -->
             <h4 class="mb-3">Các loại xe được gửi</h4>
             <ul class="list-unstyled mb-4">
-                <li><i class="fa-solid fa-car"></i> Xe oto từ 8 chỗ trở xuống</li>
-                <li><i class="fa-solid fa-truck"></i> Xe tải từ 2.5 tấn trở xuống</li>
+                <li ng-repeat="vehicleType in post.vehicleTypes">
+                    <i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypeName}}
+                </li>
+            </ul>
+
+            <h4 class="mb-3">Các tiện ích</h4>
+            <ul class="list-unstyled row">
+                <div class="col-sm-3" ng-repeat="amenity in post.amenities">
+                    <li><i class="fa-solid fa-check"></i> {{amenity.amenities_name}}</li>
+                </div>
             </ul>
 
             <!-- Amenities -->
-            <h4 class="mb-3">Các tiện ích</h4>
+            <!-- <h4 class="mb-3">Các tiện ích</h4>
             <ul class="list-unstyled row">
                 <div class="col-sm-3">
                     <li><i class="fa-solid fa-camera"></i> Có camera</li>
@@ -134,7 +141,7 @@
                     <li><i class="fa-solid fa-shower"></i> Có rửa xe</li>
                     <li><i class="fa-solid fa-charging-station"></i> Có trụ sạc xe điện</li>
                 </div>
-            </ul>
+            </ul> -->
 
             <div class="MoTa mb-4">
                 <h4>Mô tả</h4>
@@ -192,7 +199,7 @@
                     <div class="carousel-item">
                         <div class="row m-2">
                             <div class="col-md-3">
-                                <div class="post-box">  
+                                <div class="post-box">
                                     <img src="https://via.placeholder.com/150" class="img-fluid mb-3" alt="Post Image">
                                     <p>Ngô Dương Thị Mười, Tân Chánh Hiệp, Quận 12</p>
                                     <p>Xe máy</p>
@@ -203,23 +210,30 @@
                         </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#relatedPostsCarousel" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#relatedPostsCarousel"
+                    data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#relatedPostsCarousel" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#relatedPostsCarousel"
+                    data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
-                
+
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
+ 
+    <script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
+    <script src="/app/components/post/PostDetailController.js"></script>
+    <script src="/app/components/post/PostDetailService.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
