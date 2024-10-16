@@ -81,7 +81,8 @@
 }
 
 .carousel-inner img {
-    height: 200px;
+    max-width: auto;
+    height: 400px;
     object-fit: cover;
 }
 
