@@ -1,65 +1,113 @@
-let app = angular.module('parkingApp', []);
-
-app.controller('PostController', ['$scope', 'PostService', '$location', function($scope, PostService, $location) {
+app.controller('PostController', ['$scope', 'PostService', 'ItemService', function ($scope, PostService, ItemService) {
     $scope.post = {};
+    $scope.user = {};
     $scope.errorMessage = '';
-    $scope.showPhone = false; // Ẩn số điện thoại
-    $scope.captchaVisible = false; // Ẩn reCAPTCHA ban đầu
+    $scope.showPhone = false;
+    $scope.relatedPosts = [];
+    $scope.currentPage = 0;
+    $scope.pageSize = 5; // Adjust page size as needed
+    $scope.totalPagesCount = 0;
 
+    // Extract post ID from URL
     const params = new URLSearchParams(window.location.search);
-    const id_post = params.get('id'); // This should give you the ID from the URL
+    const id_post = params.get('id');
     console.log('Extracted id_post:', id_post);
 
     // Function to get the post by ID
-    $scope.getPostById = function(id_post) {
-        PostService.getPostById(id_post).then(function(data) {
+    $scope.getPostById = function (id_post) {
+        PostService.getPostById(id_post).then(function (data) {
             if (data) {
                 $scope.post = data;
+                $scope.user = data.user;
+                // Ensure that the district name is defined before fetching related posts
+                if ($scope.post.districtName) {
+                    $scope.getPostsByDistrict(); // Fetch related posts by district
+                } else {
+                    console.error('District name is undefined for the post');
+                }
             } else {
                 $scope.errorMessage = 'Post not found';
             }
         });
     };
 
-    // Call the function with the extracted id_post
+    // Call Google Map when the data is ready
+    google.charts.load("current", {
+        "packages": ["map"],
+        "mapsApiKey": "AIzaSyDaqWzB_IIAlUg3Iwp8yFfgjIIFhhMF0IQ"
+    });
+
+    google.charts.setOnLoadCallback(function() {
+        drawChart($scope.post.latitude, $scope.post.longitude, $scope.post.parkingName);
+    });
+
+    // Function to draw the chart
+    function drawChart(lat, long, name) {
+        var data = google.visualization.arrayToDataTable([
+            ['Lat', 'Long', 'Name'],
+            [lat, long, name]
+        ]);
+
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+        map.draw(data, {
+            showTooltip: true,
+            showInfoWindow: true
+        });
+    }
+
+    // Function to fetch posts related to the same district
+    $scope.getPostsByDistrict = function() {
+        if ($scope.post.districtName) {
+            ItemService.getPosts($scope.post.districtName, $scope.currentPage, $scope.pageSize)
+                .then(function(response) {
+                    if (Array.isArray(response)) {
+                        $scope.relatedPosts = response;
+                        $scope.totalPagesCount = Math.ceil(response.length / $scope.pageSize);  
+                    } else {
+                        console.error('Unexpected response structure:', response);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error fetching related posts:', error);
+                });
+        }
+    };
+
+    // Go to the next page
+    $scope.nextPage = function () {
+        if ($scope.currentPage < $scope.totalPagesCount - 1) {
+            $scope.currentPage++;
+            $scope.getPostsByDistrict();
+            console.log("next");
+        }
+    };
+
+    // Go to the previous page
+    $scope.previousPage = function () {
+        if ($scope.currentPage > 0) {
+            $scope.currentPage--;
+            $scope.getPostsByDistrict();
+            console.log("previous");
+        }
+    };
+
+    $scope.formatTimeAgo = function (date) {
+        let now = new Date();
+        let createdAt = new Date(date);
+        let timeDiff = Math.floor((now - createdAt) / 1000);
+
+        if (isNaN(timeDiff)) return "Invalid time";
+
+        if (timeDiff < 60) return timeDiff + " seconds ago";
+        if (timeDiff < 3600) return Math.floor(timeDiff / 60) + " minutes ago";
+        if (timeDiff < 86400) return Math.floor(timeDiff / 3600) + " hours ago";
+        return Math.floor(timeDiff / 86400) + " days ago";
+    };
+
+    // If the post ID is provided, fetch post details
     if (id_post) {
         $scope.getPostById(id_post);
     } else {
         $scope.errorMessage = 'Post ID is not defined';
     }
-
-    $scope.verifyCaptcha = function() {
-        // Hiện reCAPTCHA
-        $scope.captchaVisible = true;
-
-        // Lắng nghe sự kiện reCAPTCHA
-        window.onCaptchaSuccess = function() {
-            // Khi xác minh thành công
-            $scope.$apply(function() {
-                $scope.showPhone = true; // Hiển thị số điện thoại
-            });
-            grecaptcha.reset(); // Reset reCAPTCHA
-        };
-
-        // Đảm bảo rằng grecaptcha đã được khởi tạo
-        if (typeof grecaptcha !== 'undefined') {
-            grecaptcha.ready(function() {
-                grecaptcha.execute('6Ld5GV8qAAAAAL6ciFlZljPr8QJbsikaZ5nS0-VW', {action: 'submit'}).then(function(token) {
-                    onCaptchaSuccess();
-                });
-            });
-        } else {
-            console.error('grecaptcha is not available.');
-        }
-    };
 }]);
-
-// Đảm bảo rằng Google reCAPTCHA đã được tải
-angular.element(document).ready(function() {
-    // Khởi tạo reCAPTCHA nếu cần
-    if (typeof grecaptcha !== 'undefined') {
-        grecaptcha.render('your-recaptcha-element-id', {
-            'sitekey': '6Ld5GV8qAAAAAL6ciFlZljPr8QJbsikaZ5nS0-VW'
-        });
-    }
-});

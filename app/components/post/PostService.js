@@ -20,10 +20,10 @@ app.service('PostService', ['$http', function($http) {
     this.searchPosts = function(searchTerm, selectedDistrictName, page) {
         return $http({
             method: 'GET',
-            url: 'http://localhost:8080/api/posts/search',  // Ensure you include the full URL
+            url: 'http://localhost:8080/api/posts/search', // Ensure you include the full URL
             params: { 
                 searchTerm: searchTerm,
-                district: selectedDistrictName,
+                district: selectedDistrictName, // Include district name as a parameter
                 page: page
             }
         });
