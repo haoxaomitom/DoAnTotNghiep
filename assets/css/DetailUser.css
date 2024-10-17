@@ -1,0 +1,43 @@
+.profile-sidebar {
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.profile-sidebar .avatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.profile-sidebar img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+.profile-sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.profile-sidebar ul li {
+    margin: 10px 0;
+}
+
+.profile-sidebar ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+.profile-form {
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.profile-form .btn-primary {
+    width: 100%;
+}

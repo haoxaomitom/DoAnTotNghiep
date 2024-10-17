@@ -85,7 +85,18 @@
                         <option value="desc">Giá giảm dần</option>
                     </select>
                 </div>
-
+                <!-- Loading spinner -->
+                <div class="d-flex justify-content-center" ng-if="loading">
+                    <div class="spinner-grow text-primary ms-2 me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-secondary ms-2 me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-success ms-2 me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <!-- Listings -->
                 <div class="card mb-3" ng-repeat="post in posts">
                     <a href="PostDetail.html?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
@@ -118,18 +129,6 @@
                         ng-disabled="currentPage >= totalPagesCount - 1">Next</button>
                 </div>
 
-                <!-- Loading spinner -->
-                <div class="d-flex justify-content-center" ng-if="loading">
-                    <div class="spinner-grow text-primary ms-2 me-2" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div class="spinner-grow text-secondary ms-2 me-2" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <div class="spinner-grow text-success ms-2 me-2" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
             </div>
             <!-- Districts List -->
             <div class="col-md-3">
