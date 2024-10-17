@@ -7,13 +7,18 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     $scope.currentPage = 0; // Start from the first page
     $scope.pageSize = 5; // Number of posts per page
     $scope.totalPagesCount = 0; // Total pages returned from the API
+    $scope.loading = false;
 
     // Fetch posts with pagination
     $scope.getPosts = function () {
+        $scope.loading = true; // Start loading spinner
         ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
             $scope.posts = response.data.content;
             $scope.totalPagesCount = response.data.totalPages;
-            console.log($scope.posts);
+            $scope.loading = false; // Stop loading spinner
+        }).catch(function (error) {
+            $scope.loading = false; // Stop loading spinner in case of error
+            console.error('Error fetching posts:', error);
         });
     };
 
