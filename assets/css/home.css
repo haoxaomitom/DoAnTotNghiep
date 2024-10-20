@@ -13,18 +13,6 @@
 }
 
 
-/* Card số lượng  */
-.card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-}
-.card-text {
-    font-size: 1.25rem;
-    font-weight: bold;
-}
-.filter-group, .districts-list {
-    margin-bottom: 1rem;
-}
 .btn-primary-custom {
     background-color: #007bff;
     border-color: #007bff;

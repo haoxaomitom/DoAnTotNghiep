@@ -1,9 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    
-</head>
-<body>
-    <div id="map_div" style="width: 800px; height: 700px"></div>
-</body>
+<html>
+  <head>
+    <title>Chọn vị trí trên bản đồ</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaqWzB_IIAlUg3Iwp8yFfgjIIFhhMF0IQ&callback=initMap" async defer></script>
+    <style>
+      /* Định dạng cho bản đồ */
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Chọn vị trí trên bản đồ để lấy tọa độ:</h3>
+    <div id="map"></div>
+    <p id="coordinates">Tọa độ:</p>
+
+    <script>
+      let map;
+      let marker;
+
+      function initMap() {
+        // Khởi tạo bản đồ với vị trí ban đầu
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 10.8231, lng: 106.6297 }, // Vị trí mặc định: Hồ Chí Minh
+          zoom: 13,
+        });
+
+        // Thêm sự kiện click trên bản đồ
+        map.addListener("click", (e) => {
+          // Đặt lại marker tại vị trí người dùng đã click
+          placeMarker(e.latLng);
+        });
+      }
+
+      function placeMarker(location) {
+        // Xóa marker cũ nếu đã tồn tại
+        if (marker) {
+          marker.setMap(null);
+        }
+
+        // Thêm marker mới tại vị trí click
+        marker = new google.maps.Marker({
+          position: location,
+          map: map,
+        });
+
+        // Hiển thị tọa độ latitude và longitude
+        const lat = location.lat();
+        const lng = location.lng();
+        document.getElementById("coordinates").innerText = `Tọa độ: Latitude: ${lat}, Longitude: ${lng}`;
+      }
+    </script>
+  </body>
 </html>

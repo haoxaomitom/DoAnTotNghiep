@@ -12,17 +12,6 @@
     border-radius: 10px;
 }
 
-
-/* Card số lượng  */
-.card-title {
-    font-size: 1rem;
-    font-weight: bold;
-}
-.card-text {
-    color: red;
-    font-size: 1.25rem;
-    font-weight: bold;
-}
 .filter-group, .districts-list {
     margin-bottom: 1rem;
 }
