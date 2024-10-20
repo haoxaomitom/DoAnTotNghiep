@@ -23,9 +23,20 @@ app.service('PostService', ['$http', function($http) {
             url: 'http://localhost:8080/api/posts/search', // Ensure you include the full URL
             params: { 
                 searchTerm: searchTerm,
-                district: selectedDistrictName, // Include district name as a parameter
+                district: selectedDistrictName,
                 page: page
             }
         });
-    };        
+    }; 
+    this.searchPostsByVehicleType = function(vehicleType, page) {
+        return $http({
+            method: 'GET',
+            url: 'http://localhost:8080/api/posts/searchVehicleType',
+            params: {
+                vehicleType: vehicleType,
+                page: page
+            }
+        });
+    };
+             
 }]);
