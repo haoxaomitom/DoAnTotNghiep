@@ -8,16 +8,17 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     $scope.pageSize = 5; // Number of posts per page
     $scope.totalPagesCount = 0; // Total pages returned from the API
     $scope.loading = false;
+    $scope.notFoundMessage = '';
 
     // Fetch posts with pagination
     $scope.getPosts = function () {
-        $scope.loading = true; // Start loading spinner
+        $scope.loading = true;
         ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
             $scope.posts = response.data.content;
             $scope.totalPagesCount = response.data.totalPages;
-            $scope.loading = false; // Stop loading spinner
+            $scope.loading = false;
         }).catch(function (error) {
-            $scope.loading = false; // Stop loading spinner in case of error
+            $scope.loading = false;
             console.error('Error fetching posts:', error);
         });
     };
@@ -62,24 +63,30 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         }
     };
 
-
     // Search posts based on search term and selected district
     $scope.searchPosts = function () {
         PostService.searchPosts($scope.searchTerm, $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
             .then(function (response) {
-                if (response.data && response.data.content) {
-                    $scope.posts = response.data.content; // Update posts list with search results
-                    $scope.totalPagesCount = response.data.totalPages; // Update total pages
-                } else {
+                const posts = response.data.content || []; // Get the content from the response
+
+                // Check if posts array is empty
+                if (posts.length === 0) {
+                    $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
                     $scope.posts = []; // Clear posts if no data found
+                } else {
+                    $scope.notFoundMessage = ''; // Clear the not found message if results are found
+                    $scope.posts = posts; // Update posts list with search results
+                    $scope.totalPagesCount = response.data.totalPages; // Update total pages
                 }
             })
             .catch(function (error) {
                 console.error('Error fetching posts:', error);
+                $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
+                $scope.posts = []; // Clear posts on error
             });
     };
 
-    // Load the count of posts by district
+    // Load the count of posts by district  
     $scope.loadDistrictPostCounts = function () {
         PostService.getPostsCountByDistrict().then(function (response) {
             $scope.districtPostCounts = response.data;
@@ -90,24 +97,52 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
 
     $scope.onDistrictChange = function () {
         if ($scope.selectedDistrict && $scope.selectedDistrict.Name) {
-            // Use selected district for search
-            let searchTerm = $scope.selectedDistrict.Name;
-
-            // Perform search using the selected district from dropdown
-            PostService.searchPosts(searchTerm, $scope.currentPage)
+            PostService.searchPosts($scope.selectedDistrict.Name, $scope.currentPage)
                 .then(function (response) {
-                    if (response.data && response.data.content) {
-                        $scope.posts = response.data.content; // Update posts list with search results
-                        $scope.totalPagesCount = response.data.totalPages; // Update total pages
+                    const posts = response.data.content || [];
+                    if (posts.length === 0) {
+                        $scope.notFoundMessage = 'Không tìm thấy kết quả nào';
+                        $scope.posts = [];
                     } else {
-                        $scope.posts = []; // Clear posts if no data found
+                        $scope.notFoundMessage = '';  // Clear message if there are results
+                        $scope.posts = posts;
                     }
+                    $scope.totalPagesCount = response.data.totalPages;
                 })
                 .catch(function (error) {
                     console.error('Error fetching posts:', error);
                 });
+        } else {
+            $scope.notFoundMessage = '';
+            $scope.getPosts();
         }
     };
+
+
+    $scope.searchPostsByVehicleType = function () {
+        if ($scope.selectedVehicleType) {
+            PostService.searchPostsByVehicleType($scope.selectedVehicleType, $scope.currentPage)
+                .then(function (response) {
+                    const posts = response.data.content || [];
+                    if (posts.length === 0) {
+                        $scope.notFoundMessage = 'Không tìm thấy kết quả nào';  // Set message if no results
+                        $scope.posts = [];
+                    } else {
+                        $scope.notFoundMessage = '';  // Clear message if there are results
+                        $scope.posts = posts;
+                    }
+                    $scope.totalPagesCount = response.data.totalPages;
+                })
+                .catch(function (error) {
+                    console.error('Error fetching posts:', error);
+                });
+        } else {
+            $scope.notFoundMessage = '';
+            $scope.getPosts();
+        }
+    };
+
+
     // Format time function
     $scope.formatTimeAgo = function (date) {
         let now = new Date();
@@ -116,10 +151,10 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
 
         if (isNaN(timeDiff)) return "Invalid time";
 
-        if (timeDiff < 60) return timeDiff + " seconds ago";
-        if (timeDiff < 3600) return Math.floor(timeDiff / 60) + " minutes ago";
-        if (timeDiff < 86400) return Math.floor(timeDiff / 3600) + " hours ago";
-        return Math.floor(timeDiff / 86400) + " days ago";
+        if (timeDiff < 60) return timeDiff + " giây trước";
+        if (timeDiff < 3600) return Math.floor(timeDiff / 60) + " phút trước";
+        if (timeDiff < 86400) return Math.floor(timeDiff / 3600) + " giờ trước";
+        return Math.floor(timeDiff / 86400) + " ngày trước";
     };
 
     $scope.getPosts();

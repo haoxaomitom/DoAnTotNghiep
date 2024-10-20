@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="/assets/css/PostDetail.css">
     <script src="https://kit.fontawesome.com/5c73425aee.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" async defer></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
-<body ng-controller="PostController">
+<body ng-controller="PostController" class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -55,21 +55,27 @@
             </div>
         </div>
     </nav>
-
-    <!-- Loading spinner -->
-    <div class="d-flex justify-content-center" ng-if="loading">
-        <div class="spinner-grow text-primary ms-2 me-2" role="status">
-            <span class="visually-hidden">Loading...</span>
+    <div class="container mt-5 flex-fill"> 
+        <!-- Loading spinner -->
+        <div class="d-flex justify-content-center align-items-center" style="height: 50vh;" ng-if="loading">
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-grow text-primary ms-2 me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-secondary ms-2 me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-success ms-2 me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <h1 class="mt-3">Vui lòng chờ...</h1>
+            </div>
         </div>
-        <div class="spinner-grow text-secondary ms-2 me-2" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <div class="spinner-grow text-success ms-2 me-2" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
-    <div class="container mt-5">
         <div class="row" ng-if="!loading">
+
+
             <!-- Carousel Section -->
             <div class="col-md-8">
                 <div class="mb-4">
@@ -94,11 +100,13 @@
                 </div>
                 <div class="">
                     <!-- Parking Info Section -->
-                    <div class="col-md-8 mt-4">
+                    <div class="mt-4">
                         <h4 class="mb-3">{{post.parkingName}}</h4>
-                        <p class="mb-4">{{post.wardName}}, {{post.districtName}}, {{post.provinceName}}</p>
-                        <h5 class="mb-3">Giá tiền: {{post.price}} {{post.pricePer}}</h5>
-
+                        <p class="mb-4">Địa chỉ: {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}</p>
+                        <div class="d-flex mb-5 align-items-center">
+                            <h3 class="mb-0 me-2">Giá tiền:</h3>
+                            <h3 class="text-danger mb-0">{{post.price}} {{post.pricePer}}</h3>
+                        </div>
                         <!-- Parking Status -->
                         <h4 class="mb-3">Tình trạng bãi</h4>
                         <ul class="list-unstyled mb-4">
@@ -116,7 +124,7 @@
 
                         <h4 class="mb-3">Các tiện ích</h4>
                         <ul class="list-unstyled row">
-                            <div class="col-sm-3" ng-repeat="amenity in post.amenities">
+                            <div class="col-sm-6" ng-repeat="amenity in post.amenities">
                                 <li><i class="fa-solid fa-check"></i> {{amenity.amenitiesName}}</li>
                             </div>
                         </ul>
@@ -155,29 +163,50 @@
             </div>
 
             <!-- Related Posts Section -->
-            <h3 class="mb-3">Các bài đăng liên quan:</h3>
-            <div class="card mb-3" ng-repeat="post in relatedPosts">
-                <a href="PostDetail.html?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="d-flex align-items-center justify-content-center"
-                                style="height: 100%; background: #f8f9fa;">
-                                <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
-                                    alt="Images" />
+            <div class="row">
+                <div class="col-sm-8">
+                    <h3 class="mb-3">Các bài đăng liên quan:</h3>
+                    <div class="card mb-3" ng-repeat="post in relatedPosts">
+                        <a href="PostDetail.html?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center justify-content-center"
+                                        style="height: 100%; background: #f8f9fa;">
+                                        <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                            alt="Images" />
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-title">
+                                        <div class="card-header bg-transparent border-0">
+                                            <h4 class="font-weight-bold">{{post.parkingName}}</h4>
+                                        </div>
+                                        <div class="card-body flex-fill">
+                                            <p class="card-text district font-weight-bold">
+                                                {{post.street}} {{post.wardName}}, {{post.districtName}},
+                                                {{post.provinceName}}
+                                            </p>
+                                            <h4 class="card-text text-danger">
+                                                {{post.price + " " + post.pricePer}}
+                                            </h4>
+                                        </div>
+                                        <div class="card-footer ">
+                                            <p class="card-text username font-weight-bold">
+                                                Đăng bởi: {{post.userName}}
+                                                <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">{{post.parkingName}}</h5>
-                                <p class="card-text">{{post.districtName}}</p>
-                                <p class="card-text text-danger">{{post.price + " " + post.pricePer}}</p>
-                                <p class="card-text"><small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                </p>
-                            </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
+                </div>
+                <div class="col-sm-4">
+
+                </div>
             </div>
+
             <!-- Pagination Controls -->
             <div class="d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary" ng-click="previousPage()"
