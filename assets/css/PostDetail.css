@@ -1,136 +1,70 @@
-
-.nav-link {
-    color: black; /* Default text color */
-    padding: 10px; /* Ensure enough padding for the border */
-    border: 0 solid transparent;
-    transition: all 0.3s ease;
+/* Kiểu cho ảnh nền blur */
+.blur-background img {
+    filter: blur(20px); /* Tạo hiệu ứng blur */
+    transform: scale(1.1); /* Tăng kích thước một chút để tránh viền bị mờ */
+    z-index: -1; /* Đảm bảo ảnh này nằm sau ảnh chính */
+    opacity: 0.7; /* Giảm độ rõ của ảnh nền để nổi bật ảnh chính */
 }
 
-.nav-link:hover {
-    color: white; /* Text color on hover */
-    background-color: blue;
-    border-radius: 10px;
+/* Kiểu cho carousel */
+.carousel-inner {
+    position: relative;
+    height: 400px; /* Chiều cao cố định cho vùng carousel */
+    display: flex;
+
+    align-items: center;
 }
 
-.filter-group, .districts-list {
-    margin-bottom: 1rem;
-}
-.btn-primary-custom {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
-}
-.btn-primary-custom:hover {
-    background-color: #0056b3;
-    border-color: #004080;
-}
-.btn-submit {
-    background-color: #00aaff;
-    border-color: #00aaff;
-    color: white;
-}
-.btn-submit:hover {
-    background-color: #0088cc;
-    border-color: #006699;
-}
-@media (max-width: 767px) {
-    .districts-list {
-        display: none;
-    }
+/* Kiểu cho ảnh chính */
+.carousel-item img {
+    height: 400px; /* Chiều cao cố định cho ảnh chính */
+    width: auto; /* Để chiều rộng tự động điều chỉnh */
+    object-fit: cover; /* Cắt ảnh để nó phù hợp với chiều cao mà không bị biến dạng */
+    z-index: 1; /* Đảm bảo ảnh chính hiển thị phía trước */
+    position: relative;
 }
 
-/* button đăng tin */
-.btn-primary-custom {
-    border: 2px solid #007bff;
-    background-color: white;
-    color: #007bff !important;
-    font-weight: bold;
-    font-size: 1.1rem;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    padding: 10px 20px 10px 20px;
-    margin-left: 20px;
-    margin-right: 10px;
+
+/* Chống ảnh blur bị tràn viền */
+.blur-background {
+    overflow: hidden;
+    z-index: -1;
 }
 
-.btn-primary-custom:hover {
-    background-color: #007bff;
-    color: whitesmoke !important;
-
+.side-bar{
+    position: sticky;
+    top: 20px;
 }
+
 
 .profile-card {
-    border: 1px solid #eee;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-                position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+    top: 20px; /* Khoảng cách từ phía trên khi dừng lại */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, 
+                rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, 
+                rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    border-radius: 20px;
+    background-color: whitesmoke;
 }
 
-.carousel-inner img {
-    max-width: auto;
-    height: 400px;
-    object-fit: cover;
+.phone-btn {
+    color: #007bff; /* Màu mặc định của button */
+    transition: color 0.3s ease; /* Thêm hiệu ứng chuyển đổi mượt mà */
 }
 
-.title {
-    color: #00bfff;
+.phone-btn:hover {
+    color: #ff6347; /* Đổi màu khi hover vào button, ví dụ là màu cam */
 }
 
-.post-box img {
-    height: 150px;
+/* Maps */
+.h-100 {
+    height: 100%;
+}
+
+.map-container {
+    height: 100%;
+}
+
+.map-iframe {
     width: 100%;
-    object-fit: cover;
-    margin-bottom: 10px;
+    height: 100%;
 }
-.profile-card img {
-    width: 100px;
-    height: 100px;
-}
-.post-box {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-}
-.post-box:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: translateY(-5px);
-}
-
-/* Đảm bảo nút luôn hiển thị và có màu đen */
-.carousel-control-prev, .carousel-control-next {
-    color: rgb(0, 0, 0) !important; /* Màu chữ (nếu có) */
-    width: 50px; /* Giảm kích thước nút */
-
-
-}
-
-/* Di chuyển nút ra gần mép ngoài hơn */
-.carousel-control-prev {
-    left: -30px; /* Di chuyển nút sang bên trái ngoài mép carousel */
-}
-
-.carousel-control-next {
-    right: -30px; /* Di chuyển nút sang bên phải ngoài mép carousel */
-}
-
-/* Đảm bảo hiển thị các icon trong nút */
-.carousel-control-prev-icon, .carousel-control-next-icon {
-    background-color: rgb(0, 0, 0); /* Đặt màu nền cho icon là màu đen */
-    border-radius: 50%; /* Làm tròn icon */
-    height: 30px; /* Chiều cao icon */
-    width: 30px; /* Chiều rộng icon */
-    /* Thay đổi màu sắc cho icon */
-    background-image: none; /* Loại bỏ hình nền mặc định */
-}
-
-/* Thay đổi màu khi hover vào nút */
-.carousel-control-prev:hover, .carousel-control-next:hover {
-    background-color: rgba(255, 255, 255, 0.5); /* Thêm nền nhạt khi hover để làm nổi bật */
-    border-radius: 50%; /* Làm tròn các nút */
-    transition: all 0.3s ease;
-}
-
