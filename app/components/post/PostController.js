@@ -1,33 +1,40 @@
 let app = angular.module('parkingApp', []);
 
 app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
+
+// app.controller('PostController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
+    $scope.loading = false;
     $scope.posts = [];
     $scope.searchTerm = '';
     $scope.selectedDistrict = null; // Add selectedDistrict for tracking selected district
     $scope.currentPage = 0; // Start from the first page
     $scope.pageSize = 5; // Number of posts per page
     $scope.totalPagesCount = 0; // Total pages returned from the API
-    $scope.loading = false;
     $scope.notFoundMessage = '';
+    $scope.sortPrice = '';
 
     // Fetch posts with pagination
     $scope.getPosts = function () {
         $scope.loading = true;
-        ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
-            $scope.posts = response.data.content;
-            $scope.totalPagesCount = response.data.totalPages;
-            $scope.loading = false;
-        }).catch(function (error) {
-            $scope.loading = false;
-            console.error('Error fetching posts:', error);
-        });
+        if ($scope.sortPrice) {
+            $scope.sortPosts(); // Gọi hàm sortPosts
+        } else {
+            ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
+                $scope.posts = response.data.content;
+                $scope.totalPagesCount = response.data.totalPages;
+                $scope.loading = false;
+            }).catch(function (error) {
+                $scope.loading = false;
+                console.error('Error fetching posts:', error);
+            });
+        }
     };
-
+    
     // Go to the next page
     $scope.nextPage = function () {
         if ($scope.currentPage < $scope.totalPagesCount - 1) {
             $scope.currentPage++;
-            $scope.searchPosts();
+            $scope.getPosts();
         }
     };
 
@@ -35,7 +42,7 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     $scope.previousPage = function () {
         if ($scope.currentPage > 0) {
             $scope.currentPage--;
-            $scope.searchPosts();
+            $scope.getPosts();
         }
     };
 
@@ -96,6 +103,8 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     };
 
     $scope.onDistrictChange = function () {
+        $scope.selectedVehicleType = "";
+        $scope.sortPrice = "";
         if ($scope.selectedDistrict && $scope.selectedDistrict.Name) {
             PostService.searchPosts($scope.selectedDistrict.Name, $scope.currentPage)
                 .then(function (response) {
@@ -118,8 +127,21 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         }
     };
 
-
+    $scope.sortPosts = function () {
+        $scope.loading = true;
+        PostService.sortPostsByPrice($scope.sortPrice, $scope.currentPage, $scope.pageSize).then(function (response) {
+            $scope.posts = response.data.content;
+            $scope.totalPagesCount = response.data.totalPages;
+            $scope.loading = false;
+        }).catch(function (error) {
+            $scope.loading = false;
+            console.error('Error fetching sorted posts:', error);
+        });
+    };
+    
     $scope.searchPostsByVehicleType = function () {
+        $scope.selectedDistrict = "";
+        $scope.sortPrice = "";
         if ($scope.selectedVehicleType) {
             PostService.searchPostsByVehicleType($scope.selectedVehicleType, $scope.currentPage)
                 .then(function (response) {
@@ -142,6 +164,11 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         }
     };
 
+    // Sorting function triggered when the user selects a sort option
+    $scope.onSortChange = function () {
+        $scope.currentPage = 0; // Reset to the first page when sorting
+        $scope.getPosts();
+    };
 
     // Format time function
     $scope.formatTimeAgo = function (date) {

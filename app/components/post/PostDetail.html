@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parking Listing</title>
+    <title>PFR - Cho thuê chỗ để xe</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/PostDetail.css">
@@ -14,48 +14,52 @@
 </head>
 
 <body ng-controller="PostController" class="d-flex flex-column min-vh-100">
+    
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="/app/components/post/home.html">PFR</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 border-bottom shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#/home">PFR</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Offcanvas -->
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
+            <!-- Offcanvas Menu -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
                 <div class="offcanvas-header">
-                    <h5 id="offcanvasNavbarLabel">Menu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul class="navbar-nav d-flex align-items-center ms-auto">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Xe oto</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Xe tải</a>
+                            <a class="nav-link text-dark" href="#">Xe oto</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Xe khách</a>
+                            <a class="nav-link text-dark" href="#">Xe tải</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Xe máy</a>
+                            <a class="nav-link text-dark" href="#">Xe khách</a>
                         </li>
-                        <li class="nav-item d-flex">
-                            <a class="nav-link" href="#">Đăng nhập / Đăng kí</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Xe máy</a>
                         </li>
-                        <li class="nav-item d-flex">
-                            <a class="nav-link btn btn-primary-custom text-white" href="#">Đăng tin</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Đăng nhập / Đăng kí</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#"> </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary px-3" href="#">Đăng tin</a>
                         </li>
                     </ul>
                 </div>
             </div>
+
         </div>
     </nav>
-    <div class="container mt-5 flex-fill"> 
+    <div class="container flex-fill">
+
         <!-- Loading spinner -->
         <div class="d-flex justify-content-center align-items-center" style="height: 50vh;" ng-if="loading">
             <div class="text-center">
@@ -73,17 +77,44 @@
                 <h1 class="mt-3">Vui lòng chờ...</h1>
             </div>
         </div>
+
+        <!-- breadcrumb -->
+        <nav aria-label="breadcrumb list-unstyled" ng-if="!loading">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/app/components/post/home.html">Trang chủ</a></li>
+                <!-- <li class="breadcrumb-item"><a href="home.html?districtName={{post.districtName}}">{{post.districtName}}</a></li> -->
+                <li class="breadcrumb-item active" aria-current="page">{{post.parkingName}}</li>
+            </ol>
+        </nav>
+
         <div class="row" ng-if="!loading">
 
-
-            <!-- Carousel Section -->
+            <!-- Info post -->
             <div class="col-md-8">
+                <!-- Carousel Section -->
                 <div class="mb-4">
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="carousel-item" ng-repeat="image in post.images"
-                                ng-class="{'active': $index === 0}">
-                                <img ng-src="{{image.imageUrl}}" class="img-fluid" alt="Parking Image {{$index + 1}}">
+                            <!-- Carousel item đầu tiên -->
+                            <div class="carousel-item active">
+                                <!-- Ảnh nền được làm mờ -->
+                                <div class="blur-background position-absolute w-100 h-100 top-0 start-0">
+                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid w-100 h-100"
+                                        alt="Blurred Background Image" style="object-fit: cover;">
+                                </div>
+                                <!-- Ảnh chính hiển thị -->
+                                <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid d-block mx-auto"
+                                    alt="Main Image">
+                            </div>
+                            <!-- Các carousel item tiếp theo -->
+                            <div class="carousel-item" ng-repeat="image in post.images.slice(1)">
+                                <!-- Ảnh nền được làm mờ -->
+                                <div class="blur-background position-absolute w-100 h-100 top-0 start-0">
+                                    <img ng-src="{{image.imageUrl}}" class="img-fluid w-100 h-100"
+                                        alt="Blurred Background Image" style="object-fit: cover; max-height:400px;">
+                                </div>
+                                <!-- Ảnh chính hiển thị -->
+                                <img ng-src="{{image.imageUrl}}" class="img-fluid d-block mx-auto" alt="Main Image">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
@@ -98,125 +129,338 @@
                         </button>
                     </div>
                 </div>
+                <h4 class="mb-3">{{post.parkingName}}</h4>
+                <p class="mb-4">Địa chỉ: {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}</p>
+                <div class="d-flex mb-5 align-items-center">
+                    <h3 class="mb-0 me-2">Giá tiền:</h3>
+                    <h3 class="text-danger mb-0">{{post.price}} {{post.priceUnit}}</h3>
+                </div>
                 <div class="">
                     <!-- Parking Info Section -->
                     <div class="mt-4">
-                        <h4 class="mb-3">{{post.parkingName}}</h4>
-                        <p class="mb-4">Địa chỉ: {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}</p>
-                        <div class="d-flex mb-5 align-items-center">
-                            <h3 class="mb-0 me-2">Giá tiền:</h3>
-                            <h3 class="text-danger mb-0">{{post.price}} {{post.pricePer}}</h3>
-                        </div>
-                        <!-- Parking Status -->
-                        <h4 class="mb-3">Tình trạng bãi</h4>
-                        <ul class="list-unstyled mb-4">
-                            <li><i class="fa-solid fa-boxes-stacked"></i> Sức chứa: {{post.capacity}} chiếc</li>
-                            <li><i class="fa-regular fa-clock"></i> Giờ mở / đóng bãi: {{post.openingHours}}</li>
-                        </ul>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
 
-                        <!-- Car Type -->
-                        <h4 class="mb-3">Các loại xe được gửi</h4>
-                        <ul class="list-unstyled mb-4">
-                            <li ng-repeat="vehicleType in post.vehicleTypes">
-                                <i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypeName}}
-                            </li>
-                        </ul>
+                                <!-- Parking Status Card -->
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Tình trạng bãi</h5>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fa-solid fa-boxes-stacked"></i> Sức chứa: {{post.capacity}}
+                                                chiếc
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
 
-                        <h4 class="mb-3">Các tiện ích</h4>
-                        <ul class="list-unstyled row">
-                            <div class="col-sm-6" ng-repeat="amenity in post.amenities">
-                                <li><i class="fa-solid fa-check"></i> {{amenity.amenitiesName}}</li>
+                                <!-- Car Type Card -->
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Các loại xe được gửi</h5>
+                                        <ul class="list-unstyled row">
+                                            <div class="col-sm-6" ng-repeat="vehicleType in post.vehicleTypes">
+                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypeName}}</li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Amenities Card -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Các tiện ích</h5>
+                                        <ul class="list-unstyled row">
+                                            <div class="col-sm-6" ng-repeat="amenity in post.amenities">
+                                                <li><i class="fa-solid fa-check"></i> {{amenity.amenitiesName}}</li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-                        </ul>
 
-                        <div class="MoTa mb-4">
-                            <h4>Mô tả</h4>
-                            <p>{{post.description}}</p>
+                            <!-- Map Card -->
+                            <div class="col-sm-6">
+                                <div class="card mb-3 h-100">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">Vị trí trên bản đồ</h5>
+                                        <div ng-if="post.latitude && post.longitude" class="map-container flex-grow-1">
+                                            <iframe title="map" frameborder="0" class="map-iframe" allowfullscreen=""
+                                                ng-src="{{ map.src }}">
+                                            </iframe>
+                                        </div>
+                                        <div ng-if="!post.latitude || !post.longitude" class="alert alert-warning">
+                                            Người dùng này chưa cung cấp vị trí.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="btn btn-danger mb-5">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo bài đăng
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Mô tả</h5>
+                                <p>{{post.description}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- Profile Section -->
-            <div class="col-md-4 mb-4">
-                <div class="profile-card text-center p-3 shadow-sm">
-                    <img ng-src="{{user.avatar}}" class="rounded-circle mb-3" alt="{{user.firstName}}'s Avatar"
-                        width="100" height="100">
-                    <h5>{{user.firstName}} {{user.lastName}}</h5>
-                    <p>Đã tham gia: {{user.createdAt | date:'MMMM yyyy'}}</p>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <i class="bi bi-telephone-fill me-2"></i>
-                        <span>SĐT: <span ng-show="showPhone">{{user.phoneNumber}}</span>
-                            <span ng-hide="showPhone">******</span></span>
+            <div class="col-md-4 mb-4" ng-if="!loading">
+                <div class="side-bar">
+                    <div class="profile-card text-center p-4">
+                        <img ng-src="{{user.avatar}}" class="rounded-circle mb-3 border"
+                            alt="{{user.firstName}}'s Avatar" width="100" height="100">
+                        <h5 class="fw-bold">{{user.firstName}} {{user.lastName}}</h5>
+                        <p class="text-muted">Đã tham gia: {{user.createdAt | date:'MMMM yyyy'}}</p>
+                        <!-- Phần hiển thị SĐT với border -->
+                        <div class="border border-2 p-2 rounded d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-telephone-fill me-2"></i>
+                                <span class="phone-text">SĐT:
+                                    <span ng-show="showPhone">{{user.phoneNumber}}</span>
+                                    <span ng-hide="showPhone">******</span>
+                                </span>
+                            </div>
+                            <button class="btn btn-link p-0 text-decoration-none phone-btn"
+                                ng-click="showPhone = !showPhone">
+                                {{showPhone ? 'Ẩn Số Điện Thoại' : 'Hiển Thị Số Điện Thoại'}}
+                            </button>
+                        </div>
                     </div>
-                    <!-- Button to show phone number -->
-                    <button class="btn btn-primary mt-2" ng-click="showPhone = !showPhone">
-                        {{showPhone ? 'Ẩn Số Điện Thoại' : 'Hiển Thị Số Điện Thoại'}}
-                    </button>
                 </div>
-
-                <!-- Mini map Goole -->
-                <div class="mt-3" id="map_div" style="width: 400px; height: 400px"></div>
             </div>
 
-            <!-- Related Posts Section -->
-            <div class="row">
-                <div class="col-sm-8">
-                    <h3 class="mb-3">Các bài đăng liên quan:</h3>
-                    <div class="card mb-3" ng-repeat="post in relatedPosts">
-                        <a href="PostDetail.html?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <div class="d-flex align-items-center justify-content-center"
-                                        style="height: 100%; background: #f8f9fa;">
-                                        <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
-                                            alt="Images" />
-                                    </div>
+        </div>
+
+        <!-- Share function -->
+        <div class="row col-sm-8 align-items-center mt-3 mb-5 justify-content-around">
+            <div class=" d-flex justify-content-center">
+                <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
+                    <i class="fa-regular fa-heart"></i> Chia sẻ bài đăng
+                </div>
+                <!-- Share Post Modal -->
+                <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="shareModalLabel">Chia sẻ bài đăng</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                Tải hoặc quét mã QR để truy cập trang web
+                                <div id="qrCodeContainer" class="d-flex justify-content-center align-items-center mb-3">
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="card-title">
-                                        <div class="card-header bg-transparent border-0">
-                                            <h4 class="font-weight-bold">{{post.parkingName}}</h4>
-                                        </div>
-                                        <div class="card-body flex-fill">
-                                            <p class="card-text district font-weight-bold">
-                                                {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                                {{post.provinceName}}
-                                            </p>
-                                            <h4 class="card-text text-danger">
-                                                {{post.price + " " + post.pricePer}}
-                                            </h4>
-                                        </div>
-                                        <div class="card-footer ">
-                                            <p class="card-text username font-weight-bold">
-                                                Đăng bởi: {{post.userName}}
-                                                <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                            </p>
-                                        </div>
-                                    </div>
+                                <p>Hoặc chia sẻ bài đăng này với bạn bè hoặc trên mạng xã hội.</p>
+                                <div class="d-flex justify-content-around">
+                                    <button class="btn btn-primary" ng-click="shareOnFacebook(post.idPost)">
+                                        <i class="fa-brands fa-facebook"></i> Facebook
+                                    </button>
+                                    <button class="btn btn-primary" ng-click="copyLink()">
+                                        <i class="fa-solid fa-link"></i> Sao chép link
+                                    </button>
+                                    <button class="btn btn-success"><i class="fa-brands fa-whatsapp"></i>
+                                        WhatsApp</button>
+
                                 </div>
                             </div>
-                        </a>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4 d-flex justify-content-center">
+                    <div class="btn btn-success">
+                        <i class="fa-regular fa-heart"></i> Lưu bài đăng
+                    </div>
+                </div>
+                <div class="col-sm-4 d-flex justify-content-center">
+                    <!-- Button to open the modal -->
+                    <div class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo bài đăng
+                    </div>
+                    <!-- Modal for reporting post -->
+                    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="reportModalLabel">Báo cáo bài đăng</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="reportForm" ng-submit="submitReport(); $event.preventDefault();">
+                                        <div class="mb-3">
+                                            <label for="reportReason" class="form-label">Lý do báo cáo</label>
+                                            <select class="form-select" id="reportReason"
+                                                ng-change="checkReportReason()" ng-model="reportReason" required>
+                                                <option selected disabled>Chọn lý do</option>
+                                                <option value="Spam">Spam</option>
+                                                <option value="Sai thông tin">Sai thông tin</option>
+                                                <option value="Lừa đảo">Lừa đảo</option>
+                                                <option value="Khác">Khác</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reportDetails" class="form-label">Chi tiết báo cáo</label>
+                                            <textarea class="form-control" id="reportDetails" rows="3"
+                                                ng-model="reportDetails" ng-required="isOtherReason"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Đóng</button>
+                                    <button type="submit" form="reportForm" class="btn btn-danger">Gửi báo cáo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
-            </div>
-
-            <!-- Pagination Controls -->
-            <div class="d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary" ng-click="previousPage()"
-                    ng-disabled="currentPage === 0">Previous</button>
-                <span>Page {{ currentPage + 1 }} of {{ totalPagesCount }}</span> <!-- Hiển thị số trang hiện tại -->
-                <button class="btn btn-primary" ng-click="nextPage()"
-                    ng-disabled="currentPage >= totalPagesCount - 1">Next</button>
             </div>
         </div>
+
+        <!-- Comment and related Posts Section -->
+        <div class="row" ng-if="!loading">
+            <div class="col-sm-8">
+                <h5 class="mb-3">Bình luận</h5>
+                <div class="comment-list">
+                    <div class="mb-3" ng-repeat="comment in comments">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+
+                                <!-- User Avatar -->
+                                <div class="me-3">
+                                    <img ng-src="{{ comment.cud[0].avatar }}" alt="User Avatar" class="rounded-circle"
+                                        style="width: 40px; height: 40px;">
+                                </div>
+
+                                <!-- Comment Details -->
+                                <div class="flex">
+                                    <div class="comment-content bg-light border border-2 p-2 rounded"
+                                        style="border-radius: 20px;">
+                                        <strong>{{ comment.cud[0].firstName }} {{ comment.cud[0].lastName
+                                            }}</strong>
+                                        <p class="mt-2">{{ comment.commentContent }}</p>
+                                    </div>
+                                    <small class="text-muted">{{ formatTimeAgo(comment.createdAt) }}</small>
+                                    <a ng-click="openDeleteModal(comment.commentId)"
+                                        ng-if="comment.user === currentUserId" style="cursor: pointer;"> Xóa</a>
+                                    <!-- Modal Xác nhận xóa bình luận -->
+                                    <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog"
+                                        aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteCommentModalLabel">Xác
+                                                        nhận xóa bình luận</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn xóa bình luận này?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Hủy</button>
+                                                    <button type="button" class="btn btn-danger"
+                                                        ng-click="confirmDeleteComment()">Xóa</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="comments.length === 0" class="text-muted mb-3">
+                        Chưa có bình luận nào, hãy là người đầu tiên bình luận cho bài đăng này !
+                    </div>
+                    <div class="mb-3">
+                        <a ng-if="commentsPage < totalCommentsPages - 1" ng-click="loadMoreComments()"
+                            style="cursor:pointer">Tải thêm bình luận</a>
+                    </div>
+                </div>
+
+                <!-- Comment Form with Character Limit -->
+                <div class="mb-3">
+                    <div class="card-body">
+                        <form class="d-flex" ng-submit="submitComment()">
+                            <div class="flex-grow-1 me-2">
+                                <input ng-model="newComment.commentContent" class="form-control"
+                                    placeholder="Viết bình luận..." rows="1" maxlength="250" required></input>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fa-regular fa-paper-plane"></i> Gửi
+                            </button>
+                        </form>
+                        <small class="text-muted">{{ 250 - newComment.commentContent.length }} ký tự còn lại</small>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-4">
+                <h5 class="mb-3">Các bài đăng liên quan:</h5>
+                <div class="card mb-3" ng-repeat="post in relatedPosts">
+                    <a href="PostDetail.html?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center justify-content-center"
+                                    style="height: 100%; background: #f8f9fa;">
+                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                        alt="Images" />
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-title">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h7 class="font-weight-bold">{{post.parkingName}}</h7>
+                                    </div>
+                                    <div class="card-body flex-fill">
+                                        <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
+                                            {{vehicleType.vehicleTypeName}}
+                                            <span ng-if="!$last"> - </span> <!-- Optional separator between items -->
+                                        </span>
+                                        <h5 class="card-text text-danger">
+                                            {{post.price + " " + post.priceUnit}}
+                                        </h5>
+                                    </div>
+                                    <div class="card-footer ">
+                                        <h7 class="card-text username font-weight-bold">
+                                            {{post.street}} {{post.wardName}}, {{post.districtName}},
+                                            {{post.provinceName}}
+                                            <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                        </h7>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-primary" ng-click="previousPage()"
+                        ng-disabled="currentPage === 0">Trước</button>
+                    <span>Trang {{ currentPage + 1 }} trên tổng {{ totalPagesCount }} trang</span>
+                    <!-- Hiển thị số trang hiện tại -->
+                    <button class="btn btn-primary" ng-click="nextPage()"
+                        ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+
     <footer class="bg-dark text-light py-4 mt-5">
         <div class="container">
             <div class="row">
@@ -242,15 +486,21 @@
         </div>
     </footer>
 
+    <div id="fb-root"></div>
+
 
     <!-- Bootstrap JS and dependencies -->
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=859833986138775"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.8.3/angular-sanitize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="/app/components/post/PostDetailService.js"></script>
     <script src="/app/components/post/PostDetailController.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="/app/app.js"></script>
 </body>
 
 </html>

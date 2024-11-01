@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="paymentApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán với VNPay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
+    <script src="/app/components/payment/VNPayService.js"></script>
+    <script src="/app/components/payment/VNPayController.js"></script>
+</head>
+<body>
+    <div ng-controller="PaymentController" class="container mt-5">
+        <div class="text-center">
+            <h2>Thanh toán bài đăng</h2>
+        <p>Bài đăng của bạn sẽ được hiển thị lên đầu trang web của chúng tôi giúp mọi người có thể tiếp cận được dễ dàng hơn !</p>
+        </div>  
+        
+        <div class="mb-3">
+            <label for="durationSelect" class="form-label">Chọn thời gian hiển thị:</label>
+            <select id="durationSelect" class="form-select" ng-model="selectedDuration" ng-change="filterPrices()">
+                <option value="" disabled selected>Chọn thời gian</option>
+                <option value="day">Theo ngày</option>
+                <option value="month">Theo tháng</option>
+                <option value="year">Theo năm</option>
+            </select>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4" ng-repeat="price in filteredPrices">
+                <div class="card mb-4 text-center">
+                    <div class="card-body">
+                        <h3 class="card-title">{{ price.description }}</h3>
+                        <p class="card-text">Số ngày: {{ price.duration }} ngày</p>
+                        <p class="card-text">
+                            Giá gốc: <del>{{ formatCurrency(price.amount) }}</del>
+                            <span class="ms-2 text-danger">-{{ price.discountPercentage }}%</span>
+                        </p>
+                        <h5>Sau giảm giá: {{ formatCurrency(calculateDiscountedAmount(price.amount, price.discountPercentage)) }}</h5>
+                        <button ng-click="makePayment(price)" class="btn btn-primary mt-5 mb-3">Mua ngay</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
