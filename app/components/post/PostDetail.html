@@ -22,6 +22,7 @@
 
 <body ng-controller="PostController" class="d-flex flex-column min-vh-100">
 
+    
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 border-bottom shadow-sm">
         <div class="container">
@@ -31,6 +32,7 @@
                      alt="Logo" class="logo-image" style="height:auto; width:250px">
             </a>
             <!-- Toggle button for offcanvas menu -->
+            <a class="navbar-brand fw-bold" href="#/home">PFR</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -64,10 +66,12 @@
                     </ul>
                 </div>
             </div>
+
         </div>
         
     </nav>
     <div class="container flex-fill">
+
 
         <!-- Loading spinner -->
         <div class="d-flex justify-content-center align-items-center" style="height: 50vh;" ng-if="loading">
@@ -88,6 +92,8 @@
         </div>
 
         <!-- breadcrumb -->
+
+        <!-- breadcrumb -->
         <nav aria-label="breadcrumb list-unstyled" ng-if="!loading">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/app/components/post/home.html">Trang chủ</a></li>
@@ -96,10 +102,14 @@
             </ol>
         </nav>
 
+
         <div class="row" ng-if="!loading">
 
             <!-- Info post -->
+
+            <!-- Info post -->
             <div class="col-md-8">
+                <!-- Carousel Section -->
                 <!-- Carousel Section -->
                 <div class="mb-4">
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -215,6 +225,7 @@
                 </div>
             </div>
 
+
             <!-- Profile Section -->
             <div class="col-md-4 mb-4" ng-if="!loading">
                 <div class="side-bar">
@@ -241,9 +252,11 @@
                 </div>
             </div>
 
+
         </div>
 
 
+        <!-- Share function -->
         <div class="row col-sm-8 align-items-center mt-3 mb-5 justify-content-around">
 
             <!-- Share function -->
@@ -277,6 +290,34 @@
                                         </button>
                                         <!-- <button class="btn btn-success"><i class="fa-brands fa-whatsapp"></i>
                                         WhatsApp</button> -->
+            <div class=" d-flex justify-content-center">
+                <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
+                    <i class="fa-regular fa-heart"></i> Chia sẻ bài đăng
+                </div>
+                <!-- Share Post Modal -->
+                <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="shareModalLabel">Chia sẻ bài đăng</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                Tải hoặc quét mã QR để truy cập trang web
+                                <div id="qrCodeContainer" class="d-flex justify-content-center align-items-center mb-3">
+                                </div>
+                                <p>Hoặc chia sẻ bài đăng này với bạn bè hoặc trên mạng xã hội.</p>
+                                <div class="d-flex justify-content-around">
+                                    <button class="btn btn-primary" ng-click="shareOnFacebook(post.idPost)">
+                                        <i class="fa-brands fa-facebook"></i> Facebook
+                                    </button>
+                                    <button class="btn btn-primary" ng-click="copyLink()">
+                                        <i class="fa-solid fa-link"></i> Sao chép link
+                                    </button>
+                                    <button class="btn btn-success"><i class="fa-brands fa-whatsapp"></i>
+                                        WhatsApp</button>
 
                                     </div>
                                 </div>
@@ -360,6 +401,7 @@
             </div>
 
         </div>
+
         <!-- Comment and related Posts Section -->
         <div class="row" ng-if="!loading">
             <div class="col-sm-8">
@@ -369,11 +411,13 @@
                         <div class="card-body">
                             <div class="d-flex align-items-start">
 
+
                                 <!-- User Avatar -->
                                 <div class="me-3">
                                     <img ng-src="{{ comment.cud[0].avatar }}" alt="User Avatar" class="rounded-circle"
                                         style="width: 40px; height: 40px;">
                                 </div>
+
 
                                 <!-- Comment Details -->
                                 <div class="flex">
@@ -411,6 +455,7 @@
                                     </div>
                                 </div>
 
+
                             </div>
                         </div>
                     </div>
@@ -420,8 +465,10 @@
                     <div class="mb-3">
                         <a ng-if="commentsPage < totalCommentsPages - 1" ng-click="loadMoreComments()"
                             style="cursor:pointer">Tải thêm bình luận</a>
+                            style="cursor:pointer">Tải thêm bình luận</a>
                     </div>
                 </div>
+
 
                 <!-- Comment Form with Character Limit -->
                 <div class="mb-3">
@@ -480,6 +527,7 @@
                     </a>
                 </div>
 
+
                 <!-- Pagination Controls -->
                 <div class="d-flex justify-content-between align-items-center">
                     <button class="btn btn-primary" ng-click="previousPage()"
@@ -490,8 +538,10 @@
                         ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
                 </div>
 
+
             </div>
         </div>
+
 
     </div>
 
@@ -521,7 +571,11 @@
         </div>
     </footer>
 
+
     <div id="fb-root"></div>
+
+
+    <!-- Bootstrap JS and dependencies -->
 
 
     <!-- Bootstrap JS and dependencies -->
@@ -535,6 +589,7 @@
     <script src="/app/components/post/PostDetailService.js"></script>
     <script src="/app/components/post/PostDetailController.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="/app/app.js"></script>
     <script src="/app/app.js"></script>
 </body>
 
