@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi" ng-app="paymentApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán Thành Công</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .success-container {
+            margin-top: 100px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body ng-controller="SuccessController">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 success-container">
+            <h2 class="text-center text-success">Thanh Toán Thành Công</h2>
+            <hr>
+            <div class="mb-3">
+                <strong>Trạng thái thanh toán:</strong> <span class="text-success">{{paymentStatus}}</span>
+            </div>
+            <div class="mb-3">
+                <strong>Thanh toán đơn hàng:</strong> <span>{{orderId}}</span> <!-- Số đơn hàng -->
+            </div>
+            <div class="mb-3">
+                <strong>Mã thanh toán:</strong> <span>{{transactionId}}</span> <!-- Mã thanh toán -->
+            </div>
+            <div class="mb-3">
+                <strong>Số tiền:</strong> <span>{{amount}} VND</span> <!-- Số tiền -->
+            </div>
+            <div class="mb-3">
+                <strong>Ngày giao dịch:</strong> <span>{{transactionDate}}</span> <!-- Ngày giao dịch -->
+            </div>
+            <div class="text-center">
+                <a href="/" class="btn btn-primary">Quay lại trang chủ</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script>
+    var app = angular.module('paymentApp', []);
+
+    app.controller('SuccessController', function($scope, $location) {
+        // Lấy các tham số từ URL
+        var params = $location.search();
+        
+        // Gán các tham số vào scope
+        $scope.paymentStatus = "Thành công"; // Có thể lấy từ backend nếu cần
+        $scope.orderId = params.orderId || '#'; // Số đơn hàng
+        $scope.transactionId = params.vnp_TxnRef || 'TXN123456'; // Mã thanh toán
+        $scope.amount = (params.vnp_Amount / 100).toLocaleString(); // Số tiền, chia cho 100
+        $scope.transactionDate = params.vnp_PayDate || '01/11/2024'; // Ngày giao dịch
+    });
+</script>
+
+<!-- Bootstrap JS and dependencies (optional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

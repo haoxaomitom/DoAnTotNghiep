@@ -1,29 +1,23 @@
 let app = angular.module('parkingApp', []);
 
 app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
+
+// app.controller('PostController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
+    $scope.loading = false;
     $scope.posts = [];
     $scope.searchTerm = '';
     $scope.selectedDistrict = null; // Add selectedDistrict for tracking selected district
     $scope.currentPage = 0; // Start from the first page
     $scope.pageSize = 5; // Number of posts per page
     $scope.totalPagesCount = 0; // Total pages returned from the API
-    $scope.loading = false;
     $scope.notFoundMessage = '';
     $scope.sortPrice = '';
 
     // Fetch posts with pagination
     $scope.getPosts = function () {
         $scope.loading = true;
-        // Check if sortPrice is set and call the sorting function
         if ($scope.sortPrice) {
-            PostService.sortPostsByPrice($scope.sortPrice, $scope.currentPage, $scope.pageSize).then(function (response) {
-                $scope.posts = response.data.content;
-                $scope.totalPagesCount = response.data.totalPages;
-                $scope.loading = false;
-            }).catch(function (error) {
-                $scope.loading = false;
-                console.error('Error fetching sorted posts:', error);
-            });
+            $scope.sortPosts(); // Gọi hàm sortPosts
         } else {
             ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
                 $scope.posts = response.data.content;
@@ -35,12 +29,12 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             });
         }
     };
-
+    
     // Go to the next page
     $scope.nextPage = function () {
         if ($scope.currentPage < $scope.totalPagesCount - 1) {
             $scope.currentPage++;
-            $scope.searchPosts();
+            $scope.getPosts();
         }
     };
 
@@ -48,7 +42,7 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     $scope.previousPage = function () {
         if ($scope.currentPage > 0) {
             $scope.currentPage--;
-            $scope.searchPosts();
+            $scope.getPosts();
         }
     };
 
@@ -133,7 +127,18 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         }
     };
 
-
+    $scope.sortPosts = function () {
+        $scope.loading = true;
+        PostService.sortPostsByPrice($scope.sortPrice, $scope.currentPage, $scope.pageSize).then(function (response) {
+            $scope.posts = response.data.content;
+            $scope.totalPagesCount = response.data.totalPages;
+            $scope.loading = false;
+        }).catch(function (error) {
+            $scope.loading = false;
+            console.error('Error fetching sorted posts:', error);
+        });
+    };
+    
     $scope.searchPostsByVehicleType = function () {
         $scope.selectedDistrict = "";
         $scope.sortPrice = "";
