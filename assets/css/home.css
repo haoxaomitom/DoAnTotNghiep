@@ -7,7 +7,5 @@
 
 .img-fluid{
     max-width:auto;
-    height:200px;
     object-fit: cover;
 }
-

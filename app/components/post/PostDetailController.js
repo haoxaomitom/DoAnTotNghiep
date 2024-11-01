@@ -196,6 +196,12 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
         $('#deleteCommentModal').modal('show');
     };
 
+    $scope.shareOnFacebook = function (postId) {
+        const url = `http://127.0.0.1:5500/app/components/post/PostDetail.html?id=${postId}`;
+        const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        window.open(facebookShareURL, '_blank', 'width=600,height=400');
+    };
+    
     $scope.copyLink = function () {
         // Lấy URL hiện tại
         const url = $location.absUrl();
