@@ -122,7 +122,8 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         return Math.floor(timeDiff / 86400) + " days ago";
     };
 
-    $scope.searchPosts();
+    $scope.getPosts();
     $scope.getProvinces();
     $scope.loadDistrictPostCounts();
+
 }]);

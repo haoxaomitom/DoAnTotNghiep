@@ -40,34 +40,58 @@
             <div class="col-md-8 border rounded p-4">
                 <div class="profile-form">
                     <form ng-submit="update()">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Họ</label>
-                            <input type="text" class="form-control rounded" id="lastName" placeholder="Họ"
-                                ng-model="lastName">
+                        <div class="mb-3 row">
+                            <div class="col-sm-6"><label for="name" class="form-label">Họ</label>
+                                <input type="text" class="form-control rounded" id="lastName" placeholder="Họ"
+                                    ng-model="lastName">
+                            </div>
+                            <div class="col-sm-6"><label for="name" class="form-label">Tên</label>
+                                <input type="text" class="form-control rounded" id="firstName" placeholder="Tên"
+                                    ng-model="firstName">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Tên</label>
-                            <input type="text" class="form-control rounded" id="firstName" placeholder="Tên"
-                                ng-model="firstName">
+                        <div class="mb-3 row">
+                            <div class="col-sm-6">
+                                <label for="name" class="form-label">Giới tính</label>
+                                <br>
+                                <input class="form-check-input" type="radio" name="gender" id="male" {{gender=="male"
+                                    ? 'checked' :''}}>
+                                <label for="male" style="margin-right: 50px;">Nam</label>
+                                <input class="form-check-input" type="radio" name="gender" id="female"
+                                    {{gender=="female" ? 'checked' :''}}>
+                                <label for="female">Nữ</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="name" class="form-label">Ngày sinh</label>
+                                <input type="text" class="form-control rounded" id="name" placeholder="dd/MM/yyyy"
+                                    ng-model="dateOfBirth">
+                            </div>
+
                         </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Giới tính</label>
-                            <br>
-                            <input class="form-check-input" type="radio" name="gender" id="male" {{gender=="male"
-                                ? 'checked' :''}}>
-                            <label for="male" style="margin-right: 50px;">Nam</label>
-                            <input class="form-check-input" type="radio" name="gender" id="female" {{gender=="female"
-                                ? 'checked' :''}}>
-                            <label for="female">Nữ</label>
+                        <div class="mb-3 row">
+                            <div class="col-sm-6">
+                                <label for="phone" class="form-label">Tên đường</label>
+                                <input type="text" class="form-control rounded" id="phone" placeholder="">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="phone" class="form-label">Phường/Thị trấn/Xã</label>
+                                <input type="text" class="form-control rounded" id="phone" placeholder="">
+                            </div>
+
                         </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Ngày sinh</label>
-                            <input type="text" class="form-control rounded" id="name" placeholder="dd/MM/yyyy"
-                                ng-model="dateOfBirth">
+                        <div class="mb-3 row">
+                            <div class="col-sm-6">
+                                <label for="phone" class="form-label">Quận/Huyện</label>
+                                <input type="text" class="form-control rounded" id="phone" placeholder="">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="phone" class="form-label">Thành phố/Tỉnh</label>
+                                <input type="text" class="form-control rounded" id="phone" placeholder="">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control rounded" id="phone" placeholder="Số điện thoại">
+                            <input type="text" class="form-control rounded" id="phone" placeholder="">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
@@ -77,15 +101,6 @@
                                 <button class="btn btn-outline-secondary rounded-end" type="button"
                                     id="confirm-email-button">Xác nhận email</button>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control rounded" id="password" placeholder="Mật khẩu">
-                        </div>
-                        <div class="mb-3">
-                            <label for="confirm-password" class="form-label">Xác nhận mật khẩu</label>
-                            <input type="password" class="form-control rounded" id="confirm-password"
-                                placeholder="Xác nhận mật khẩu">
                         </div>
                         <button type="submit" class="btn btn-primary rounded-pill">Cập nhật</button>
                     </form>
