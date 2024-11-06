@@ -1,7 +1,11 @@
-app.controller('PaymentController', function ($scope, PaymentService, $window) {
+app.controller('PaymentController', function ($scope, $location, PaymentService, $window) {
     $scope.selectedPriceId = null;
     $scope.filteredPrices = [];
-    $scope.postId = 1;
+    // $scope.postId = 1;
+    $scope.orderInfo = "Thông tin đơn hàng"; // Define orderInfo with appropriate content
+    const queryParams = new URLSearchParams($location.absUrl().split('?')[1]);
+    $scope.postId = queryParams.get('postId');
+    console.log($scope.postId)
 
     // Fetch prices from the database
     PaymentService.getPrices().then(function (response) {
@@ -17,22 +21,13 @@ app.controller('PaymentController', function ($scope, PaymentService, $window) {
         return "0 VND";
     };
 
-    // Function to set selected price and calculate discount
-    $scope.selectPrice = function(priceId) {
+    // Function to set selected price
+    $scope.selectPrice = function (priceId) {
         $scope.selectedPriceId = priceId;
         const selectedPrice = $scope.prices.find(price => price.priceId === priceId);
         if (selectedPrice) {
-            $scope.amount = selectedPrice.amount;
-            $scope.discountPercentage = selectedPrice.discountPercentage || 0; // Use discountPercentage from Price table
+            $scope.amount = selectedPrice.finalAmount;
         }
-    };
-
-    // Calculate discounted amount based on specific discount percentage
-    $scope.calculateDiscountedAmount = function (amount, discountPercentage) {
-        if (amount && discountPercentage) {
-            return amount - (amount * discountPercentage / 100);
-        }
-        return amount;
     };
 
     // Filter prices based on duration selection
@@ -50,10 +45,17 @@ app.controller('PaymentController', function ($scope, PaymentService, $window) {
 
     // Function to make payment
     $scope.makePayment = function (price) {
-        const discountedAmount = $scope.calculateDiscountedAmount(price.amount, price.discountPercentage);
-        PaymentService.createPayment(discountedAmount, $scope.orderInfo, $scope.postId, price.priceId)
+        if (!price || !$scope.postId) {
+            console.error("Price or postId is not defined");
+            return;
+        }
+    
+        $scope.orderInfo = `Thanh toán cho bài đăng với ID ${$scope.postId} và giá ${price.finalAmount}`;
+    
+        PaymentService.createPayment(price.priceId, $scope.postId)
             .then(function (response) {
-                if (response.data && response.data.url) { // Ensure the URL exists in the response
+                if (response && response.data && response.data.url) {
+                    console.log("Payment URL:", response.data.url);
                     $window.location.href = response.data.url; // Navigate to payment URL
                 } else {
                     console.log("Payment URL is undefined", response);
@@ -63,5 +65,4 @@ app.controller('PaymentController', function ($scope, PaymentService, $window) {
             });
     };
     
-
 });

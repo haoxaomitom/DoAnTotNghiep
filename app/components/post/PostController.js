@@ -2,7 +2,7 @@ let app = angular.module('parkingApp', []);
 
 app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
 
-// app.controller('PostController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
+    // app.controller('PostController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
     $scope.loading = false;
     $scope.posts = [];
     $scope.searchTerm = '';
@@ -30,7 +30,36 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             });
         }
     };
-    
+
+    //infinity scroll
+    //     $scope.getPosts = function () {
+    //         $scope.loading = true;
+    //         ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
+    //             // Thêm các bài viết mới vào danh sách hiện có
+    //             $scope.posts = $scope.posts.concat(response.data.content);
+    //             $scope.totalPagesCount = response.data.totalPages;
+    //             $scope.loading = false;
+    //         }).catch(function (error) {
+    //             $scope.loading = false;
+    //             console.error('Error fetching posts:', error);
+    //         });
+    //     };
+
+
+    //     // Thêm sự kiện cuộn để tải thêm dữ liệu khi cuộn đến cuối trang
+    // window.onscroll = function() {
+    //     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+    //         $scope.loadMorePosts();
+    //     }
+    // };
+
+    // $scope.loadMorePosts = function() {
+    //     if ($scope.currentPage < $scope.totalPagesCount - 1 && !$scope.loading) {
+    //         $scope.currentPage++;
+    //         $scope.getPosts();
+    //     }
+    // };
+
     // Go to the next page
     $scope.nextPage = function () {
         if ($scope.currentPage < $scope.totalPagesCount - 1) {
@@ -141,7 +170,7 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             console.error('Error fetching sorted posts:', error);
         });
     };
-    
+
     $scope.searchPostsByVehicleType = function () {
         $scope.selectedDistrict = "";
         $scope.sortPrice = "";
