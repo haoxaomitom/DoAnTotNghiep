@@ -79,6 +79,17 @@ app.service('PostService', ['$http', function ($http) {
                 throw error;
             });
     };
+    this.checkFavoriteStatus = function(userId, postId) {
+        return $http.get('http://localhost:8080/api/favorites/check', {
+            params: { userId: userId, postId: postId }
+        });
+    };
+
+    this.toggleFavorite = function(userId, postId) {
+        return $http.post('http://localhost:8080/api/favorites/toggle', null, {
+            params: { userId: userId, postId: postId }
+        });
+    };
 }]);
 // Service for fetching related posts
 app.service('ItemService', ['$http', function ($http) {
