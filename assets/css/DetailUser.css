@@ -41,3 +41,31 @@
 .profile-form .btn-primary {
     width: 100%;
 }
+.position-relative {
+    position: relative; /* Để cho danh sách gợi ý có thể sử dụng vị trí tuyệt đối trong vùng chứa này */
+}
+
+.list-group {
+    position: absolute; /* Đặt danh sách gợi ý ở vị trí tuyệt đối */
+    top: 100%; /* Đưa nó xuống dưới input */
+    left: 0;
+    z-index: 1000; /* Đảm bảo nó nằm trên các thành phần khác */
+    max-height: 200px; /* Chiều cao tối đa cho danh sách */
+    overflow-y: auto; /* Thêm cuộn nếu cần */
+    background-color: #fff; /* Nền trắng cho danh sách */
+    border: 1px solid #ccc; /* Đường viền xung quanh */
+    border-radius: 0.25rem; /* Bo góc */
+    display: block; /* Đảm bảo danh sách luôn hiển thị */
+}
+
+.list-group-item {
+    padding: 10px 15px; /* Padding cho các mục */
+    cursor: pointer; /* Con trỏ chuột dạng pointer */
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0; /* Màu nền khi hover */
+    color: #333; /* Màu chữ khi hover */
+}
+
+

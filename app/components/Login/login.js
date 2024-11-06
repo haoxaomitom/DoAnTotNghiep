@@ -16,8 +16,10 @@ app.controller('loginController', function ($scope, $http, $window) {
                 if (response.data.status) {
 
                     const token = response.data.data.token;
+                    const userId = response.data.data.userId;
                     localStorage.setItem('token', token);
                     localStorage.setItem('username', $scope.login.username);
+                    localStorage.setItem('userId', userId);
                     const redirectUrl = localStorage.getItem('redirectUrl');
                     if (redirectUrl) {
                         // Xóa URL đã lưu sau khi chuyển hướng
