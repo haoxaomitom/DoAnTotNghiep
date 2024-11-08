@@ -1,5 +1,6 @@
 let app = angular.module('parkingApp', ['ngSanitize']);
 
+const token = localStorage.getItem('token');
 // Combined service for Post and Comment related functions
 app.service('PostService', ['$http', function ($http) {
     this.getPostById = function (id_post) {
@@ -33,8 +34,14 @@ app.service('PostService', ['$http', function ($http) {
 
     // New function to create a comment
     this.createComment = function (commentDTO) {
-        return $http.post('http://localhost:8080/api/comments', commentDTO)
+        return $http.post('http://localhost:8080/api/comments', commentDTO, {
+            headers: {
+                'Authorization': `Bearer ${token}`  // Add token in the header
+            }
+        })
+
             .then(function (response) {
+                console.log("run");
                 return response.data;
             })
             .catch(function (error) {
@@ -79,13 +86,13 @@ app.service('PostService', ['$http', function ($http) {
                 throw error;
             });
     };
-    this.checkFavoriteStatus = function(userId, postId) {
+    this.checkFavoriteStatus = function (userId, postId) {
         return $http.get('http://localhost:8080/api/favorites/check', {
             params: { userId: userId, postId: postId }
         });
     };
 
-    this.toggleFavorite = function(userId, postId) {
+    this.toggleFavorite = function (userId, postId) {
         return $http.post('http://localhost:8080/api/favorites/toggle', null, {
             params: { userId: userId, postId: postId }
         });
