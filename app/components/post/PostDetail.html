@@ -10,7 +10,8 @@
     <meta property="og:image:alt" content="Logo of Your Site" />
     <meta property="og:url" content="Google.com" />
     <meta property="og:type" content="website" />
-    <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822662/4_jhd3xb.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822662/4_jhd3xb.png">
     <title>PFR - Cho thuê chỗ để xe</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,8 +28,8 @@
         <div class="container">
             <!-- Clickable logo with resized image -->
             <a href="Post.html">
-                <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730823121/2__1_-removebg-preview_cfjj2h.png" 
-                     alt="Logo" class="logo-image" style="height:auto; width:250px">
+                <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730823121/2__1_-removebg-preview_cfjj2h.png"
+                    alt="Logo" class="logo-image" style="height:auto; width:250px">
             </a>
             <!-- Toggle button for offcanvas menu -->
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -65,7 +66,7 @@
                 </div>
             </div>
         </div>
-        
+
     </nav>
     <div class="container flex-fill">
 
@@ -243,7 +244,6 @@
 
         </div>
 
-
         <div class="row col-sm-8 align-items-center mt-3 mb-5 justify-content-around">
 
             <!-- Share function -->
@@ -302,7 +302,8 @@
 
                     <div id="favoriteToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="toast-header">
-                            <img src="..." class="rounded me-2" alt="...">
+                            <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822083/1_au4rfg.jpg"
+                                style="height:auto; width:50px" class="rounded me-2" alt="logo">
                             <strong class="me-auto">Thông báo</strong>
                             <!-- <small>11 mins ago</small> -->
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -385,7 +386,7 @@
                                     </div>
                                     <small class="text-muted">{{ formatTimeAgo(comment.createdAt) }}</small>
                                     <a ng-click="openDeleteModal(comment.commentId)"
-                                        ng-if="comment.user === currentUserId" style="cursor: pointer;"> Xóa</a>
+                                        ng-if="comment.user === userId" style="cursor: pointer;"> Xóa</a>
                                     <!-- Modal Xác nhận xóa bình luận -->
                                     <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog"
                                         aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
@@ -426,7 +427,7 @@
                 <!-- Comment Form with Character Limit -->
                 <div class="mb-3">
                     <div class="card-body">
-                        <form class="d-flex" ng-submit="submitComment()">
+                        <form class="d-flex" ng-submit="checkLoginBeforeSubmit()">
                             <div class="flex-grow-1 me-2">
                                 <input ng-model="newComment.commentContent" class="form-control"
                                     placeholder="Viết bình luận..." rows="1" maxlength="250" required></input>
@@ -435,7 +436,30 @@
                                 <i class="fa-regular fa-paper-plane"></i> Gửi
                             </button>
                         </form>
-                        <small class="text-muted">{{ 250 - newComment.commentContent.length }} ký tự còn lại</small>
+                        <small class="text-muted">{{ 250 - (newComment.commentContent || '').length }} ký tự còn lại</small>
+                    </div>
+
+                    <!-- Modal for login prompt -->
+                    <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="loginPromptModalLabel">Login Required</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Bạn cần phải đăng nhập mới được bình luận. Đi tới trang đăng nhập chứ ?
+                                </div>
+                                <div class="modal-footer">
+                                    
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                                    <button type="button" class="btn btn-primary"
+                                    ng-click="redirectToLogin()">Có</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

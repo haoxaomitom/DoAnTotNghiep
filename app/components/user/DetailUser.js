@@ -57,7 +57,7 @@ app.controller('detailUserController', function ($scope, $http, $window) {
 
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
-    if (username && token) {
+    if (token) {
         $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
             headers: {
                 'Authorization': `Bearer ${token}` // Gửi token trong header

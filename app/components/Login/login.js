@@ -28,7 +28,7 @@ app.controller('loginController', function ($scope, $http, $window) {
                         $window.location.href = redirectUrl;
                     } else {
                         // Mặc định 
-                        $window.location.href = '/app/components/post/home.html';
+                        $window.location.href = '/app/components/post/post.html';
                     }
                 } else {
                     $scope.message = response.data.message;
