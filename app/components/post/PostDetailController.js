@@ -1,27 +1,31 @@
-app.controller('PostController', ['$scope', '$location','$sce', 'PostService', 'ItemService', function ($scope, $location, $sce, PostService, ItemService) {
+app.controller('PostController', ['$scope', '$location', '$sce','$window', 'PostService', 'ItemService', function ($scope, $location, $sce, $window, PostService, ItemService) {
     $scope.post = {};
     $scope.user = {};
+    $scope.relatedPosts = [];
+    $scope.comments = [];
     $scope.errorMessage = '';
     $scope.showPhone = false;
-    $scope.relatedPosts = [];
+    $scope.commentsPage = 0;
+    $scope.commentsSize = 5;
+    $scope.totalCommentsPages = 0;
     $scope.currentPage = 0;
     $scope.pageSize = 5;
     $scope.totalPagesCount = 0;
     $scope.loading = false;
-
-    $scope.totalCommentsPages = 0;
-
-    $scope.commentsPage = 0;
-    $scope.commentsSize = 5;
-    $scope.comments = [];
-
-
-    // Assign a user ID for testing
-    $scope.currentUserId = 1;
+    $scope.isFavorite = false;
+    $scope.isLiked = false;
+    // $scope.userId = 1;
+    $scope.toastMessage = '';
+    // $scope.currentUserId = 1;
 
     // Extract post ID from URL
     const params = new URLSearchParams(window.location.search);
     const id_post = params.get('id');
+
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        $scope.userId = parseInt(userId, 10); // Gán vào $scope để sử dụng trong HTML
+    }
     console.log('Extracted id_post:', id_post);
 
     // Function to get the post by ID
@@ -34,7 +38,7 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
                 $scope.loading = false;
                 $scope.map = {
                     src: $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?key=AIzaSyDaqWzB_IIAlUg3Iwp8yFfgjIIFhhMF0IQ&language=vi&q=" + $scope.post.latitude + "," + $scope.post.longitude)
-                };            
+                };
                 if ($scope.post.districtName) {
                     $scope.getPostsByDistrict();
                 } else {
@@ -50,8 +54,6 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
             $scope.loading = false;  // Ensure loading is set to false even if there’s an error
         });
     };
-  
-
 
     // Hàm lấy bài viết liên quan theo quận
     $scope.getPostsByDistrict = function () {
@@ -70,8 +72,6 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
                 });
         }
     };
-
-
 
     // Go to the next page
     $scope.nextPage = function () {
@@ -106,7 +106,7 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
 
     // Initialize the newComment object
     $scope.newComment = {
-        user: $scope.currentUserId, // Use the assigned user ID
+        user: userId, // Use the assigned user ID
         post: id_post, // Use the extracted post ID
         commentContent: '' // Initialize with an empty string
     };
@@ -145,6 +145,24 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
         }
     };
 
+    $scope.checkLoginBeforeSubmit = function () {
+        const isLoggedIn = localStorage.getItem("token") && localStorage.getItem("userId");
+        if (!isLoggedIn) {
+            // Show modal if not logged in
+            $('#loginPromptModal').modal('show');
+        } else {
+            // If logged in, proceed with submitting the comment
+            $scope.submitComment();
+        }
+    };
+
+    $scope.redirectToLogin = function () {
+        // Hide modal and redirect to login page
+        $('#loginPromptModal').modal('hide');
+        localStorage.setItem('redirectUrl', $window.location.href);
+        $window.location.href = 'http://127.0.0.1:5500/app/components/Login/LoginAndRegister.html';
+    };
+
     // Function to create a comment
     $scope.submitComment = function () {
         PostService.createComment($scope.newComment).then(function (createdComment) {
@@ -160,16 +178,12 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
         });
     };
 
-
     // Delete comment
     $scope.deleteComment = function (commentId) {
-        PostService.deleteComment(commentId, $scope.currentUserId)
+        PostService.deleteComment(commentId, userId)
             .then(function () {
-                // Remove the comment from the UI
                 $scope.comments = $scope.comments.filter(comment => comment.commentId !== commentId);
-                // Close the modal
-                $('#deleteCommentModal').modal('hide');
-                // Show feedback to the user
+                $('#deleteCommentModal').modal('hide'); // Close the modal after deletion
                 alert("Bình luận đã được xóa!");
             })
             .catch(function (error) {
@@ -177,7 +191,6 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
                 alert("Đã xảy ra lỗi khi xóa bình luận.");
             });
     };
-
 
     $scope.commentIdToDelete = null;
 
@@ -190,18 +203,19 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
     };
 
     $scope.openDeleteModal = function (commentId) {
-        // Lưu ID bình luận vào biến
+        // Save comment ID to delete
         $scope.commentIdToDelete = commentId;
-        // Mở modal
+        // Show delete confirmation modal
         $('#deleteCommentModal').modal('show');
     };
+    
 
     $scope.shareOnFacebook = function (postId) {
         const url = `http://127.0.0.1:5500/app/components/post/PostDetail.html?id=${postId}`;
         const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         window.open(facebookShareURL, '_blank', 'width=600,height=400');
     };
-    
+
     $scope.copyLink = function () {
         // Lấy URL hiện tại
         const url = $location.absUrl();
@@ -240,7 +254,6 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
         }
     };
 
-
     $scope.isOtherReason = false;
 
     $scope.checkReportReason = function () {
@@ -257,7 +270,7 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
                 reportType: reportReason,
                 reportContent: reportDetails,
                 post: id_post, // Assuming you have the post ID available
-                user: $scope.currentUserId // Assuming you have the current user ID available
+                user: userId // Assuming you have the current user ID available
             };
 
             // Call your API service to submit the report
@@ -276,32 +289,42 @@ app.controller('PostController', ['$scope', '$location','$sce', 'PostService', '
         }
     };
 
+    // Kiểm tra trạng thái yêu thích khi tải trang
+    $scope.checkFavoriteStatus = function () {
+        PostService.checkFavoriteStatus(userId, id_post)
+            .then(function (response) {
+                $scope.isFavorite = response.data; // true nếu đã thích, false nếu chưa
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi kiểm tra trạng thái yêu thích:", error);
+            });
+    };
 
+    // Gọi API kiểm tra trạng thái yêu thích khi trang được tải
+    $scope.checkFavoriteStatus();
+
+     // Show success toast
+     $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('favoriteToast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
+
+    // Toggle favorite status
+    $scope.toggleFavorite = function () {
+        PostService.toggleFavorite(userId, id_post)
+            .then(function (response) {
+                $scope.isFavorite = response.data.isFavorite;
+                const actionMessage = $scope.isFavorite ? 'Đã lưu bài đăng' : 'Đã hủy lưu bài đăng';
+                $scope.showToast(actionMessage);
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi thay đổi trạng thái yêu thích:", error);
+            });
+    };
+    
     $scope.getPostById(id_post);
     $scope.loadComments();
     $scope.generateQRCode();
-
-    // Call Google Map when the data is ready
-    // google.charts.load("current", {
-    //     "packages": ["map"],
-    //     "mapsApiKey": "AIzaSyDaqWzB_IIAlUg3Iwp8yFfgjIIFhhMF0IQ"
-    // });
-
-    // google.charts.setOnLoadCallback(function() {
-    //     drawChart($scope.post.latitude, $scope.post.longitude, $scope.post.parkingName);
-    // });
-
-    // // Function to draw the chart
-    // function drawChart(lat, long, name) {
-    //     var data = google.visualization.arrayToDataTable([
-    //         ['Lat', 'Long', 'Name'],
-    //         [lat, long, name]
-    //     ]);
-
-    //     var map = new google.visualization.Map(document.getElementById('map_div'));
-    //     map.draw(data, {
-    //         showTooltip: true,
-    //         showInfoWindow: true
-    //     });
-    // }
 }]);

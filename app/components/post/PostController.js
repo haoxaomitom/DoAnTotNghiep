@@ -2,7 +2,6 @@ let app = angular.module('parkingApp', []);
 
 app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
 
-// app.controller('PostController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
     $scope.loading = false;
     $scope.posts = [];
     $scope.searchTerm = '';
@@ -12,6 +11,40 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     $scope.totalPagesCount = 0; // Total pages returned from the API
     $scope.notFoundMessage = '';
     $scope.sortPrice = '';
+    $scope.isLoggedIn = false;
+    $scope.user = {};
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+
+    // Kiểm tra trạng thái đăng nhập khi khởi tạo controller
+    $scope.checkLoginStatus = function () {
+        if (token) {
+            $scope.isLoggedIn = true;
+            // Lấy thông tin người dùng từ API (giả sử có API lấy thông tin người dùng)
+            $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }).then(function (response) {
+                $scope.user = response.data;
+            }).catch(function (error) {
+                console.error('Error fetching user data:', error);
+            });
+        } else {
+            $scope.isLoggedIn = false;
+        }
+    };
+
+    // Phương thức đăng xuất
+    $scope.logout = function () {
+        // Xóa token và userId trong localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        // Đổi trạng thái đăng nhập
+        $scope.isLoggedIn = false;
+        $scope.user = {};
+        // Chuyển hướng về trang đăng nhập
+        $location.path('/app/components/Login/LoginAndRegister.html');
+    };
 
     // Fetch posts with pagination
     $scope.getPosts = function () {
@@ -29,7 +62,7 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             });
         }
     };
-    
+
     // Go to the next page
     $scope.nextPage = function () {
         if ($scope.currentPage < $scope.totalPagesCount - 1) {
@@ -138,7 +171,7 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             console.error('Error fetching sorted posts:', error);
         });
     };
-    
+
     $scope.searchPostsByVehicleType = function () {
         $scope.selectedDistrict = "";
         $scope.sortPrice = "";
@@ -184,7 +217,9 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         return Math.floor(timeDiff / 86400) + " ngày trước";
     };
 
+    $scope.checkLoginStatus();
     $scope.getPosts();
     $scope.getProvinces();
     $scope.loadDistrictPostCounts();
+
 }]);
