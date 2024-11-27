@@ -30,16 +30,20 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             templateUrl: 'app/components/user/YourPost.html',
             controller: 'PostsController'
         })
+        .when('/user/change-password', {
+        templateUrl: 'app/components/user/ChangePassword.html',
+        controller: 'ChangePasswordController'
+    })
 
-        //Payment
-        .when('/payment', {
-            templateUrl: 'app/components/payment/VNPay.html',
-            controller: 'PaymentController'
-        })
+    //Payment
+    .when('/payment', {
+        templateUrl: 'app/components/payment/VNPay.html',
+        controller: 'PaymentController'
+    })
 
-        .otherwise({
-            redirectTo: '/home'
-        });
+    .otherwise({
+        redirectTo: '/home'
+    });
 
-    $locationProvider.html5Mode(true);
+$locationProvider.html5Mode(true);
 }]);
