@@ -5,159 +5,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link href="/assets/css/DetailUser.css">
 </head>
 
-<body ng-app="parkingApp" ng-controller="detailUserController">
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-4">
-                <div class="profile-sidebar rounded border p-3">
-                    <div class="row">
-                        <div class="col-sm-3 avatar">
-                            <label for="fileInput">
-                                <img ng-src="{{ avatar ? avatar : 'https://via.placeholder.com/100' }}"
-                                    class="rounded-circle" alt="User Avatar" style="max-width: 100px; cursor: pointer;">
-                            </label>
-                            <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="angular.element(this).scope().setAvatarFile(this.files[0]); 
-                                angular.element(this).scope().uploadAvatar();">
-                        </div>
+<body ng-controller="detailUserController">
 
-                        <div class=" col-sm-9 pt-4">
-                            <h4 class="text-center">{{fullName}}</h4>
-                        </div>
-                    </div>
-                    <ul class="list-unstyled text-center">
-                        <li class="mb-4 mt-4"><a href="YourPost.html">Bài đăng của bạn</a></li>
-                        <li class="mb-4 mt-4"><a href="favoritePost.html">Bãi đỗ yêu thích</a></li>
-                        <li class="mb-4 mt-4"><a href="#">Thông tin cá nhân</a></li>
-                        <li class="mb-4 mt-4"><a href="#">Xác thực tài khoản</a></li>
-                        <li class="mb-4 mt-4"><a ng-click="logout()">Đăng xuất</a></li>
-                    </ul>
+    <!-- Form -->
+    <div class="profile-form">
+        <form ng-submit="update()">
+            <div class="mb-3 row">
+                <div class="col-sm-6"><label for="name" class="form-label">Họ</label>
+                    <input type="text" class="form-control rounded" id="lastName" placeholder="Họ" ng-model="lastName">
+                </div>
+                <div class="col-sm-6"><label for="name" class="form-label">Tên</label>
+                    <input type="text" class="form-control rounded" id="firstName" placeholder="Tên"
+                        ng-model="firstName">
                 </div>
             </div>
+            <div class="mb-3 row">
+                <div class="col-sm-6">
+                    <label for="name" class="form-label">Giới tính</label>
+                    <br>
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="Nam" ng-model="gender"
+                        {{gender=="Nam" ? 'checked' :''}}>
+                    <label for="male" style="margin-right: 50px;">Nam</label>
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="Nữ" ng-model="gender"
+                        {{gender=="Nữ" ? 'checked' :''}}>
+                    <label for="female">Nữ</label>
+                </div>
+                <div class="col-sm-6">
+                    <label for="name" class="form-label">Ngày sinh</label>
+                    <input type="text" class="form-control rounded" id="name" placeholder="dd/MM/yyyy"
+                        ng-model="dateOfBirth">
+                </div>
 
-            <!-- Form -->
-            <div class="col-md-8 border rounded p-4">
-                <div class="profile-form">
-                    <form ng-submit="update()">
-                        <div class="mb-3 row">
-                            <div class="col-sm-6"><label for="name" class="form-label">Họ</label>
-                                <input type="text" class="form-control rounded" id="lastName" placeholder="Họ"
-                                    ng-model="lastName">
-                            </div>
-                            <div class="col-sm-6"><label for="name" class="form-label">Tên</label>
-                                <input type="text" class="form-control rounded" id="firstName" placeholder="Tên"
-                                    ng-model="firstName">
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-6">
-                                <label for="name" class="form-label">Giới tính</label>
-                                <br>
-                                <input class="form-check-input" type="radio" name="gender" id="male" value="Nam"
-                                    ng-model="gender" {{gender=="Nam" ? 'checked' :''}}>
-                                <label for="male" style="margin-right: 50px;">Nam</label>
-                                <input class="form-check-input" type="radio" name="gender" id="female" value="Nữ"
-                                    ng-model="gender" {{gender=="Nữ" ? 'checked' :''}}>
-                                <label for="female">Nữ</label>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="name" class="form-label">Ngày sinh</label>
-                                <input type="text" class="form-control rounded" id="name" placeholder="dd/MM/yyyy"
-                                    ng-model="dateOfBirth">
-                            </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-6">
+                    <label for="phone" class="form-label">Thành phố/Tỉnh</label>
+                    <input type="text" class="form-control rounded" ng-model="inputProvince"
+                        ng-keyup="searchSuggestions(inputProvince)" placeholder="Nhập tên tỉnh/thành phố...">
+                    <section class="list-group" ng-if="suggestions.length">
+                        <option class="list-group-item" ng-repeat="suggestion in suggestions"
+                            ng-click="selectProvince(suggestion)">
+                            {{ suggestion.Name }}
+                        </option>
+                    </section>
+                </div>
+                <div class="col-sm-6">
+                    <label for="phone" class="form-label">Quận/Huyện</label>
+                    <select id="district" class="form-select" ng-model="selectedDistrict"
+                        ng-options="district as district.Name for district in selectedProvince.Districts"
+                        ng-change="onDistrictChange()" ng-disabled="!selectedProvince">
+                        <option value="">Chọn Quận/Huyện</option>
+                    </select>
+                </div>
 
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-6">
-                                <label for="phone" class="form-label">Thành phố/Tỉnh</label>
-                                <input type="text" class="form-control rounded" ng-model="inputProvince"
-                                    ng-keyup="searchSuggestions(inputProvince)"
-                                    placeholder="Nhập tên tỉnh/thành phố...">
-                                <section class="list-group" ng-if="suggestions.length">
-                                    <option class="list-group-item" ng-repeat="suggestion in suggestions"
-                                        ng-click="selectProvince(suggestion)">
-                                        {{ suggestion.Name }}
-                                    </option>
-                                </section>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="phone" class="form-label">Quận/Huyện</label>
-                                <select id="district" class="form-select" ng-model="selectedDistrict"
-                                    ng-options="district as district.Name for district in selectedProvince.Districts"
-                                    ng-change="onDistrictChange()" ng-disabled="!selectedProvince">
-                                    <option value="">Chọn Quận/Huyện</option>
-                                </select>
-                            </div>
-
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-6">
-                                <label for="phone" class="form-label">Phường/Thị trấn/Xã</label>
-                                <select id="ward" class="form-select" ng-model="selectedWard"
-                                    ng-options="ward as ward.Name for ward in selectedDistrict.Wards"
-                                    ng-disabled="!selectedDistrict">
-                                    <option value="">Chọn Phường/Xã</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="phone" class="form-label">Tên đường</label>
-                                <input type="text" class="form-control rounded" id="phone" placeholder="">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control rounded" id="phone" placeholder=""
-                                ng-model="phoneNumber">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <div class="input-group">
-                                <input type="email" class="form-control rounded-start" id="email" placeholder="Email"
-                                    ng-model="email">
-                                <button class="btn btn-outline-secondary rounded-end" type="button"
-                                    id="confirm-email-button">Xác nhận email</button>
-                            </div>
-                        </div>
-                        <button type="submit" ng-click="uploadAvatar()" class="btn btn-primary rounded-pill">Cập
-                            nhật</button>
-                    </form>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-6">
+                    <label for="phone" class="form-label">Phường/Thị trấn/Xã</label>
+                    <select id="ward" class="form-select" ng-model="selectedWard"
+                        ng-options="ward as ward.Name for ward in selectedDistrict.Wards"
+                        ng-disabled="!selectedDistrict">
+                        <option value="">Chọn Phường/Xã</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <label for="phone" class="form-label">Tên đường</label>
+                    <input type="text" class="form-control rounded" id="phone" placeholder="">
                 </div>
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control rounded" id="phone" placeholder="" ng-model="phoneNumber">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                    <input type="email" class="form-control rounded-start" id="email" placeholder="Email"
+                        ng-model="email">
+                    <button class="btn btn-outline-secondary rounded-end" type="button" id="confirm-email-button">Xác
+                        nhận email</button>
+                </div>
+            </div>
+            <button type="submit" ng-click="uploadAvatar()" class="btn btn-primary rounded-pill">Cập
+                nhật</button>
+        </form>
     </div>
-    <footer class="bg-dark text-light py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center mb-3">
-                    <h5 class="mb-2">Parking Lot for Rent</h5>
-                    <p class="mb-0">2024 PFR &copy; All Rights Reserved</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <a href="#" class="text-light mx-2">Privacy Policy</a>
-                    <a href="#" class="text-light mx-2">Terms of Service</a>
-                    <a href="#" class="text-light mx-2">Contact Us</a>
-                </div>
-            </div>
-            <!-- <div class="row mt-3">
-                <div class="col text-center">
-                    <a href="#" class="text-light mx-2"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-light mx-2"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-light mx-2"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div> -->
-        </div>
-    </footer>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
-<script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
-<script src="DetailUser.js"></script>
+
 
 </html>

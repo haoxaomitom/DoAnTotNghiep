@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="yourPostsApp">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Posts</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/DetailUser.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://kit.fontawesome.com/5c73425aee.js" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="/assets/css/YourPost.css"> -->
+    <link rel="stylesheet" href="/assets/css/home.css">
+    <base href="/user/your-post">
 </head>
-<body ng-controller="PostsController">
-    <div class="container mt-5">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-4">
-                <div class="profile-sidebar rounded border p-3">
-                    <div class="row">
-                        <div class="col-sm-3 avatar">
-                            <img src="https://via.placeholder.com/100" class="rounded-circle" alt="User Avatar">
-                        </div>
-                        <div class="col-sm-9 pt-4">
-                            <h4 class="text-center">Họ và tên</h4>
-                        </div>
-                    </div>
-                    <ul class="list-unstyled text-center">
-                        <li class="mb-4 mt-4"><a href="YourPost.html">Bài đăng của bạn</a></li>
-                        <li class="mb-4 mt-4"><a href="favoritePost.html">Bãi đỗ yêu thích</a></li>
-                        <li class="mb-4 mt-4"><a href="#">Thông tin cá nhân</a></li>
-                        <li class="mb-4 mt-4"><a href="#">Xác thực tài khoản</a></li>
-                        <li class="mb-4 mt-4"><a href="#">Đăng xuất</a></li>
-                    </ul>
-                </div>
-            </div>
 
-            <!-- Posts Section -->
-            <div class="col-md-8 border rounded p-4">
-                <h3>Bài đăng của bạn</h3>
+<body ng-controller="PostsController">
+
+    <div class="container mt-4">
+        <h3 class="mb-4">Quản lý bài đăng</h3>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs nav_underline" id="postTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="active-posts-tab" data-bs-toggle="tab"
+                    data-bs-target="#active-posts" type="button" role="tab" aria-controls="active-posts"
+                    aria-selected="true">
+                    Bài đăng đang hoạt động
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pending-posts-tab" data-bs-toggle="tab" data-bs-target="#pending-posts"
+                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false">
+                    Bài đăng chờ duyệt
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cancelled-posts-tab" data-bs-toggle="tab" data-bs-target="#cancelled-posts"
+                    type="button" role="tab" aria-controls="cancelled-posts" aria-selected="false">
+                    Bài đăng bị hủy
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-4">
+            <!-- Active Posts -->
+            <div class="tab-pane fade show active" id="active-posts" role="tabpanel" aria-labelledby="active-posts-tab">
                 <div ng-if="loading" class="text-center">Loading posts...</div>
-                <div ng-if="!loading && posts.length === 0" class="text-center">No posts found.</div>
-                
-                <div class="card mb-3 post-item" ng-repeat="post in posts" ng-if="!loading">
-                    <a ng-href="/app/components/post/PostDetail.html?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                <div ng-if="!loading && activePosts.length === 0" class="text-center">Không có bài đăng đang hoạt động.
+                </div>
+                <div ng-repeat="post in activePosts" class="card mb-3 post-item">
+                    <!-- Reuse your post HTML -->
+                    <!-- Nội dung bài đăng của bạn -->
+                    <a ng-href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <div class="d-flex align-items-center justify-content-center" style="height: 100%; background: #f8f9fa;">
-                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start" alt="Images" />
+                                <div class="d-flex align-items-center justify-content-center"
+                                    style="height: 100%; background: #f8f9fa;">
+                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                        alt="Images" />
                                 </div>
                             </div>
                             <div class="col-md-8 d-flex flex-column">
@@ -57,60 +67,131 @@
                                             {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
                                         </h7>
                                         <h4 class="card-text text-danger">
-                                            {{post.price + " " + post.priceUnit}}
+                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
                                         </h4>
-                                        <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                            {{vehicleType.vehicleTypeName}}
-                                            <span ng-if="!$last"> - </span> <!-- Optional separator between items -->
-                                        </span>
                                     </div>
                                     <div class="card-footer d-flex justify-content-between mt-auto">
-                                        <p class="card-text username font-weight-bold mb-0">
-                                            
-                                            <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                        </p>
-                                        <p class="card-text text-muted mb-0">
-                                            <i class="fa-regular fa-comment"></i> {{post.commentCount}}
-                                        </p>
+                                        <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
                                     </div>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                     </a>
+                    <!-- Các nút hành động -->
+
+
                     <div class="row mb-3 mt-3">
                         <div class="col text-center">
-                            <button class="btn btn-success me-2">Chỉnh sửa bài đăng</button>
-                            <a ng-href="/app/components/payment/VNPay.html?postId={{post.idPost}}" class="btn btn-primary">Đẩy top</a>
-                            <button class="btn btn-info">Xem lịch sử thanh toán</button>
-                            <button class="btn btn-danger">Xóa bài đăng</button>
+                            <a ng-href="#" class="btn btn-success me-2">Chỉnh sửa bài đăng</a>
+                            <a ng-href="/payment?postId={{post.idPost}}" class="btn btn-primary">Đẩy top</a>
+                            <a ng-href="#" class="btn btn-info">Xem lịch sử thanh toán</a>
+                            <a ng-href="#" class="btn btn-danger" ng-click="openDeleteModal(post.idPost)">Xóa bài
+                                đăng</a>
                         </div>
                     </div>
-                    
+
+                    <!-- Modal xác nhận xóa -->
+                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                        style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa bài đăng</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Bạn có chắc chắn muốn xóa bài đăng này không?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <button type="button" class="btn btn-danger" ng-click="confirmDelete()">Đồng
+                                        ý</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Pending Posts -->
+            <div class="tab-pane fade" id="pending-posts" role="tabpanel" aria-labelledby="pending-posts-tab">
+                <div ng-if="loading" class="text-center">Loading posts...</div>
+                <div ng-if="!loading && pendingPosts.length === 0" class="text-center">Không có bài đăng chờ duyệt.
+                </div>
+                <div ng-repeat="post in pendingPosts" class="card mb-3 post-item">
+                    <a ng-href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center justify-content-center"
+                                    style="height: 100%; background: #f8f9fa;">
+                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                        alt="Images" />
+                                </div>
+                            </div>
+                            <div class="col-md-8 d-flex flex-column">
+                                <div class="card-title mb-0">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h4 class="font-weight-bold">{{post.parkingName}}</h4>
+                                    </div>
+                                    <div class="card-body flex-grow-1">
+                                        <h7 class="card-text district d-flex mb-2">
+                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
+                                        </h7>
+                                        <h4 class="card-text text-danger">
+                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
+                                        </h4>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between mt-auto">
+                                        <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Cancelled Posts -->
+            <div class="tab-pane fade" id="cancelled-posts" role="tabpanel" aria-labelledby="cancelled-posts-tab">
+                <div ng-if="loading" class="text-center">Loading posts...</div>
+                <div ng-if="!loading && cancelledPosts.length === 0" class="text-center">Không có bài đăng bị hủy.</div>
+                <div ng-repeat="post in cancelledPosts" class="card mb-3 post-item">
+                    <a ng-href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center justify-content-center"
+                                    style="height: 100%; background: #f8f9fa;">
+                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                        alt="Images" />
+                                </div>
+                            </div>
+                            <div class="col-md-8 d-flex flex-column">
+                                <div class="card-title mb-0">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h4 class="font-weight-bold">{{post.parkingName}}</h4>
+                                    </div>
+                                    <div class="card-body flex-grow-1">
+                                        <h7 class="card-text district d-flex mb-2">
+                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
+                                        </h7>
+                                        <h4 class="card-text text-danger">
+                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
+                                        </h4>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between mt-auto">
+                                        <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <footer class="bg-dark text-light py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center mb-3">
-                    <h5 class="mb-2">Parking Lot for Rent</h5>
-                    <p class="mb-0">2024 PFR &copy; All Rights Reserved</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
-                    <a href="#" class="text-light mx-2">Privacy Policy</a>
-                    <a href="#" class="text-light mx-2">Terms of Service</a>
-                    <a href="#" class="text-light mx-2">Contact Us</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
-    <script src="YourPostService.js"></script>
-    <script src="YourPostController.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

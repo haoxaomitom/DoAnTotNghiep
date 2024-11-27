@@ -1,20 +1,143 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" ng-app="ParkingApp">
 
 <head>
     <meta charset="UTF-8">
-    <title>Parking App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="PFR - Parking lot for Rent" />
+    <meta property="og:description" content="Bãi đỗ xe - Nơi tìm kiếm bãi đỗ lí tưởng" />
+    <meta property="og:image" content="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822083/1_au4rfg.jpg" />
+    <meta property="og:image:alt" content="Logo of Your Site" />
+    <meta property="og:url" content="http://127.0.0.1:5500/app/components/post/Post.html" />
+    <meta property="og:type" content="website" />
+
+    <title>PFR</title>
+
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822662/4_jhd3xb.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.8.3/angular-sanitize.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/5c73425aee.js" async crossorigin="anonymous"></script>
+    <!-- Application Scripts -->
+    <script src="/app/app.js"></script>
+
     <base href="/">
 </head>
 
-<body>
-    <div ng-view></div>
-    <script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/angular-route/angular-route.min.js"></script>
-    <script src="/app/app.js"></script>
-    <script src="/app/components/post/PostController.js"></script>
-    <script src="/app/components/post/PostService.js"></script>
+<body ng-controller="ParkingController">
+    <div ng-controller="detailUserController">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 border-bottom shadow-sm">
+            <div class="container">
+                <a href="/home">
+                    <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730823121/2__1_-removebg-preview_cfjj2h.png"
+                        alt="Logo" class="logo-image" style="height:auto; width:250px">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Offcanvas Menu -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav ms-auto">
+                            <!-- Link Đăng nhập/Đăng kí nếu người dùng chưa đăng nhập -->
+                            <li class="nav-item" ng-if="!isLoggedIn">
+                                <a class="nav-link text-dark" href="/app/components/Login/LoginAndRegister.html">Đăng nhập /
+                                    Đăng kí</a>
+                            </li>
+                            <!-- Dropdown người dùng khi đã đăng nhập -->
+                            <li class="nav-item dropdown" ng-if="isLoggedIn">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Xin chào {{ fullName }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/user/information"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a></li>
+                                    <li><a class="dropdown-item" href="/user/my-post"><i class="fa-solid fa-sheet-plastic"></i> Bài đăng của tôi</a></li>
+                                    <li><a class="dropdown-item" href="/user/save-post"><i class="fa-regular fa-bookmark"></i> Bài đăng đã lưu</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" ng-click="logout()"><i class="fa-solid fa-right-to-bracket"></i> Đăng xuất</a></li>
+                                </ul>
+                            </li>
+                            <!-- Nút Đăng tin -->
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-primary px-3" href="#">Đăng tin</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div ng-if="!showSidebar">
+        <!-- Hiển thị nội dung chính -->
+        <div ng-view></div>
+    </div>
+
+    <!-- Hiển thị nội dung trong form user -->
+    <div ng-if="showSidebar">
+
+        <div ng-include="'app/components/user/Sidebar.html'" ng-controller="detailUserController">
+        </div>
+
+
+    </div>
+
+
+
+
+    <footer class="bg-dark text-light py-4 mt-5 ">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center mb-3">
+                    <h5 class="mb-2">Parking Lot for Rent</h5>
+                    <p class="mb-0">2024 PFR &copy; All Rights Reserved</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <a href="#" class="text-light mx-2">Privacy Policy</a>
+                    <a href="#" class="text-light mx-2">Terms of Service</a>
+                    <a href="#" class="text-light mx-2">Contact Us</a>
+                </div>
+            </div>
+            <!-- <div class="row mt-3">
+                <div class="col text-center">
+                    <a href="#" class="text-light mx-2"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-light mx-2"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-light mx-2"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div> -->
+        </div>
+    </footer>
+    <!-- <script src="/app/components/Login/login.js" defer></script> -->
+
+    <script src="/app/components/user/DetailUser.js"></script>
+    <script src="/app/components/post/PostService.js" defer></script>
+    <script src="/app/components/post/PostController.js" defer></script>
+
 </body>
 
-</html> -->
+<script src="/app/components/post/PostDetailService.js" defer></script>
+<script src="/app/components/post/PostDetailController.js" defer></script>
+
+<script src="/app/components/user/FavoritePostService.js" defer></script>
+<script src="/app/components/user/FavoritePostController.js" defer></script>
+<script src="/app/components/user/YourPostService.js" defer></script>
+<script src="/app/components/user/YourPostController.js" defer></script>
+<script src="/app/components/payment/VNPayService.js" defer></script>
+<script src="/app/components/payment/VNPayController.js" defer></script>
+
+</html>

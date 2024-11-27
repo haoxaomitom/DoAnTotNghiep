@@ -1,8 +1,6 @@
 
 app.controller('CommentController', function ($scope, $window) {
 
-
-
     $scope.checkLoginBeforeSubmit = function () {
         const isLoggedIn = localStorage.getItem("token") && localStorage.getItem("userId");
         if (!isLoggedIn) {

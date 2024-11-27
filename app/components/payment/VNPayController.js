@@ -10,6 +10,7 @@ app.controller('PaymentController', function ($scope, $location, PaymentService,
     // Fetch prices from the database
     PaymentService.getPrices().then(function (response) {
         $scope.prices = response.data;
+        console.log(response.data);
         $scope.filteredPrices = $scope.prices; // Initialize with all prices
     });
 
@@ -56,7 +57,9 @@ app.controller('PaymentController', function ($scope, $location, PaymentService,
             .then(function (response) {
                 if (response && response.data && response.data.url) {
                     console.log("Payment URL:", response.data.url);
-                    $window.location.href = response.data.url; // Navigate to payment URL
+                    $window.open(response.data.url, '_blank');
+
+                    // $window.location.href = response.data.url; // Navigate to payment URL
                 } else {
                     console.log("Payment URL is undefined", response);
                 }

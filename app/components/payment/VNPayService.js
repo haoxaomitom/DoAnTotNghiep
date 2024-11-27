@@ -1,22 +1,25 @@
-var app = angular.module('paymentApp', []);
-
-
+// let app = angular.module('paymentApp', []);
+// const token = localStorage.getItem('token');
 app.service('PaymentService', function($http) {
     this.getPrices = function() {
-        return $http.get('http://localhost:8080/api/prices');
+        return $http.get('http://localhost:8080/api/prices', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
     };
 
-    this.createPayment = function(priceId, postId) {
+this.createPayment = function(priceId, postId) {
         if (postId == null || priceId == null) {
             console.error("postId or priceId is undefined. Please check your function call.");
-            // Return an empty promise to avoid 'undefined' errors
-            return Promise.resolve(); // or you can use $q.resolve() for compatibility
+            return Promise.resolve();
         }
         return $http({
             method: 'GET',
-            url: `http://127.0.0.1:8080/api/vnpay/payment/${priceId}/${postId}`
+            url: `http://127.0.0.1:8080/api/vnpay/payment/${priceId}/${postId}`,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
     };
-    
 });
-

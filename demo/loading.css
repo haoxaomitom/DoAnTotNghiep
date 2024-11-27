@@ -1,0 +1,7 @@
+div {
+    height: 150px;
+    width: 300px;
+    background: linear-gradient(-45deg, #eee 40%, #fafafa 50%, #eee 60%);
+    background-size: 300%;
+    background-position-x: 40%
+ }
