@@ -1,4 +1,4 @@
-app.controller('PostController', ['$scope', '$location', '$sce','$window', 'PostService', 'ItemService', function ($scope, $location, $sce, $window, PostService, ItemService) {
+app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'PostDetailService', 'ItemService', function ($scope, $location, $sce, $window, PostDetailService, ItemService) {
     $scope.post = {};
     $scope.user = {};
     $scope.relatedPosts = [];
@@ -14,9 +14,7 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
     $scope.loading = false;
     $scope.isFavorite = false;
     $scope.isLiked = false;
-    // $scope.userId = 1;
     $scope.toastMessage = '';
-    // $scope.currentUserId = 1;
 
     // Extract post ID from URL
     const params = new URLSearchParams(window.location.search);
@@ -24,14 +22,14 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
 
     const userId = localStorage.getItem('userId');
     if (userId) {
-        $scope.userId = parseInt(userId, 10); // Gán vào $scope để sử dụng trong HTML
+        $scope.userId = parseInt(userId, 10);
     }
     console.log('Extracted id_post:', id_post);
 
     // Function to get the post by ID
     $scope.getPostById = function (id_post) {
         $scope.loading = true;  // Set loading to true when fetching data
-        PostService.getPostById(id_post).then(function (data) {
+        PostDetailService.getPostById(id_post).then(function (data) {
             if (data) {
                 $scope.post = data;
                 $scope.user = data.user;
@@ -55,13 +53,27 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
         });
     };
 
+    $scope.isPostPromoted = function (topPostEnd) {
+        // Check if topPostEnd exists and is still valid
+        return topPostEnd && new Date(topPostEnd) > new Date();
+    };
+
+    // Function to format amount as Vietnamese currency
+    $scope.formatCurrency = function (amount) {
+        if (amount != null) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        return "0 VND";
+    };
+
     // Hàm lấy bài viết liên quan theo quận
     $scope.getPostsByDistrict = function () {
         if ($scope.post.districtName) {
-            ItemService.getPosts($scope.post.districtName, $scope.currentPage, $scope.pageSize)
+            PostDetailService.getPostsRelated($scope.post.districtName, $scope.currentPage, $scope.pageSize)
                 .then(function (response) {
                     if (response && response.content) {
-                        $scope.relatedPosts = response.content;
+                        // Lọc bài viết loại trừ bài viết hiện tại
+                        $scope.relatedPosts = response.content.filter(relatedPost => relatedPost.idPost !== $scope.post.idPost);
                         $scope.totalPagesCount = response.totalPages;
                     } else {
                         console.error('Unexpected response structure:', response);
@@ -72,6 +84,7 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
                 });
         }
     };
+    
 
     // Go to the next page
     $scope.nextPage = function () {
@@ -113,7 +126,7 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
 
     // Function to load comments by post ID
     $scope.loadComments = function () {
-        PostService.getCommentsByPostId(id_post, $scope.commentsPage, $scope.commentsSize)
+        PostDetailService.getCommentsByPostId(id_post, $scope.commentsPage, $scope.commentsSize)
             .then(function (response) { // Changed from data to response for clarity
                 if (response && Array.isArray(response.content)) {
                     // Nếu có bình luận mới, thêm chúng vào danh sách hiện tại
@@ -165,7 +178,7 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
 
     // Function to create a comment
     $scope.submitComment = function () {
-        PostService.createComment($scope.newComment).then(function (createdComment) {
+        PostDetailService.createComment($scope.newComment).then(function (createdComment) {
             if (createdComment) {
                 $scope.comments.push(createdComment); // Ensure createdComment has the correct structure
                 $scope.newComment.commentContent = ''; // Clear comment content
@@ -180,11 +193,10 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
 
     // Delete comment
     $scope.deleteComment = function (commentId) {
-        PostService.deleteComment(commentId, userId)
+        return PostDetailService.deleteComment(commentId, userId)  // Ensure it returns the promise
             .then(function () {
                 $scope.comments = $scope.comments.filter(comment => comment.commentId !== commentId);
                 $('#deleteCommentModal').modal('hide'); // Close the modal after deletion
-                alert("Bình luận đã được xóa!");
             })
             .catch(function (error) {
                 console.error('Error deleting comment:', error);
@@ -192,13 +204,15 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
             });
     };
 
+
     $scope.commentIdToDelete = null;
 
     $scope.confirmDeleteComment = function () {
-        // Gọi hàm deleteComment với ID bình luận đã lưu
         if ($scope.commentIdToDelete) {
-            $scope.deleteComment($scope.commentIdToDelete);
-            $scope.commentIdToDelete = null; // Reset ID sau khi xóa
+            $scope.deleteComment($scope.commentIdToDelete).then(function () {
+                $scope.commentIdToDelete = null; // Reset ID sau khi xóa
+                $scope.showToast('Bình luận đã được xóa thành công!');
+            });
         }
     };
 
@@ -208,29 +222,32 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
         // Show delete confirmation modal
         $('#deleteCommentModal').modal('show');
     };
-    
+
 
     $scope.shareOnFacebook = function (postId) {
-        const url = `http://127.0.0.1:5500/app/components/post/PostDetail.html?id=${postId}`;
+        // const url = `http://127.0.0.1:5500/app/components/post/PostDetail.html?id=${postId}`;
+        const url = $location.absUrl();
         const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         window.open(facebookShareURL, '_blank', 'width=600,height=400');
     };
 
     $scope.copyLink = function () {
-        // Lấy URL hiện tại
+        // Get the current URL
         const url = $location.absUrl();
 
-        // Sao chép vào clipboard
+        // Copy to clipboard
         navigator.clipboard.writeText(url)
             .then(() => {
-                // Hiện thông báo khi sao chép thành công
-                alert("Liên kết đã được sao chép!");
+                // Show a toast message on successful copy
+                $scope.showToast("Liên kết đã được sao chép!");
+                $scope.$apply(); // Apply scope changes manually if needed
             })
             .catch((error) => {
                 console.error("Không thể sao chép liên kết: ", error);
-                alert("Đã xảy ra lỗi khi sao chép liên kết.");
+                $scope.showToast("Đã xảy ra lỗi khi sao chép liên kết.");
             });
     };
+
 
     $scope.generateQRCode = function () {
         const url = $location.absUrl(); // Lấy URL hiện tại
@@ -254,6 +271,15 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
         }
     };
 
+    // $('#reportModal').on('shown.bs.modal', function () {
+    //     $scope.$apply(function () {
+    //         $scope.reportReason = 1; // Reset giá trị mặc định
+    //         $scope.reportDetails = '';
+    //         $scope.isOtherReason = false;
+    //     });
+    // });
+
+    
     $scope.isOtherReason = false;
 
     $scope.checkReportReason = function () {
@@ -262,69 +288,74 @@ app.controller('PostController', ['$scope', '$location', '$sce','$window', 'Post
 
     $scope.submitReport = function () {
         const reportReason = $scope.reportReason;
-        const reportDetails = $scope.reportDetails || ''; // Defaults to empty if not filled
+        const reportDetails = $scope.reportDetails || '';
 
         if (reportReason && (reportReason !== 'Khác' || reportDetails)) {
             // Create an object for the report
             const reportData = {
                 reportType: reportReason,
                 reportContent: reportDetails,
-                post: id_post, // Assuming you have the post ID available
-                user: userId // Assuming you have the current user ID available
+                post: id_post,
+                user: userId
             };
 
             // Call your API service to submit the report
-            PostService.submitReport(reportData).then(function (response) {
-                // Handle success (show a message, reset form, etc.)
-                alert('Báo cáo đã được gửi thành công!');
+            PostDetailService.submitReport(reportData).then(function (response) {
                 $('#reportModal').modal('hide'); // Close the modal
+                $scope.showToast('Báo cáo đã được gửi thành công!');
+
                 $scope.reportReason = '';
                 $scope.reportDetails = '';
             }).catch(function (error) {
                 console.error('Error submitting report:', error);
-                alert('Đã xảy ra lỗi khi gửi báo cáo.');
+                $scope.showToast('Đã xảy ra lỗi khi gửi báo cáo.');
             });
         } else {
-            alert('Vui lòng điền đầy đủ thông tin báo cáo.');
+            $scope.showToast('Vui lòng điền đầy đủ thông tin báo cáo.');
         }
     };
 
-    // Kiểm tra trạng thái yêu thích khi tải trang
+
+    // Fetch the initial favorite status when the page loads
     $scope.checkFavoriteStatus = function () {
-        PostService.checkFavoriteStatus(userId, id_post)
+        PostDetailService.checkFavoriteStatus(userId, id_post)
             .then(function (response) {
-                $scope.isFavorite = response.data; // true nếu đã thích, false nếu chưa
+                $scope.isFavorite = response.data.data || false; // Defaults to false if no data
             })
             .catch(function (error) {
                 console.error("Lỗi khi kiểm tra trạng thái yêu thích:", error);
+                $scope.isFavorite = false; // Default to false if there's an error
             });
-    };
-
-    // Gọi API kiểm tra trạng thái yêu thích khi trang được tải
-    $scope.checkFavoriteStatus();
-
-     // Show success toast
-     $scope.showToast = function (message) {
-        $scope.toastMessage = message;
-        const toastElement = document.getElementById('favoriteToast');
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
     };
 
     // Toggle favorite status
     $scope.toggleFavorite = function () {
-        PostService.toggleFavorite(userId, id_post)
+
+        PostDetailService.toggleFavorite(userId, id_post)
+
             .then(function (response) {
-                $scope.isFavorite = response.data.isFavorite;
+                $scope.isFavorite = response.data.data.isFavorite;
                 const actionMessage = $scope.isFavorite ? 'Đã lưu bài đăng' : 'Đã hủy lưu bài đăng';
                 $scope.showToast(actionMessage);
             })
             .catch(function (error) {
                 console.error("Lỗi khi thay đổi trạng thái yêu thích:", error);
+                $scope.showToast('Lỗi khi thay đổi trạng thái yêu thích');
             });
     };
-    
+
+
+    // Show success toast
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
+
+
     $scope.getPostById(id_post);
+    $scope.checkFavoriteStatus();
     $scope.loadComments();
     $scope.generateQRCode();
 }]);

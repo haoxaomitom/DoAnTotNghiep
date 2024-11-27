@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Date and Time Range</title>
+</head>
+<body>
+
+<h2>Chọn khoảng thời gian</h2>
+<label for="start">Bắt đầu:</label>
+<input type="datetime-local" id="start" name="start" required>
+<br><br>
+
+<label for="end">Kết thúc:</label>
+<input type="datetime-local" id="end" name="end" required>
+<br><br>
+
+<button onclick="showSelectedTime()">Hiển thị khoảng thời gian</button>
+
+<p id="timeRange"></p>
+
+<script>
+function showSelectedTime() {
+    const start = document.getElementById('start').value;
+    const end = document.getElementById('end').value;
+    
+    if (start && end) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        const startTime = `${startDate.getHours()}h ngày ${startDate.toLocaleDateString('vi-VN', options)}`;
+        const endTime = `${endDate.getHours()}h ngày ${endDate.toLocaleDateString('vi-VN', options)}`;
+
+        document.getElementById('timeRange').textContent = `Khoảng thời gian: từ ${startTime} - ${endTime}`;
+    } else {
+        document.getElementById('timeRange').textContent = "Vui lòng chọn cả hai ngày và giờ.";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,11 +1,10 @@
-let app = angular.module('parkingApp', []);
 
-app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, ItemService, LocationService, PostService) {
+
+app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, $location, ItemService, LocationService, PostService) {
 
     $scope.loading = false;
     $scope.posts = [];
     $scope.searchTerm = '';
-    $scope.selectedDistrict = null; // Add selectedDistrict for tracking selected district
     $scope.currentPage = 0; // Start from the first page
     $scope.pageSize = 5; // Number of posts per page
     $scope.totalPagesCount = 0; // Total pages returned from the API
@@ -19,13 +18,14 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
 
     // Kiểm tra trạng thái đăng nhập khi khởi tạo controller
     $scope.checkLoginStatus = function () {
-        if (token) {
+        if (token && username) {
             $scope.isLoggedIn = true;
-            // Lấy thông tin người dùng từ API (giả sử có API lấy thông tin người dùng)
             $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             }).then(function (response) {
-                $scope.user = response.data;
+                $scope.$applyAsync(() => {  // Ensures Angular detects the update
+                    $scope.user = response.data; // Save the user data in $scope.user
+                });
             }).catch(function (error) {
                 console.error('Error fetching user data:', error);
             });
@@ -34,24 +34,25 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         }
     };
 
+
     // Phương thức đăng xuất
     $scope.logout = function () {
         // Xóa token và userId trong localStorage
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
+        localStorage.removeItem('username');
         // Đổi trạng thái đăng nhập
         $scope.isLoggedIn = false;
         $scope.user = {};
         // Chuyển hướng về trang đăng nhập
-        $location.path('/app/components/Login/LoginAndRegister.html');
+        $location.path('/app/index.html');
     };
 
     // Fetch posts with pagination
     $scope.getPosts = function () {
         $scope.loading = true;
         if ($scope.sortPrice) {
-            $scope.sortPosts(); // Gọi hàm sortPosts
-            $scope.sortPosts(); // Gọi hàm sortPosts
+            $scope.sortPosts();
         } else {
             ItemService.getPosts($scope.currentPage, $scope.pageSize).then(function (response) {
                 $scope.posts = response.data.content;
@@ -62,6 +63,11 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
                 console.error('Error fetching posts:', error);
             });
         }
+    };
+
+    $scope.isPostPromoted = function (topPostEnd) {
+        // Check if topPostEnd exists and is still valid
+        return topPostEnd && new Date(topPostEnd) > new Date();
     };
 
     // Go to the next page
@@ -80,6 +86,22 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             $scope.getPosts();
             $scope.getPosts();
         }
+    };
+
+    // Function to format amount as Vietnamese currency
+    $scope.formatCurrency = function (amount) {
+        if (amount != null) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        return "0 VND";
+    };
+
+    // Function to format amount as Vietnamese currency
+    $scope.formatCurrency = function (amount) {
+        if (amount != null) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        return "0 VND";
     };
 
     // Fetch provinces and set default selections
@@ -139,8 +161,9 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
     };
 
     $scope.onDistrictChange = function () {
-        $scope.selectedVehicleType = "";
-        $scope.sortPrice = "";
+        $scope.selectedVehicleType = ""; // Reset dropdown loại xe
+        $scope.sortPrice = "";           // Reset dropdown sắp xếp
+    
         if ($scope.selectedDistrict && $scope.selectedDistrict.Name) {
             PostService.searchPosts($scope.selectedDistrict.Name, $scope.currentPage)
                 .then(function (response) {
@@ -162,6 +185,7 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             $scope.getPosts();
         }
     };
+    
 
     $scope.sortPosts = function () {
         $scope.loading = true;
@@ -175,9 +199,10 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         });
     };
 
-    $scope.searchPostsByVehicleType = function () {
-        $scope.selectedDistrict = "";
-        $scope.sortPrice = "";
+    $scope.onVehicleTypeChange = function () {
+        $scope.selectedDistrict = ""; // Reset dropdown quận/huyện
+        $scope.sortPrice = "";          // Reset dropdown sắp xếp
+    
         if ($scope.selectedVehicleType) {
             PostService.searchPostsByVehicleType($scope.selectedVehicleType, $scope.currentPage)
                 .then(function (response) {
@@ -199,12 +224,17 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
             $scope.getPosts();
         }
     };
+    
 
     // Sorting function triggered when the user selects a sort option
     $scope.onSortChange = function () {
-        $scope.currentPage = 0; // Reset to the first page when sorting
+        $scope.selectedDistrict = ""; // Reset dropdown quận/huyện
+        $scope.selectedVehicleType = ""; // Reset dropdown loại xe
+    
+        $scope.currentPage = 0; // Reset về trang đầu tiên
         $scope.getPosts();
     };
+    
 
     // Format time function
     $scope.formatTimeAgo = function (date) {
@@ -219,6 +249,11 @@ app.controller('ParkingController', ['$scope', '$http', 'ItemService', 'Location
         if (timeDiff < 86400) return Math.floor(timeDiff / 3600) + " giờ trước";
         return Math.floor(timeDiff / 86400) + " ngày trước";
     };
+
+    $scope.$on('$routeChangeSuccess', function () {
+        // Hiển thị sidebar cho các đường dẫn bắt đầu với '/user/'
+        $scope.showSidebar = $location.path().startsWith('/user/');
+    });
 
     $scope.checkLoginStatus();
     $scope.getPosts();

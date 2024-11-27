@@ -1,23 +1,45 @@
-// var app = angular.module('ParkingApp', ['ngRoute']);
+let app = angular.module('ParkingApp', ['ngRoute', 'ngSanitize']);
 
-// app.config(function($routeProvider, $locationProvider) {
-//     $routeProvider
-//         .when('/post', {  
-//             templateUrl: '/app/components/post/post.html',
-//             controller: 'PostController'
-//         })
-//         .when('/postDetail', {
-//             templateUrl: '/app/components/post/postDetail.html',
-//             controller: 'PostController'
-//         })
-//         .when('/payment/paymentSuccess', {
-//             templateUrl: '/app/components/payment/PaymentSuccess.html',
-//             controller: 'SuccessController'
-//         })
-//         .otherwise({
-//             redirectTo: '/post'
-//         });
+app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    $routeProvider
+        .when('/home', {
+            templateUrl: 'app/components/post/Post.html',
+            controller: 'ParkingController'
+        })
+        .when('/post-detail', {
+            templateUrl: 'app/components/post/PostDetail.html',
+            controller: 'PostController'
+        })
 
-//     // Enable HTML5 mode
-//     $locationProvider.html5Mode(true);
-// });
+        //Login
+        .when('/Login-and-Register', {
+            templateUrl: 'app/components/Login/LoginAndRegister.html',
+            controller: 'LoginController'
+        })
+
+        // User
+        .when('/user/save-post', {
+            templateUrl: 'app/components/user/FavoritePost.html',
+            controller: 'FavoritesController'
+        })
+        .when('/user/information', {
+            templateUrl: 'app/components/user/DetailUser.html',
+            controller: 'detailUserController'
+        })
+        .when('/user/my-post', {
+            templateUrl: 'app/components/user/YourPost.html',
+            controller: 'PostsController'
+        })
+
+        //Payment
+        .when('/payment', {
+            templateUrl: 'app/components/payment/VNPay.html',
+            controller: 'PaymentController'
+        })
+
+        .otherwise({
+            redirectTo: '/home'
+        });
+
+    $locationProvider.html5Mode(true);
+}]);

@@ -1,4 +1,3 @@
-let app = angular.module('parkingApp', []);
 
 // Directive cho input file, dùng để gán file vào model
 app.directive("fileModel", ["$parse", function ($parse) {
@@ -17,6 +16,8 @@ app.directive("fileModel", ["$parse", function ($parse) {
     };
 }]);
 app.controller('detailUserController', function ($scope, $http, $window) {
+
+    console.log("Run user")
     // Lấy dữ liệu tỉnh thành từ GitHub
     $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
         .then(function (response) {
@@ -108,7 +109,6 @@ app.controller('detailUserController', function ($scope, $http, $window) {
                         }
                     }
 
-
                 } else {
                     console.log(response.data.message);
                 }
@@ -125,7 +125,7 @@ app.controller('detailUserController', function ($scope, $http, $window) {
 
         localStorage.clear();
         // Chuyển hướng đến trang chủ
-        $window.location.href = '/app/components/post/home.html';
+        $window.location.href = '/app/index.html';
     };
 
     // load avata

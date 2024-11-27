@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Từ Khóa (Tags) với Checkbox và Input</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 50px;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+        .tag {
+            background-color: #007BFF;
+            color: white;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+        }
+        .tag .close {
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .checkbox-container {
+            margin-top: 20px;
+        }
+        .checkbox-container label {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .manual-input {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .manual-input input {
+            font-size: 16px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thêm Từ Khóa (Tags)</h1>
+
+    <!-- Khu vực hiển thị thẻ -->
+    <div class="tag-container" id="tagContainer">
+        <!-- Thẻ sẽ được thêm vào đây -->
+    </div>
+
+    <!-- Danh sách checkbox -->
+    <div class="checkbox-container">
+        <label>
+            <input type="checkbox" class="tag-checkbox" value="HTML"> HTML
+        </label>
+        <label>
+            <input type="checkbox" class="tag-checkbox" value="CSS"> CSS
+        </label>
+        <label>
+            <input type="checkbox" class="tag-checkbox" value="JavaScript"> JavaScript
+        </label>
+        <label>
+            <input type="checkbox" class="tag-checkbox" value="Python"> Python
+        </label>
+        <label>
+            <input type="checkbox" class="tag-checkbox" value="Java"> Java
+        </label>
+    </div>
+
+    <!-- Ô nhập liệu -->
+    <div class="manual-input">
+        <input type="text" id="manualInput" placeholder="Nhập từ khóa...">
+        <button id="addTagButton">Thêm</button>
+    </div>
+
+    <script>
+        const tagContainer = document.getElementById('tagContainer');
+        const checkboxes = document.querySelectorAll('.tag-checkbox');
+        const manualInput = document.getElementById('manualInput');
+        const addTagButton = document.getElementById('addTagButton');
+
+        // Hàm thêm thẻ
+        function addTag(text) {
+            const tagText = text.trim();
+            if (tagText === '') return;
+
+            // Kiểm tra trùng lặp
+            const existingTags = Array.from(tagContainer.querySelectorAll('.tag')).map(tag => tag.textContent.trim());
+            if (existingTags.includes(tagText)) {
+                alert('Thẻ này đã tồn tại!');
+                return;
+            }
+
+            // Tạo thẻ mới
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.textContent = tagText;
+
+            // Nút xóa
+            const closeBtn = document.createElement('span');
+            closeBtn.className = 'close';
+            closeBtn.textContent = 'x';
+            closeBtn.addEventListener('click', () => {
+                tag.remove();
+
+                // Bỏ chọn checkbox liên quan nếu có
+                const relatedCheckbox = Array.from(checkboxes).find(checkbox => checkbox.value === tagText);
+                if (relatedCheckbox) {
+                    relatedCheckbox.checked = false;
+                }
+            });
+
+            tag.appendChild(closeBtn);
+            tagContainer.appendChild(tag);
+        }
+
+        // Xử lý khi chọn checkbox
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+                if (event.target.checked) {
+                    addTag(event.target.value);
+                } else {
+                    // Nếu bỏ chọn, xóa thẻ tương ứng
+                    const tagToRemove = Array.from(tagContainer.querySelectorAll('.tag')).find(tag => tag.textContent.includes(event.target.value));
+                    if (tagToRemove) {
+                        tagToRemove.remove();
+                    }
+                }
+            });
+        });
+
+        // Xử lý thêm từ khóa qua input
+        addTagButton.addEventListener('click', () => {
+            const tagText = manualInput.value;
+            addTag(tagText);
+            manualInput.value = ''; // Xóa nội dung sau khi thêm
+        });
+
+        // Hỗ trợ nhấn Enter để thêm thẻ
+        manualInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const tagText = manualInput.value;
+                addTag(tagText);
+                manualInput.value = ''; // Xóa nội dung sau khi thêm
+            }
+        });
+    </script>
+</body>
+</html>
