@@ -141,6 +141,15 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
                 } else {
                     $scope.notFoundMessage = ''; // Clear the not found message if results are found
                     $scope.posts = posts; // Update posts list with search results
+                const posts = response.data.content || []; // Get the content from the response
+
+                // Check if posts array is empty
+                if (posts.length === 0) {
+                    $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
+                    $scope.posts = []; // Clear posts if no data found
+                } else {
+                    $scope.notFoundMessage = ''; // Clear the not found message if results are found
+                    $scope.posts = posts; // Update posts list with search results
                     $scope.totalPagesCount = response.data.totalPages; // Update total pages
                 }
             })
@@ -148,9 +157,12 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
                 console.error('Error fetching posts:', error);
                 $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
                 $scope.posts = []; // Clear posts on error
+                $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
+                $scope.posts = []; // Clear posts on error
             });
     };
 
+    // Load the count of posts by district  
     // Load the count of posts by district  
     $scope.loadDistrictPostCounts = function () {
         PostService.getPostsCountByDistrict().then(function (response) {
@@ -210,15 +222,25 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
                     if (posts.length === 0) {
                         $scope.notFoundMessage = 'Không tìm thấy kết quả nào';  // Set message if no results
                         $scope.posts = [];
+                    const posts = response.data.content || [];
+                    if (posts.length === 0) {
+                        $scope.notFoundMessage = 'Không tìm thấy kết quả nào';  // Set message if no results
+                        $scope.posts = [];
                     } else {
                         $scope.notFoundMessage = '';  // Clear message if there are results
                         $scope.posts = posts;
+                        $scope.notFoundMessage = '';  // Clear message if there are results
+                        $scope.posts = posts;
                     }
+                    $scope.totalPagesCount = response.data.totalPages;
                     $scope.totalPagesCount = response.data.totalPages;
                 })
                 .catch(function (error) {
                     console.error('Error fetching posts:', error);
                 });
+        } else {
+            $scope.notFoundMessage = '';
+            $scope.getPosts();
         } else {
             $scope.notFoundMessage = '';
             $scope.getPosts();
@@ -255,6 +277,7 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
         $scope.showSidebar = $location.path().startsWith('/user/');
     });
 
+    $scope.checkLoginStatus();
     $scope.checkLoginStatus();
     $scope.getPosts();
     $scope.getProvinces();

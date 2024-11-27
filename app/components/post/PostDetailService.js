@@ -8,8 +8,10 @@ app.service('PostDetailService', ['$http', function ($http) {
     this.getPostById = function (id_post) {
         return $http.get('http://localhost:8080/api/posts/' + id_post)
             .then(function (response) {
+            .then(function (response) {
                 return response.data;
             })
+            .catch(function (error) {
             .catch(function (error) {
                 console.error('Error fetching post by ID:', error);
                 return null;
@@ -18,14 +20,17 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Existing function to get posts count by district
     this.getPostsCountByDistrict = function () {
+    this.getPostsCountByDistrict = function () {
         return $http.get('http://localhost:8080/api/posts/countByDistrict');
     };
 
     // Existing function to search posts
     this.searchPosts = function (searchTerm, selectedDistrictName, page) {
+    this.searchPosts = function (searchTerm, selectedDistrictName, page) {
         return $http({
             method: 'GET',
             url: 'http://localhost:8080/api/posts/search',
+            params: {
             params: {
                 searchTerm: searchTerm,
                 district: selectedDistrictName,
@@ -112,11 +117,14 @@ app.service('PostDetailService', ['$http', function ($http) {
         return $http.get('http://localhost:8080/api/posts/related', {
             params: {
                 districtName: districtName,
+                districtName: districtName,
                 page: page,
                 size: size
             }
         }).then(function (response) {
+        }).then(function (response) {
             return response.data;
+        }).catch(function (error) {
         }).catch(function (error) {
             console.error('Error fetching related posts:', error);
         });

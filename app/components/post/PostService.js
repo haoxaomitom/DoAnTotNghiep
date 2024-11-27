@@ -7,6 +7,8 @@ app.service('ItemService', function ($http) {
 // API for fetching location data
 app.service('LocationService', ['$http', function ($http) {
     this.getProvinces = function () {
+app.service('LocationService', ['$http', function ($http) {
+    this.getProvinces = function () {
         return $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
     };
 }]);
