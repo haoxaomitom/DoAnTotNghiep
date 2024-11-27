@@ -1,5 +1,21 @@
 let app = angular.module('parkingApp', []);
 
+// Directive cho input file, dùng để gán file vào model
+app.directive("fileModel", ["$parse", function ($parse) {
+    return {
+        restrict: "A",
+        link: function (scope, element, attrs) {
+            const model = $parse(attrs.fileModel);
+            const modelSetter = model.assign;
+
+            element.bind("change", function () {
+                scope.$apply(function () {
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        },
+    };
+}]);
 app.controller('detailUserController', function ($scope, $http, $window) {
     // Lấy dữ liệu tỉnh thành từ GitHub
     $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
@@ -57,6 +73,7 @@ app.controller('detailUserController', function ($scope, $http, $window) {
 
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
     if (username && token) {
         $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
             headers: {
@@ -74,6 +91,7 @@ app.controller('detailUserController', function ($scope, $http, $window) {
                     $scope.email = data.email;
                     $scope.fullName = data.lastName + ' ' + data.firstName;
                     $scope.avatar = data.avatar;
+                    $scope.isVerified = data.verified ? "Xác thực Email" : "Đã xác thực"
                     // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
 
                     $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
@@ -110,60 +128,56 @@ app.controller('detailUserController', function ($scope, $http, $window) {
         $window.location.href = '/app/components/post/home.html';
     };
 
-
-
     // load avata
-    $scope.uploadImage = function (files) {
-        if (files && files.length) {
-            const file = files[0]; // Chọn tệp đầu tiên
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                $scope.$apply(function () {
-                    $scope.avatar = e.target.result; // Lưu trữ URL của ảnh đại diện
-                    console.log("change avatar");
-
-                });
-            };
-
-            reader.readAsDataURL(file); // Đọc tệp như một URL dữ liệu
-        }
-    };
-    $scope.setAvatarFile = function (file) {
-        $scope.avatarFile = file;
-    };
     $scope.uploadAvatar = function () {
-        const file = $scope.avatarFile;
-        if (!file) {
-            alert("Please select a file to upload.");
+        const formData = new FormData();
+        formData.append("file", $scope.file);
+        console.log(formData);
+        if (!$scope.file || !/^image\//.test($scope.file.type)) {
+            console.error("Chỉ chấp nhận các định dạng ảnh.");
+            $scope.uploadResult = {
+                status: false,
+                message: "Chỉ chấp nhận các định dạng ảnh.",
+            };
             return;
         }
 
-        const formData = new FormData();
-        formData.append("file", file);
+        // Gửi yêu cầu PUT đến API
+        $http
+            .put(`http://localhost:8080/api/users/avatar/${username}`, formData, {
+                headers: {
+                    "Content-Type": undefined,
+                    'Authorization': `Bearer ${token}`
+                },
+                transformRequest: angular.identity,
+            })
+            .then(function (response) {
+                $scope.uploadResult = response.data;
+                console.log($scope.uploadResult.message);
 
-        const username = localStorage.getItem("username");
 
-        $http.put(`http://localhost:8080/api/users/avatar/${username}`, formData, {
-            headers: {
-                'Content-Type': undefined,  // Let the browser set the Content-Type
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => {
-            if (response.data.status) {
-                // Update avatar with the new Cloudinary URL from the backend response
-                $scope.avatar = response.data.data.avatar;
-                alert("Avatar updated successfully!");
-            } else {
-                console.log(response.data.message);
-                alert("Failed to update avatar.");
-            }
-        }).catch(error => {
-            console.error("Error uploading avatar", error);
-            alert('Failed to upload the avatar.');
-        });
+                // Cập nhật URL của avatar nếu upload thành công
+                if ($scope.uploadResult.status) {
+                    $scope.avatar = $scope.uploadResult.data.avatar;
+                    console.log("thành công");
+                }
+            })
+            .catch(function (error) {
+                console.error("Lỗi tải ảnh:", error);
+                $scope.uploadResult = {
+                    status: false,
+                    message: "Tải ảnh thất bại. Vui lòng thử lại.",
+                };
+            });
     };
 
+    // Gọi hàm upload khi người dùng chọn một file
+    $scope.$watch("file", function (newFile) {
+        console.log("File selected:", newFile);
+        if (newFile) {
+            $scope.uploadAvatar();
+        }
+    });
     // cập nhật thông tin
     $scope.update = function () {
 
@@ -180,10 +194,6 @@ app.controller('detailUserController', function ($scope, $http, $window) {
             email: $scope.email,
 
         }
-        console.log($scope.phoneNumber);
-        console.log(data.phoneNumber);
-
-
         $http.put('http://localhost:8080/api/users/update', data, {
             headers: {
                 'Authorization': `Bearer ${token}` // Gửi token trong header
@@ -197,6 +207,24 @@ app.controller('detailUserController', function ($scope, $http, $window) {
                 }
             })
     }
+    $scope.verified = function () {
+        $http.get(`http://localhost:8080/api/email/send-verification-email?userId=${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(function (response) {
+                if (response.data.status) {
+                    alert("Đã gửi email xác nhận qua địa chỉ mail của bạn")
+                    console.log("thành công");
+
+                } else {
+                    console.log(response.data.message);
+
+                }
+            })
+    }
+
 
 
 })
