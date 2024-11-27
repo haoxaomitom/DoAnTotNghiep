@@ -1,25 +1,8 @@
 
-// Directive cho input file, dùng để gán file vào model
-app.directive("fileModel", ["$parse", function ($parse) {
-    return {
-        restrict: "A",
-        link: function (scope, element, attrs) {
-            const model = $parse(attrs.fileModel);
-            const modelSetter = model.assign;
+app.controller('detailUserController', function ($scope, $http, $window) {
 
-            element.bind("change", function () {
-                scope.$apply(function () {
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        },
-    };
-}]);
-
-app.controller('detailUserController', function ($scope, $location,  $http, $window) {
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+    console.log("Run user")
+    // Lấy dữ liệu tỉnh thành từ GitHub
     $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
         .then(function (response) {
             // Lưu dữ liệu vào $scope
@@ -39,60 +22,6 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
         } else {
             $scope.districts = [];
         }
-    };
-
-    $scope.isLoggedIn = !!(username && token); // Kiểm tra người dùng đã đăng nhập hay chưa
-
-    if ($scope.isLoggedIn) {
-        // Nếu đã đăng nhập, lấy thông tin người dùng
-        $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
-            headers: {
-                'Authorization': `Bearer ${token}` // Gửi token trong header
-            }
-        })
-        .then(function (response) {
-            if (response.data.status) {
-                const data = response.data.data;
-                $scope.firstName = data.firstName;
-                $scope.lastName = data.lastName;
-                $scope.gender = data.gender;
-                $scope.dateOfBirth = data.dateOfBirth;
-                $scope.phoneNumber = data.phoneNumber;
-                $scope.email = data.email;
-                $scope.fullName = data.lastName + ' ' + data.firstName;
-                $scope.avatar = data.avatar;
-                $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email";
-
-                // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
-                $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
-                if ($scope.selectedProvince) {
-                    $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
-
-                    $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
-
-                    $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
-                    if ($scope.selectedDistrict) {
-                        $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
-
-                        $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
-                    }
-                }
-            } else {
-                console.log(response.data.message);
-            }
-        }, function (error) {
-            console.log(error);
-        })
-    } else {
-        // Nếu chưa đăng nhập, không chuyển hướng, chỉ hiển thị các tùy chọn đăng nhập
-        $scope.isLoggedIn = false;
-    }
-
-    // Đăng xuất
-    $scope.logout = function () {
-        localStorage.clear();
-        // Chuyển hướng đến trang chủ
-        $window.location.href = '/app/index.html';
     };
 
     // Khi chọn Quận/Huyện
@@ -126,6 +55,62 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
         $scope.suggestions = []; // Ẩn danh sách gợi ý
         $scope.onProvinceChange(); // Reset quận/huyện
     };
+
+    const username = localStorage.getItem('username');
+    const token = localStorage.getItem('token');
+    if (token) {
+        $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Gửi token trong header
+            }
+        })
+            .then(function (response) {
+                if (response.data.status) {
+                    const data = response.data.data;
+                    $scope.firstName = data.firstName;
+                    $scope.lastName = data.lastName;
+                    $scope.gender = data.gender;
+                    $scope.dateOfBirth = data.dateOfBirth;
+                    $scope.phoneNumber = data.phoneNumber;
+                    $scope.email = data.email;
+                    $scope.fullName = data.lastName + ' ' + data.firstName;
+                    $scope.avatar = data.avatar;
+                    // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
+
+                    $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
+                    if ($scope.selectedProvince) {
+                        $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
+
+                        $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
+
+                        $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
+                        if ($scope.selectedDistrict) {
+                            $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
+
+                            $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
+                        }
+                    }
+
+                } else {
+                    console.log(response.data.message);
+                }
+            }, function (error) {
+                console.log(error);
+            }
+            )
+    } else {
+        localStorage.setItem('redirectUrl', $window.location.href);
+        $window.location.href = '/app/components/Login/LoginAndRegister.html';
+    }
+    // Đăng xuất
+    $scope.logout = function () {
+
+        localStorage.clear();
+        // Chuyển hướng đến trang chủ
+        $window.location.href = '/app/index.html';
+    };
+
+
 
     // load avata
     $scope.avatar = 'https://via.placeholder.com/100'; // Avatar mặc định
@@ -192,46 +177,12 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
         })
             .then(function (response) {
                 if (response.data.status) {
-                    // alert("Cập nhật thành công!");
-                
-                    $scope.showToast("Cập nhật thông tin thành công !");
+                    alert("Cập nhật thành công!");
                 } else {
                     $scope.message = response.data.message
                 }
             })
     }
-    $scope.isLoading = false; // Biến để kiểm soát trạng thái loading
-    $scope.isVerified = "Chưa xác thực"; // Trạng thái nút
-    
-    $scope.verified = function () {
-        $scope.isLoading = true; // Hiển thị hiệu ứng loading
-    
-        $http.get(`http://localhost:8080/api/email/send-verification-email?userId=${userId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(function (response) {
-            $scope.isLoading = false; // Tắt hiệu ứng loading
-            if (response.data.status) {
-                $scope.isVerified = "Đã gửi";
-                const actionMessage = "Đã gửi email xác nhận qua địa chỉ mail của bạn, vui lòng kiểm tra mail để xác nhận";
-                $scope.showToast(actionMessage);
-                console.log("Thành công");
-            } else {
-                console.log(response.data.message);
-            }
-        }).catch(function (error) {
-            $scope.isLoading = false; // Tắt hiệu ứng loading nếu có lỗi
-            console.error("Lỗi:", error);
-        });
-    };
-    
-    $scope.showToast = function (message) {
-        $scope.toastMessage = message;
-        const toastElement = document.getElementById('toast');
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
-    };
 
 
 })

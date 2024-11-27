@@ -66,6 +66,17 @@
     filter: brightness(0) invert(1); /* Invert icon color for visibility */
 }
 
+/* Hover effect for Facebook and Zalo buttons */
+.social:hover {
+    background-color: #007cdb; /* Blue background on hover */
+    color: #fff; /* White text color on hover */
+    border-color: #007cdb; /* Change border to blue on hover */
+}
+
+.btn:hover .fa-facebook{
+    filter: brightness(0) invert(1); /* Invert icon color for visibility */
+}
+
 /* Maps */
 .h-100 {
     height: 100%;
@@ -137,3 +148,4 @@
     background-color: #fff; /* White button for contrast */
     color: #007bff; /* Blue text to match the card color */
 }
+

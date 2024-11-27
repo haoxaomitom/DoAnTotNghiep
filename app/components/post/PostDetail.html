@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>PFR - Cho thuê chỗ để xe</title>
     <link rel="stylesheet" href="/assets/css/PostDetail.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
 </head>
 
 <body ng-controller="PostController" class="d-flex flex-column min-vh-100">
 
-    <div class="container flex-fill" ng-class="{'fade-in': !loading}">
+    <div class="container flex-fill">
 
         <!-- Loading spinner -->
         <div class="d-flex justify-content-center align-items-center" style="height: 50vh;" ng-if="loading">
@@ -34,6 +36,7 @@
         <nav aria-label="breadcrumb list-unstyled" ng-if="!loading">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/home">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/home">Trang chủ</a></li>
                 <!-- <li class="breadcrumb-item"><a href="home.html?districtName={{post.districtName}}">{{post.districtName}}</a></li> -->
                 <li class="breadcrumb-item active" aria-current="page">{{post.parkingName}}</li>
             </ol>
@@ -55,14 +58,15 @@
                                         class="img-fluid w-100 h-100" alt="Blurred Background Image"
                                         style="object-fit: cover;">
                                 </div>
+                                <!-- Ảnh chính hiển thị -->
                                 <img ng-src="{{post.images[0].imageUrl}}" loading="lazy"
-                                    class="img-fluid d-block mx-auto" alt="Main Image"
-                                    ng-click="openModal(post.images[0].imageUrl)">
+                                    class="img-fluid d-block mx-auto" alt="Main Image">
                             </div>
                             <!-- Các carousel item tiếp theo -->
                             <div class="carousel-item" ng-repeat="image in post.images.slice(1)">
                                 <div class="blur-background position-absolute w-100 h-100 top-0 start-0">
-                                    <img ng-src="{{image.imageUrl}}" loading="lazy" class="img-fluid w-100 h-100"
+                                    <img ng-src="{{image.imageUrl}}" loading="lazy" class="img-fluid w-100 h-100" <img
+                                        ng-src="{{image.imageUrl}}" loading="lazy" class="img-fluid w-100 h-100"
                                         alt="Blurred Background Image" style="object-fit: cover; max-height:400px;">
                                 </div>
                                 <img ng-src="{{image.imageUrl}}" class="img-fluid d-block mx-auto" alt="Main Image"
@@ -81,21 +85,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Modal -->
-                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-body p-0">
-                                <img ng-src="{{modalImage}}" class="img-fluid w-100" alt="Zoomed Image">
-                            </div>
-                            <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
-                                data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-
                 <span class="promoted-label d-flex justify-content-center mb-3 align-items-center"
                     ng-if="isPostPromoted(post.topPostEnd)">
                     Bài viết được quảng cáo
@@ -105,7 +94,9 @@
                 <div class="d-flex mb-5 align-items-center">
                     <h3 class="mb-0 me-2">Giá tiền:</h3>
                     <h3 class="text-danger mb-0">{{formatCurrency(post.price)}} {{post.priceUnit}}</h3>
+                    <h3 class="text-danger mb-0">{{formatCurrency(post.price)}} {{post.priceUnit}}</h3>
                 </div>
+
 
                 <div class="">
                     <!-- Parking Info Section -->
@@ -172,6 +163,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Mô tả</h5>
                                 <span style="white-space: pre-wrap;">{{ post.description }}</span>
+                                <span style="white-space: pre-wrap;">{{ post.description }}</span>
                             </div>
                         </div>
 
@@ -180,14 +172,18 @@
             </div>
 
             <!-- Side bar -->
+            <!-- Side bar -->
             <div class="col-md-4 mb-4" ng-if="!loading">
+                <!-- Profile Section -->
                 <!-- Profile Section -->
                 <div class="side-bar">
                     <div class="profile-card text-center p-4">
-                        <img ng-src="{{user.avatar}}" loading="lazy" class="rounded-circle mb-3 border"
+                        <img ng-src="{{user.avatar}}" loading="lazy" class="rounded-circle mb-3 border" <img
+                            ng-src="{{user.avatar}}" loading="lazy" class="rounded-circle mb-3 border"
                             alt="{{user.firstName}}'s Avatar" width="100" height="100">
                         <h5 class="fw-bold">{{user.firstName}} {{user.lastName}}</h5>
                         <p class="text-muted">Đã tham gia: {{user.createdAt | date:'MMMM yyyy'}}</p>
+
 
                         <!-- Phần hiển thị SĐT với border -->
                         <div class="border border-2 p-2 rounded d-flex align-items-center justify-content-between mb-2">
@@ -230,10 +226,7 @@
                             <!-- Bootstrap icon for email/message -->
                             <h5 class="fw-bold text-white mb-1">Bạn thấy ưng ý ?</h5>
                             <p class="text-white">Nhấn vào để gửi thông tin tới chủ bãi đỗ xe</p>
-                            <button type="button" class="btn btn-light fw-bold mt-2 px-4" data-bs-toggle="modal"
-                                data-bs-target="#leaveInfModal">Gửi Thông Tin</button>
-
-
+                            <button class="btn btn-light fw-bold mt-2 px-4">Gửi Thông Tin</button>
                         </div>
                     </div>
                 </div>
@@ -241,339 +234,394 @@
         </div>
         <!-- Post function -->
         <div class="row col-sm-8 align-items-center justify-content-around">
+            <!-- Post function -->
+            <div class="row col-sm-8 align-items-center justify-content-around">
 
-            <!-- Share function -->
+                <!-- Share function -->
+                <div class="col-sm-4 mt-3 d-flex justify-content-center">
+                    <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
+                        <i class="fa-regular fa-share-from-square"></i> Chia sẻ bài đăng
+                    </div>
+                    <!-- Share Post Modal -->
+                    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="shareModalLabel">Chia sẻ bài đăng</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    Tải hoặc quét mã QR để truy cập trang web
+                                    <div id="qrCodeContainer"
+                                        class="d-flex justify-content-center align-items-center mb-3">
+                                    </div>
+                                    <p>Hoặc chia sẻ bài đăng này với bạn bè hoặc trên mạng xã hội.</p>
+                                    <div class="d-flex justify-content-around">
+                                        <button class="btn btn-primary" ng-click="shareOnFacebook(post.idPost)">
+                                            <i class="fa-brands fa-facebook"></i> Facebook
+                                        </button>
+                                        <button class="btn btn-primary" ng-click="copyLink()">
+                                            <i class="fa-solid fa-link"></i> Sao chép link
+                                        </button>
+                                        <!-- <button class="btn btn-success"><i class="fa-brands fa-whatsapp"></i>
             <div class="col-sm-4 mt-3 d-flex justify-content-center">
                 <div class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
                     <i class="fa-regular fa-share-from-square"></i> Chia sẻ bài đăng
                 </div>
                 <!-- Share Post Modal -->
-                <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="shareModalLabel">Chia sẻ bài đăng</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                                Tải hoặc quét mã QR để truy cập trang web
-                                <div id="qrCodeContainer" class="d-flex justify-content-center align-items-center mb-3">
-                                </div>
-                                <p>Hoặc chia sẻ bài đăng này với bạn bè hoặc trên mạng xã hội.</p>
-                                <div class="d-flex justify-content-around">
-                                    <button class="btn btn-primary" ng-click="shareOnFacebook(post.idPost)">
-                                        <i class="fa-brands fa-facebook"></i> Facebook
-                                    </button>
-                                    <button class="btn btn-primary" ng-click="copyLink()">
-                                        <i class="fa-solid fa-link"></i> Sao chép link
-                                    </button>
-                                    <!-- <button class="btn btn-success"><i class="fa-brands fa-whatsapp"></i>
+                                        <div class="modal fade" id="shareModal" tabindex="-1"
+                                            aria-labelledby="shareModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="shareModalLabel">Chia sẻ bài đăng
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        Tải hoặc quét mã QR để truy cập trang web
+                                                        <div id="qrCodeContainer"
+                                                            class="d-flex justify-content-center align-items-center mb-3">
+                                                        </div>
+                                                        <p>Hoặc chia sẻ bài đăng này với bạn bè hoặc trên mạng xã hội.
+                                                        </p>
+                                                        <div class="d-flex justify-content-around">
+                                                            <button class="btn btn-primary"
+                                                                ng-click="shareOnFacebook(post.idPost)">
+                                                                <i class="fa-brands fa-facebook"></i> Facebook
+                                                            </button>
+                                                            <button class="btn btn-primary" ng-click="copyLink()">
+                                                                <i class="fa-solid fa-link"></i> Sao chép link
+                                                            </button>
+                                                            <!-- <button class="btn btn-success"><i class="fa-brands fa-whatsapp"></i>
                                         WhatsApp</button> -->
 
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bookmark post -->
-            <div class="col-sm-4 d-flex justify-content-center mt-3">
-                <button class="btn btn-success" ng-click="toggleFavorite()">
-                    <i class="fa" ng-class="isFavorite ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'"></i>
-                    {{ isFavorite ? ' Hủy lưu bài đăng' : 'Lưu bài đăng' }}
-                </button>
-
-                <!-- Toast Notification -->
-                <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3"
-                    style="z-index: 1100">
-
-                    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header">
-                            <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822083/1_au4rfg.jpg"
-                                style="height:auto; width:50px" class="rounded me-2" alt="logo">
-                            <strong class="me-auto">Thông báo</strong>
-                            <!-- <small>11 mins ago</small> -->
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            {{ toastMessage }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report post -->
-            <div class="col-sm-4 d-flex justify-content-center mt-3">
-                <!-- Button to open the modal -->
-                <div class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo bài đăng
-                </div>
-
-                <!-- Modal for reporting post -->
-                <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="reportModalLabel">Báo cáo bài đăng</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="reportForm" ng-submit="submitReport()">
-                                    <div class="mb-3">
-                                        <label for="reportReason" class="form-label">Lý do báo cáo</label>
-                                        <select class="form-select" id="reportReason" ng-change="checkReportReason()"
-                                            ng-model="reportReason" required>
-                                            <option value="" selected disabled>Chọn lý do</option>
-                                            <option value="Spam">Spam</option>
-                                            <option value="Sai thông tin">Sai thông tin</option>
-                                            <option value="Lừa đảo">Lừa đảo</option>
-                                            <option value="Khác">Khác</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="reportDetails" class="form-label">Chi tiết báo cáo</label>
-                                        <textarea class="form-control" id="reportDetails" rows="3"
-                                            ng-model="reportDetails" ng-required="isOtherReason"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                <button type="submit" form="reportForm" data-bs-dismiss="modal"
-                                    class="btn btn-danger">Gửi báo cáo</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Comment and related Posts Section -->
-        <div class="row" ng-if="!loading">
-            <div class="col-sm-8 mt-3">
-                <h5 class="mb-3">Bình luận</h5>
-                <div class="comment-list">
-                    <div class="mb-3" ng-repeat="comment in comments">
-                        <div class="card-body">
-                            <div class="d-flex align-items-start">
-
-                                <!-- User Avatar -->
-                                <div class="me-3">
-                                    <img ng-src="{{ comment.cud[0].avatar }}" loading="lazy" alt="User Avatar"
-                                        class="rounded-circle" style="width: 40px; height: 40px;">
-                                </div>
-
-                                <!-- Comment Details -->
-                                <div class="flex">
-                                    <div class="comment-content bg-light border border-2 p-2 rounded"
-                                        style="border-radius: 20px;">
-                                        <strong>{{ comment.cud[0].firstName }} {{ comment.cud[0].lastName
-                                            }}</strong>
-                                        <p class="mt-2">{{ comment.commentContent }}</p>
-                                    </div>
-                                    <small class="text-muted">{{ formatTimeAgo(comment.createdAt) }}</small>
-                                    <a ng-click="openDeleteModal(comment.commentId)" ng-if="comment.user === userId"
-                                        style="cursor: pointer;"> Xóa</a>
-                                    <!-- Modal Xác nhận xóa bình luận -->
-                                    <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteCommentModalLabel">Xác
-                                                        nhận xóa bình luận</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Bạn có chắc chắn muốn xóa bình luận này?
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Đóng</button>
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Hủy</button>
-                                                    <button type="button" class="btn btn-danger"
-                                                        ng-click="confirmDeleteComment()">Xóa</button>
+                                                        data-bs-dismiss="modal">Đóng</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div ng-if="comments.length === 0" class="text-muted mb-3">
-                        Chưa có bình luận nào, hãy là người đầu tiên bình luận cho bài đăng này !
-                    </div>
-                    <div class="mb-3">
-                        <a ng-if="commentsPage < totalCommentsPages - 1" ng-click="loadMoreComments()"
-                            style="cursor:pointer">Tải thêm bình luận</a>
-                    </div>
-                </div>
+                                <!-- Bookmark post -->
+                                <div class="col-sm-4 d-flex justify-content-center mt-3">
+                                    <div class="col-sm-4 d-flex justify-content-center mt-3">
+                                        <button class="btn btn-success" ng-click="toggleFavorite()">
+                                            <i class="fa"
+                                                ng-class="isFavorite ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'"></i>
+                                            {{ isFavorite ? ' Hủy lưu bài đăng' : 'Lưu bài đăng' }}
+                                        </button>
 
-                <!-- Comment Form with Character Limit -->
-                <div class="mb-3">
-                    <div class="card-body">
-                        <form class="d-flex" ng-submit="checkLoginBeforeSubmit()">
-                            <div class="flex-grow-1 me-2">
-                                <input ng-model="newComment.commentContent" class="form-control"
-                                    placeholder="Viết bình luận..." rows="1" maxlength="250" required></input>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                <i class="fa-regular fa-paper-plane"></i> Gửi
-                            </button>
-                        </form>
-                        <small class="text-muted">{{ 250 - (newComment.commentContent || '').length }} ký tự còn
-                            lại</small>
-                    </div>
+                                        <!-- Toast Notification -->
+                                        <div aria-live="polite" aria-atomic="true"
+                                            class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+
+                                            <div id="toast" class="toast" role="alert" aria-live="assertive"
+                                                aria-atomic="true">
+                                                <div id="toast" class="toast" role="alert" aria-live="assertive"
+                                                    aria-atomic="true">
+                                                    <div class="toast-header">
+                                                        <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822083/1_au4rfg.jpg"
+                                                            style="height:auto; width:50px" class="rounded me-2"
+                                                            alt="logo">
+                                                        <strong class="me-auto">Thông báo</strong>
+                                                        <!-- <small>11 mins ago</small> -->
+                                                        <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="toast-body">
+                                                        {{ toastMessage }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Report post -->
+                                        <div class="col-sm-4 d-flex justify-content-center mt-3">
+                                            <!-- Report post -->
+                                            <div class="col-sm-4 d-flex justify-content-center mt-3">
+                                                <!-- Button to open the modal -->
+                                                <div class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#reportModal">
+                                                    <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo bài đăng
+                                                </div>
+
+                                                <!-- Modal for reporting post -->
+                                                <div class="modal fade" id="reportModal" tabindex="-1"
+                                                    aria-labelledby="reportModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="reportModalLabel">Báo cáo
+                                                                    bài đăng</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form id="reportForm" ng-submit="submitReport()">
+                                                                    <form id="reportForm" ng-submit="submitReport()">
+                                                                        <div class="mb-3">
+                                                                            <label for="reportReason"
+                                                                                class="form-label">Lý do báo cáo</label>
+                                                                            <select class="form-select"
+                                                                                id="reportReason"
+                                                                                ng-change="checkReportReason()"
+                                                                                ng-model="reportReason" required>
+                                                                                <option value="" selected disabled>Chọn
+                                                                                    lý do</option>
+                                                                                <option value="" selected disabled>Chọn
+                                                                                    lý do</option>
+                                                                                <option value="Spam">Spam</option>
+                                                                                <option value="Sai thông tin">Sai thông
+                                                                                    tin</option>
+                                                                                <option value="Lừa đảo">Lừa đảo</option>
+                                                                                <option value="Khác">Khác</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="reportDetails"
+                                                                                class="form-label">Chi tiết báo
+                                                                                cáo</label>
+                                                                            <textarea class="form-control"
+                                                                                id="reportDetails" rows="3"
+                                                                                ng-model="reportDetails"
+                                                                                ng-required="isOtherReason"></textarea>
+                                                                        </div>
+                                                                    </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Đóng</button>
+                                                                <button type="submit" form="reportForm"
+                                                                    data-bs-dismiss="modal" class="btn btn-danger">Gửi
+                                                                    báo cáo</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Comment and related Posts Section -->
+                                        <div class="row" ng-if="!loading">
+                                            <div class="col-sm-8 mt-3">
+                                                <div class="col-sm-8 mt-3">
+                                                    <h5 class="mb-3">Bình luận</h5>
+                                                    <div class="comment-list">
+                                                        <div class="mb-3" ng-repeat="comment in comments">
+                                                            <div class="card-body">
+                                                                <div class="d-flex align-items-start">
+
+                                                                    <!-- User Avatar -->
+                                                                    <div class="me-3">
+                                                                        <img ng-src="{{ comment.cud[0].avatar }}"
+                                                                            loading="lazy" alt="User Avatar"
+                                                                            class="rounded-circle"
+                                                                            style="width: 40px; height: 40px;">
+                                                                    </div>
+
+                                                                    <!-- Comment Details -->
+                                                                    <div class="flex">
+                                                                        <div class="comment-content bg-light border border-2 p-2 rounded"
+                                                                            style="border-radius: 20px;">
+                                                                            <strong>{{ comment.cud[0].firstName }} {{
+                                                                                comment.cud[0].lastName
+                                                                                }}</strong>
+                                                                            <p class="mt-2">{{ comment.commentContent }}
+                                                                            </p>
+                                                                        </div>
+                                                                        <small class="text-muted">{{
+                                                                            formatTimeAgo(comment.createdAt) }}</small>
+                                                                        <a ng-click="openDeleteModal(comment.commentId)"
+                                                                            ng-if="comment.user === userId"
+                                                                            style="cursor: pointer;"> Xóa</a>
+                                                                        <a ng-click="openDeleteModal(comment.commentId)"
+                                                                            ng-if="comment.user === userId"
+                                                                            style="cursor: pointer;"> Xóa</a>
+                                                                        <!-- Modal Xác nhận xóa bình luận -->
+                                                                        <div class="modal fade" id="deleteCommentModal"
+                                                                            tabindex="-1" role="dialog"
+                                                                            aria-labelledby="deleteCommentModalLabel"
+                                                                            aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered"
+                                                                                role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title"
+                                                                                            id="deleteCommentModalLabel">
+                                                                                            Xác
+                                                                                            nhận xóa bình luận</h5>
+                                                                                        <button type="button"
+                                                                                            class="btn-close"
+                                                                                            data-bs-dismiss="modal"
+                                                                                            aria-label="Close"></button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        Bạn có chắc chắn muốn xóa bình
+                                                                                        luận này?
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button"
+                                                                                            class="btn btn-secondary"
+                                                                                            data-bs-dismiss="modal">Hủy</button>
+                                                                                        <button type="button"
+                                                                                            class="btn btn-danger"
+                                                                                            ng-click="confirmDeleteComment()">Xóa</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div ng-if="comments.length === 0" class="text-muted mb-3">
+                                                            Chưa có bình luận nào, hãy là người đầu tiên bình luận cho
+                                                            bài đăng này !
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <a ng-if="commentsPage < totalCommentsPages - 1"
+                                                                ng-click="loadMoreComments()" style="cursor:pointer">Tải
+                                                                thêm bình luận</a>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Comment Form with Character Limit -->
+                                                    <div class="mb-3">
+                                                        <div class="card-body">
+                                                            <form class="d-flex" ng-submit="checkLoginBeforeSubmit()">
+                                                                <div class="flex-grow-1 me-2">
+                                                                    <input ng-model="newComment.commentContent"
+                                                                        class="form-control"
+                                                                        placeholder="Viết bình luận..." rows="1"
+                                                                        maxlength="250" required></input>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                                    <i class="fa-regular fa-paper-plane"></i> Gửi
+                                                                </button>
+                                                            </form>
+                                                            <small class="text-muted">{{ 250 -
+                                                                (newComment.commentContent || '').length }} ký tự còn
+                                                                lại</small>
+                                                            <small class="text-muted">{{ 250 -
+                                                                (newComment.commentContent || '').length }} ký tự còn
+                                                                lại</small>
+                                                        </div>
+
+                                                        <!-- Modal for login prompt -->
+                                                        <div class="modal fade" id="loginPromptModal" tabindex="-1"
+                                                            aria-labelledby="loginPromptModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title"
+                                                                            id="loginPromptModalLabel">Login Required
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        Bạn cần phải đăng nhập mới được bình luận. Đi
+                                                                        tới trang đăng nhập chứ ?
+                                                                    </div>
+                                                                    <div class="modal-footer">
+
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Không</button>
+                                                                        <button type="button" class="btn btn-primary"
+                                                                            ng-click="redirectToLogin()">Có</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <h5 class="mb-3">Các bài đăng liên quan:</h5>
+                                                    <div class="card mb-3" ng-repeat="post in relatedPosts">
+                                                        <a href="/post-detail?id={{post.idPost}}" loading="lazy"
+                                                            style="text-decoration: none; color: inherit;">
+                                                            <div class="row g-0">
+                                                                <div class="col-md-4">
+                                                                    <div class="d-flex align-items-center justify-content-center"
+                                                                        style="height: 100%; background: #f8f9fa;">
+                                                                        <img ng-src="{{post.images[0].imageUrl}}"
+                                                                            class="img-fluid rounded-start"
+                                                                            alt="Images" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <div class="card-title">
+                                                                        <div
+                                                                            class="card-header bg-transparent border-0">
+                                                                            <h7 class="font-weight-bold">
+                                                                                {{post.parkingName}}</h7>
+                                                                        </div>
+                                                                        <div class="card-body flex-fill">
+                                                                            <span
+                                                                                ng-repeat="vehicleType in post.vehicleTypes"
+                                                                                class="vehicle-type-inline">
+                                                                                {{vehicleType.vehicleTypeName}}
+                                                                                <span ng-if="!$last"> - </span>
+                                                                            </span>
+                                                                            <h5 class="card-text text-danger">
+                                                                                {{formatCurrency(post.price) + " " +
+                                                                                post.priceUnit}}
+                                                                                {{formatCurrency(post.price) + " " +
+                                                                                post.priceUnit}}
+                                                                            </h5>
+                                                                        </div>
+                                                                        <div class="card-footer">
+                                                                            <h7
+                                                                                class="card-text username font-weight-bold">
+                                                                                {{post.street}} {{post.wardName}},
+                                                                                {{post.districtName}},
+                                                                                {{post.provinceName}}
+                                                                                <small
+                                                                                    class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                                                            </h7>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+
+                                                    <!-- Điều khiển phân trang -->
+                                                    <div class="d-flex justify-content-between align-items-center mt-3"
+                                                        ng-if="relatedPosts.length > 0">
+                                                        <button class="btn btn-primary" ng-click="previousPage()"
+                                                            ng-disabled="currentPage === 0">Trước</button>
+                                                        <span>Trang {{ currentPage + 1 }} trên tổng {{ totalPagesCount
+                                                            }} trang</span>
+                                                        <button class="btn btn-primary" ng-click="nextPage()"
+                                                            ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div id="fb-root"></div>
 
 
-                </div>
+                                        <!-- Bootstrap JS and dependencies -->
 
-            </div>
-            <div class="col-sm-4">
-                <h5 class="mb-3">Các bài đăng liên quan:</h5>
-
-                <!-- Kiểm tra nếu danh sách liên quan không có bài viết -->
-                <div ng-if="relatedPosts.length === 0" class="alert alert-info">
-                    Hiện không có bài đăng nào phù hợp.
-                </div>
-
-                <!-- Danh sách bài đăng liên quan -->
-                <div class="card mb-3" ng-repeat="post in relatedPosts" ng-if="relatedPosts.length > 0">
-                    <a href="/post-detail?id={{post.idPost}}" loading="lazy"
-                        style="text-decoration: none; color: inherit;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <div class="d-flex align-items-center justify-content-center"
-                                    style="height: 100%; background: #f8f9fa;">
-                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
-                                        alt="Images" />
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-title">
-                                    <div class="card-header bg-transparent border-0">
-                                        <h7 class="font-weight-bold">{{post.parkingName}}</h7>
-                                    </div>
-                                    <div class="card-body flex-fill">
-                                        <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                            {{vehicleType.vehicleTypeName}}
-                                            <span ng-if="!$last"> - </span>
-                                        </span>
-                                        <h5 class="card-text text-danger">
-                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
-                                        </h5>
-                                    </div>
-                                    <div class="card-footer">
-                                        <h7 class="card-text username font-weight-bold">
-                                            {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                            {{post.provinceName}}
-                                            <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                        </h7>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Điều khiển phân trang -->
-                <div class="d-flex justify-content-between align-items-center mt-3" ng-if="relatedPosts.length > 0">
-                    <button class="btn btn-primary" ng-click="previousPage()"
-                        ng-disabled="currentPage === 0">Trước</button>
-                    <span>Trang {{ currentPage + 1 }} trên tổng {{ totalPagesCount }} trang</span>
-                    <button class="btn btn-primary" ng-click="nextPage()"
-                        ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Modal for login prompt -->
-    <!-- <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginPromptModalLabel">Yêu cầu đăng nhập</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Bạn cần phải đăng nhập mới được sử dụng tính năng này. Đi tới trang đăng nhập chứ ?
-                </div>
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                    <button type="button" class="btn btn-primary" ng-click="redirectToLogin()">Có</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Modal leave information -->
-    <div class="modal fade" id="leaveInfModal" tabindex="-1" aria-labelledby="leaveInfModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-info">
-                    <h1 class="modal-title fs-5 " id="leaveInfModalLabel">Thông tin liên hệ</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="shadow-sm bg-light">
-
-                        <div class="form-floating mb-3">
-                            <input type="text" name="fullName" id="fullName" ng-model="fullName" class="form-control"
-                                placeholder="Họ và tên">
-                            <label for="fullName">Họ và tên</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" name="phoneNumber" id="phoneNumber" ng-model="phoneNumber"
-                                class="form-control" placeholder="Số điện thoại">
-                            <label for="phoneNumber">Số điện thoại</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" name="typeCar" id="typeCar" ng-model="typeCar" class="form-control"
-                                placeholder="Loại xe">
-                            <label for="typeCar">Loại xe</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" name="contactTime" id="contactTime" ng-model="contactTime"
-                                class="form-control" placeholder="Thời gian có thể liên lạc">
-                            <label for="contactTime">Thời gian có thể liên lạc</label>
-                        </div>
-
-                        <div class="form-floating mb-4">
-                            <textarea name="description" id="description" ng-model="description" class="form-control"
-                                placeholder="Thông tin khác" style="height: 100px;"></textarea>
-                            <label for="description">Thông tin khác</label>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" ng-click="saveContactInfo()">Save
-                        changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="fb-root"></div>
-
-
-    <!-- Bootstrap JS and dependencies -->
 
 </body>
 <script async defer crossorigin="anonymous"

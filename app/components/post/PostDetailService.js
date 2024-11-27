@@ -1,9 +1,11 @@
+
+
 const token = localStorage.getItem('token');
+
 
 // Combined service for Post and Comment related functions
 app.service('PostDetailService', ['$http', function ($http) {
 
-    // Fetch post by ID
     this.getPostById = function (id_post) {
         return $http.get(`http://localhost:8080/api/posts/${id_post}`)
             .then(response => response.data)
@@ -34,12 +36,18 @@ app.service('PostDetailService', ['$http', function ($http) {
     // Create a comment
     this.createComment = function (commentDTO) {
         return $http.post('http://localhost:8080/api/comments', commentDTO, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        }).then(response => response.data)
-          .catch(error => {
-              console.error('Error creating comment:', error);
-              return null;
-          });
+            headers: {
+                'Authorization': `Bearer ${token}`  // Add token in the header
+            }
+        })
+            .then(function (response) {
+                console.log("run");
+                return response.data;
+            })
+            .catch(function (error) {
+                console.error('Error creating comment:', error);
+                return null;
+            });
     };
 
     // Delete a comment
@@ -48,10 +56,10 @@ app.service('PostDetailService', ['$http', function ($http) {
             params: { userId: userId },
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error deleting comment:', error);
-              throw error; // Re-throw to handle it in the controller
-          });
+            .catch(error => {
+                console.error('Error deleting comment:', error);
+                throw error; // Re-throw to handle it in the controller
+            });
     };
 
     // Fetch comments by post ID
@@ -59,55 +67,64 @@ app.service('PostDetailService', ['$http', function ($http) {
         return $http.get(`http://localhost:8080/api/comments/post/${postId}`, {
             params: { page: page, size: size }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error fetching comments for post:', error);
-              return [];
-          });
+            .catch(error => {
+                console.error('Error fetching comments for post:', error);
+                return [];
+            });
     };
 
-    // Submit a report
     this.submitReport = function (reportData) {
         return $http.post('http://localhost:8080/api/reports', reportData, {
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error submitting report:', error);
-              throw error;
-          });
+            .catch(error => {
+                console.error('Error submitting report:', error);
+                throw error;
+            });
     };
 
-    // Check if the post is favorited by the user
+    // Service method to check if the post is favorited by the user
     this.checkFavoriteStatus = function (userId, postId) {
         return $http.get('http://localhost:8080/api/favorites/check', {
-            headers: { 'Authorization': `Bearer ${token}` },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             params: { userId: userId, postId: postId }
         });
     };
 
-    // Toggle favorite status
+    // Service method to toggle the favorite status
     this.toggleFavorite = function (userId, postId) {
         return $http.post('http://localhost:8080/api/favorites/toggle', null, {
-            headers: { 'Authorization': `Bearer ${token}` },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             params: { userId: userId, postId: postId }
         });
     };
-
-    // Fetch related posts
     this.getPostsRelated = function (districtName, page, size) {
         return $http.get('http://localhost:8080/api/posts/related', {
             params: { districtName: districtName, page: page, size: size }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error fetching related posts:', error);
-          });
-    };
-    
-    this.saveContactInfo = function(data) {
-        return $http.post("http://localhost:8080/api/contactInformation/create", data);
+            .catch(error => {
+                console.error('Error fetching related posts:', error);
+            });
     };
 
-    // this.redirectToLogin = function() {
-    //     localStorage.setItem('redirectUrl', $window.location.href);
-    //     $window.location.href = '/app/components/Login/LoginAndRegister.html';
-    // };
 }]);
+// Service for fetching related posts
+// app.service('ItemService', ['$http', function ($http) {
+//     this.getPostsRelated = function (districtName, page, size) {
+//         return $http.get('http://localhost:8080/api/posts/related', {
+//             params: {
+//                 districtName: districtName,
+//                 page: page,
+//                 size: size
+//             }
+//         }).then(function (response) {
+//             return response.data;
+//         }).catch(function (error) {
+//             console.error('Error fetching related posts:', error);
+//         });
+//     };
+// }]);
