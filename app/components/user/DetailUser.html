@@ -59,27 +59,6 @@
                         <option value="">Chọn Quận/Huyện</option>
                     </select>
                 </div>
-            </div>
-            <div class="mb-3 row">
-                <div class="col-sm-6">
-                    <label for="phone" class="form-label">Thành phố/Tỉnh</label>
-                    <input type="text" class="form-control rounded" ng-model="inputProvince"
-                        ng-keyup="searchSuggestions(inputProvince)" placeholder="Nhập tên tỉnh/thành phố...">
-                    <section class="list-group" ng-if="suggestions.length">
-                        <option class="list-group-item" ng-repeat="suggestion in suggestions"
-                            ng-click="selectProvince(suggestion)">
-                            {{ suggestion.Name }}
-                        </option>
-                    </section>
-                </div>
-                <div class="col-sm-6">
-                    <label for="phone" class="form-label">Quận/Huyện</label>
-                    <select id="district" class="form-select" ng-model="selectedDistrict"
-                        ng-options="district as district.Name for district in selectedProvince.Districts"
-                        ng-change="onDistrictChange()" ng-disabled="!selectedProvince">
-                        <option value="">Chọn Quận/Huyện</option>
-                    </select>
-                </div>
 
             </div>
             <div class="mb-3 row">

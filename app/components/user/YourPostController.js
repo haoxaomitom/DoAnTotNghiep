@@ -15,7 +15,6 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
 
     const userId = localStorage.getItem('userId');
     let postIdToDelete = null; // Biến lưu trữ postId cần xóa
-    let postIdToDelete = null; // Biến lưu trữ postId cần xóa
 
     // Hàm để lấy dữ liệu bài viết
     $scope.getPosts = function () {
@@ -79,35 +78,6 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
             });
     };
 
-    // Hàm định dạng tiền tệ
-    $scope.formatCurrency = function (amount) {
-        if (amount != null) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
-        return "0 VND";
-    };
-
-    // Mở modal xác nhận xóa
-    $scope.openDeleteModal = function (postId) {
-        postIdToDelete = postId; // Lưu postId cần xóa vào biến
-        $('#deleteModal').modal('show'); // Mở modal bằng Bootstrap
-    };
-
-    // Xác nhận xóa bài đăng
-    $scope.confirmDelete = function () {
-        PostsService.deletePost(postIdToDelete, token)
-            .then(function (response) {
-                $('#deleteModal').modal('hide'); // Đóng modal
-                alert("Bài đăng đã được xóa thành công!");
-                $scope.getPosts(); // Làm mới danh sách bài viết
-            })
-            .catch(function (error) {
-                console.error('Error deleting post:', error);
-                alert("Có lỗi xảy ra khi xóa bài đăng!");
-            });
-    };
-
     // Gọi hàm để lấy dữ liệu bài viết khi controller được khởi tạo
     $scope.getPosts();
 }]);
-

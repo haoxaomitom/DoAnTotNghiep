@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +9,6 @@
     <link rel="stylesheet" href="/assets/css/home.css">
     <base href="/user/your-post">
 </head>
-
 
 <body ng-controller="PostsController">
 
@@ -61,17 +58,15 @@
                                 </div>
                             </div>
                             <div class="col-md-8 d-flex flex-column">
-                                <div class="card h-100 d-flex flex-column">
+                                <div class="card-title mb-0">
                                     <div class="card-header bg-transparent border-0">
                                         <h4 class="font-weight-bold">{{post.parkingName}}</h4>
                                     </div>
                                     <div class="card-body flex-grow-1">
                                         <h7 class="card-text district d-flex mb-2">
-                                            {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                            {{post.provinceName}}
+                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
                                         </h7>
                                         <h4 class="card-text text-danger">
-                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
                                             {{formatCurrency(post.price) + " " + post.priceUnit}}
                                         </h4>
                                     </div>
@@ -194,16 +189,9 @@
                     </a>
                 </div>
             </div>
-            <div ng-show="posts.length > 0 && !hasMoreData && !loading" class="text-center">
-                <p>Không còn bài đăng nào để hiển thị.</p>
-            </div>
-
         </div>
     </div>
 
-    </div>
-
 </body>
-
 
 </html>

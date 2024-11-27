@@ -1,4 +1,4 @@
-// let app = angular.module('parkingApp', []);
+let app = angular.module('parkingApp', []);
 
 app.controller('LoginController', function ($scope, $http, $window) {
     console.log("run");
@@ -26,10 +26,9 @@ app.controller('LoginController', function ($scope, $http, $window) {
                         // Xóa URL đã lưu sau khi chuyển hướng
                         localStorage.removeItem('redirectUrl');
                         // Chuyển hướng đến trang trước đó
-                        $location.path(redirectUrl);
+                        $window.location.href = redirectUrl;
                     } else {
                         // Mặc định 
-                        $window.location.href = '/app/index.html';
                         $window.location.href = '/app/index.html';
                     }
                 } else {
@@ -69,7 +68,6 @@ app.controller('LoginController', function ($scope, $http, $window) {
             return;
         }
     }
-}
     $scope.loginWithFacebook = function () {
         FB.login(function (response) {
             if (response.authResponse) {
@@ -99,45 +97,45 @@ app.controller('LoginController', function ($scope, $http, $window) {
         });
     };
 
-$scope.registerUser = function () {
-    const user = {
-        username: $scope.username,
-        email: $scope.email,
-        password: $scope.password
+    $scope.registerUser = function () {
+        const user = {
+            username: $scope.username,
+            email: $scope.email,
+            password: $scope.password
+        };
+        $http.post('http://localhost:8080/api/users/register', user)
+            .then(function (response) {
+                console.log('User registered successfully:', response);
+            }, function (error) {
+                console.log('Registration failed:', error);
+            });
     };
-    $http.post('http://localhost:8080/api/users/register', user)
-        .then(function (response) {
-            console.log('User registered successfully:', response);
-        }, function (error) {
-            console.log('Registration failed:', error);
-        });
-};
 
-$scope.loginWithGoogle = function () {
-    const clientId = '326720550153-k9n1s1v6vdomueidjne4bggu8o6n2u6d.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
-    const scope = 'openid profile email';
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline`;
+    $scope.loginWithGoogle = function () {
+        const clientId = '326720550153-k9n1s1v6vdomueidjne4bggu8o6n2u6d.apps.googleusercontent.com';
+        const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
+        const scope = 'openid profile email';
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline`;
 
-    // Chuyển hướng người dùng tới URL xác thực của Google
-    $window.location.href = authUrl;
-};
-const urlParams = new URLSearchParams(window.location.search);
-const code = urlParams.get('code');
-console.log("Authorization Code: " + code);
+        // Chuyển hướng người dùng tới URL xác thực của Google
+        $window.location.href = authUrl;
+    };
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    console.log("Authorization Code: " + code);
 
-if (code) {
-    $http.post('/api/auth/google', { code: code })
-        .then(function (response) {
-            console.log('User Info:', response.data);
-            $scope.user = response.data;
-        })
-        .catch(function (error) {
-            console.error('Login error:', error);
-        });
-}
-    
-    
+    if (code) {
+        $http.post('/api/auth/google', { code: code })
+            .then(function (response) {
+                console.log('User Info:', response.data);
+                $scope.user = response.data;
+            })
+            .catch(function (error) {
+                console.error('Login error:', error);
+            });
+    }
+
+
 
 }
 )

@@ -59,4 +59,3 @@ app.service('PostsService', ['$http', function ($http) {
         });
     };
 }]);
-
