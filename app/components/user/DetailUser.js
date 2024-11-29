@@ -15,10 +15,9 @@ app.directive("fileModel", ["$parse", function ($parse) {
         },
     };
 }]);
+
 app.controller('detailUserController', function ($scope, $http, $window) {
 
-    console.log("Run user")
-    // Lấy dữ liệu tỉnh thành từ GitHub
     $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
         .then(function (response) {
             // Lưu dữ liệu vào $scope
@@ -92,7 +91,8 @@ app.controller('detailUserController', function ($scope, $http, $window) {
                     $scope.email = data.email;
                     $scope.fullName = data.lastName + ' ' + data.firstName;
                     $scope.avatar = data.avatar;
-                    $scope.isVerified = data.verified ? "Xác thực Email" : "Đã xác thực"
+                    $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email"
+
                     // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
 
                     $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
@@ -129,45 +129,36 @@ app.controller('detailUserController', function ($scope, $http, $window) {
     };
 
     // load avata
-    $scope.uploadAvatar = function () {
-        const formData = new FormData();
-        formData.append("file", $scope.file);
-        console.log(formData);
-        if (!$scope.file || !/^image\//.test($scope.file.type)) {
-            console.error("Chỉ chấp nhận các định dạng ảnh.");
-            $scope.uploadResult = {
-                status: false,
-                message: "Chỉ chấp nhận các định dạng ảnh.",
-            };
+    $scope.avatar = 'https://via.placeholder.com/100'; // Avatar mặc định
+    $scope.file = null; // File người dùng chọn
+
+    // Hàm upload ảnh
+    $scope.uploadAvatar = function (file) {
+        console.log("Run avt");
+        if (!file) {
+            // alert('Vui lòng chọn một file hợp lệ!');
             return;
         }
 
-        // Gửi yêu cầu PUT đến API
-        $http
-            .put(`http://localhost:8080/api/users/avatar/${username}`, formData, {
-                headers: {
-                    "Content-Type": undefined,
-                    'Authorization': `Bearer ${token}`
-                },
-                transformRequest: angular.identity,
-            })
+        // Tạo FormData để gửi file
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const apiUrl = `http://localhost:8080/api/users/avatar/${$scope.username}`; // Thay $scope.username bằng username người dùng
+
+        // Gửi request POST
+        $http.post(apiUrl, formData, {
+            headers: { 'Content-Type': undefined } // Để trình duyệt tự set Content-Type
+        })
             .then(function (response) {
-                $scope.uploadResult = response.data;
-                console.log($scope.uploadResult.message);
-
-
-                // Cập nhật URL của avatar nếu upload thành công
-                if ($scope.uploadResult.status) {
-                    $scope.avatar = $scope.uploadResult.data.avatar;
-                    console.log("thành công");
-                }
+                // Cập nhật avatar mới sau khi upload thành công
+                $scope.avatar = response.data.avatarUrl;
+                // alert('Ảnh đã được cập nhật thành công!');
+                $scope.showToast("Ảnh đã được cập nhật thành công !");
             })
             .catch(function (error) {
-                console.error("Lỗi tải ảnh:", error);
-                $scope.uploadResult = {
-                    status: false,
-                    message: "Tải ảnh thất bại. Vui lòng thử lại.",
-                };
+                console.error('Upload lỗi:', error);
+                alert('Đã xảy ra lỗi khi upload ảnh!');
             });
     };
 
@@ -178,6 +169,7 @@ app.controller('detailUserController', function ($scope, $http, $window) {
             $scope.uploadAvatar();
         }
     });
+
     // cập nhật thông tin
     $scope.update = function () {
 
@@ -201,30 +193,46 @@ app.controller('detailUserController', function ($scope, $http, $window) {
         })
             .then(function (response) {
                 if (response.data.status) {
-                    alert("Cập nhật thành công!");
+                    // alert("Cập nhật thành công!");
+                
+                    $scope.showToast("Cập nhật thông tin thành công !");
                 } else {
                     $scope.message = response.data.message
                 }
             })
     }
+    $scope.isLoading = false; // Biến để kiểm soát trạng thái loading
+    $scope.isVerified = "Chưa xác thực"; // Trạng thái nút
+    
     $scope.verified = function () {
+        $scope.isLoading = true; // Hiển thị hiệu ứng loading
+    
         $http.get(`http://localhost:8080/api/email/send-verification-email?userId=${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        })
-            .then(function (response) {
-                if (response.data.status) {
-                    alert("Đã gửi email xác nhận qua địa chỉ mail của bạn")
-                    console.log("thành công");
-
-                } else {
-                    console.log(response.data.message);
-
-                }
-            })
-    }
-
+        }).then(function (response) {
+            $scope.isLoading = false; // Tắt hiệu ứng loading
+            if (response.data.status) {
+                $scope.isVerified = "Đã gửi";
+                const actionMessage = "Đã gửi email xác nhận qua địa chỉ mail của bạn, vui lòng kiểm tra mail để xác nhận";
+                $scope.showToast(actionMessage);
+                console.log("Thành công");
+            } else {
+                console.log(response.data.message);
+            }
+        }).catch(function (error) {
+            $scope.isLoading = false; // Tắt hiệu ứng loading nếu có lỗi
+            console.error("Lỗi:", error);
+        });
+    };
+    
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
 
 
 })

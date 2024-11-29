@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PFR - Thông tin cá nhân</title>
-
+    <link rel="stylesheet" href="/assets/css/home.css">
     <base href="/user">
 </head>
 
@@ -13,44 +13,59 @@
     <div class="container mt-5">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-4">
+            <div class="col-md-4 sb">
                 <div class="profile-sidebar rounded border p-3">
                     <div class="row">
-                        <div class="col-sm-3 avatar">
+                        <div class="col-sm-3 avatar" ng-controller="detailUserController">
                             <label for="fileInput">
+                                <!-- Hiển thị avatar hoặc hình mặc định -->
                                 <img ng-src="{{ avatar ? avatar : 'https://via.placeholder.com/100' }}"
-                                    class="rounded-circle" alt="User Avatar" style="max-width: 100px; cursor: pointer;">
+                                     class="rounded-circle" 
+                                     alt="User Avatar" 
+                                     style="max-width: 100px; cursor: pointer;">
                             </label>
-                            <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="angular.element(this).scope().setAvatarFile(this.files[0]); 
-                                angular.element(this).scope().uploadAvatar();">
+                        
+                            <!-- Input file ẩn -->
+                            <input 
+                                type="file" 
+                                id="fileInput" 
+                                style="display: none;" 
+                                accept="image/*" 
+                                ng-model="file"
+                                onchange="uploadAvatar(file)">
                         </div>
+                        
 
                         <div class=" col-sm-9 pt-4">
                             <h4 class="text-center"> {{fullName}} </h4>
                         </div>
                     </div>
                     <ul class="list-unstyled nav nav-tabs flex-column text-center">
-                        
+
                         <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/information')}">
-                            <a class="nav-link" href="/user/information"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a>
+                            <a class="nav-link" href="/user/information"><i class="fa-regular fa-user"></i> Thông tin cá
+                                nhân</a>
                         </li>
                         <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/my-post')}">
-                            <a class="nav-link" href="/user/my-post"><i class="fa-solid fa-sheet-plastic"></i> Bài đăng của bạn</a>
+                            <a class="nav-link" href="/user/my-post"><i class="fa-solid fa-sheet-plastic"></i> Bài đăng
+                                của bạn</a>
                         </li>
                         <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/save-post')}">
-                            <a class="nav-link" href="/user/save-post"><i class="fa-regular fa-bookmark"></i> Bài đăng đã lưu</a>
+                            <a class="nav-link" href="/user/save-post"><i class="fa-regular fa-bookmark"></i> Bài đăng
+                                đã lưu</a>
                         </li>
                         <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/change-password')}">
                             <a class="nav-link" href="/user/change-password">Đổi mật khẩu</a>
                         </li>
                         <li class="mb-2 mt-2 nav-item">
-                            <a class="nav-link" ng-click="logout()"><i class="fa-solid fa-right-to-bracket"></i> Đăng xuất</a>
+                            <a class="nav-link" ng-click="logout()"><i class="fa-solid fa-right-to-bracket"></i> Đăng
+                                xuất</a>
                         </li>
                     </ul>
-                    
+
                 </div>
             </div>
-            <div class="col-md-8 border rounded p-4">
+            <div class="col-md-8 border rounded p-4 ">
                 <div ng-view></div>
             </div>
         </div>

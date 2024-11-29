@@ -1,5 +1,6 @@
 app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', function ($scope, $window, FavoritesService) {
     const token = localStorage.getItem('token'); // Lấy token từ localStorage
+    $scope.shimmerRepeatCount = new Array(5);
 
     // Hàm kiểm tra thời gian hết hạn của token
     function isTokenExpired(token) {

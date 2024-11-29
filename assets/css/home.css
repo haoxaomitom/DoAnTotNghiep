@@ -11,19 +11,28 @@
     object-fit: cover;
 }
 
+.sb-ft {
+    min-height: 68vh;
+    height: auto !important;
+    height: 100%;
+}
 
 
 .promoted-label {
     position: absolute;
-    top: 65px;
-    right:10px;
-    color: #333; /* Dark text for readability */
+    right: 10px;
+    color: #333;
+    /* Dark text for readability */
     font-weight: bold;
     padding: 5px 10px;
-    border-radius: 20px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
-    font-size: 0.9rem; /* Slightly larger font size */
-    z-index: 1; /* Ensure it stays on top */
+    border-radius: 20px;
+    /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Slight shadow for depth */
+    font-size: 0.9rem;
+    /* Slightly larger font size */
+    z-index: 1;
+    /* Ensure it stays on top */
 }
 
 .promoted-label::before {
@@ -34,23 +43,108 @@
     right: -5px;
     bottom: -5px;
     border-radius: 25px;
-    background-image: repeating-linear-gradient(130deg, 
-        rgba(251, 213, 251, 1), 
-        rgba(149, 233, 243, 1),
-        rgba(251, 213, 251, 1),
-        rgba(149, 233, 243, 1)
-    );
+    background-image: repeating-linear-gradient(130deg,
+            rgba(251, 213, 251, 1),
+            rgba(149, 233, 243, 1),
+            rgba(251, 213, 251, 1),
+            rgba(149, 233, 243, 1));
     z-index: -1;
-    animation: shimmer 7s linear infinite;
+    animation: shimmer1 7s linear infinite;
     background-size: 300%;
 }
 
 /* Keyframes for the shimmering effect */
-@keyframes shimmer {
+@keyframes shimmer1 {
     0% {
-        background-position: 100% 50%; /* Start from the right */
+        background-position: 100% 50%;
+        /* Start from the right */
     }
+
     100% {
-        background-position: 0% 50%; /* End at the left */
+        background-position: 0% 50%;
+        /* End at the left */
     }
 }
+
+.hl{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Loading screen styles */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-logo {
+    width: 250px;
+    height: auto;
+    animation: fadeIn 1s ease-in-out infinite alternate;
+}
+
+/* Fade-in animation for the logo */
+@keyframes fadeIn {
+    from {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Hide main content while loading */
+#main-content.d-none {
+    display: none;
+}
+
+/* Shimmer effect style */
+.shimmer-wrapper {
+    display: inline-block;
+    position: relative;
+    overflow: hidden; /* Ensure overflow is hidden */
+    width: 100%;  /* Or specific width */
+    height: 200px; /* Or specific height */
+  }
+  
+  .shimmer-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+    animation: shimmer2 1.5s infinite linear;
+  }
+  
+  @keyframes shimmer2 {
+    100% {
+      left: 100%;
+    }
+  }
+  
+  .shimmer-block {
+    height: 100%;
+    background: #e0e0e0;
+    border-radius: 4px;
+  }
+  
+  .profile-sidebar{
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+
+  }

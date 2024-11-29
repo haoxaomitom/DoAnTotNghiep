@@ -10,7 +10,7 @@
 
 <body ng-controller="VerificationController" class="container mt-5">
     <div class="text-center">
-        <h2>Kết quả xác thực</h2>
+        <h2 class="mb-3">Kết quả xác thực</h2>
         <div ng-if="status === 'success'" class="alert alert-success" role="alert">
             {{ message }}
         </div>
@@ -24,6 +24,7 @@
             {{ message }}
         </div>
     </div>
+    <a class="btn btn-primary d-flex justify-content-center" href="/app/index.html">Quay lại trang chủ</a>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="Verification.js"></script>

@@ -16,6 +16,13 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
 
+        // Chờ tải xong tất cả tài nguyên
+        angular.element(document).ready(function () {
+            $scope.$applyAsync(() => {
+                $scope.isLoading = false; // Đảm bảo trạng thái này thực sự được cập nhật
+            });
+        });
+        
     // Kiểm tra trạng thái đăng nhập khi khởi tạo controller
     $scope.checkLoginStatus = function () {
         if (token && username) {
@@ -35,6 +42,9 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
     };
 
 
+
+
+    
     // Phương thức đăng xuất
     $scope.logout = function () {
         // Xóa token và userId trong localStorage
@@ -141,22 +151,10 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
                 } else {
                     $scope.notFoundMessage = ''; // Clear the not found message if results are found
                     $scope.posts = posts; // Update posts list with search results
-                const posts = response.data.content || []; // Get the content from the response
-
-                // Check if posts array is empty
-                if (posts.length === 0) {
-                    $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
-                    $scope.posts = []; // Clear posts if no data found
-                } else {
-                    $scope.notFoundMessage = ''; // Clear the not found message if results are found
-                    $scope.posts = posts; // Update posts list with search results
-                    $scope.totalPagesCount = response.data.totalPages; // Update total pages
                 }
             })
             .catch(function (error) {
                 console.error('Error fetching posts:', error);
-                $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
-                $scope.posts = []; // Clear posts on error
                 $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
                 $scope.posts = []; // Clear posts on error
             });
@@ -175,7 +173,7 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
     $scope.onDistrictChange = function () {
         $scope.selectedVehicleType = ""; // Reset dropdown loại xe
         $scope.sortPrice = "";           // Reset dropdown sắp xếp
-    
+
         if ($scope.selectedDistrict && $scope.selectedDistrict.Name) {
             PostService.searchPosts($scope.selectedDistrict.Name, $scope.currentPage)
                 .then(function (response) {
@@ -197,7 +195,7 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
             $scope.getPosts();
         }
     };
-    
+
 
     $scope.sortPosts = function () {
         $scope.loading = true;
@@ -214,7 +212,7 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
     $scope.onVehicleTypeChange = function () {
         $scope.selectedDistrict = ""; // Reset dropdown quận/huyện
         $scope.sortPrice = "";          // Reset dropdown sắp xếp
-    
+
         if ($scope.selectedVehicleType) {
             PostService.searchPostsByVehicleType($scope.selectedVehicleType, $scope.currentPage)
                 .then(function (response) {
@@ -222,17 +220,10 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
                     if (posts.length === 0) {
                         $scope.notFoundMessage = 'Không tìm thấy kết quả nào';  // Set message if no results
                         $scope.posts = [];
-                    const posts = response.data.content || [];
-                    if (posts.length === 0) {
-                        $scope.notFoundMessage = 'Không tìm thấy kết quả nào';  // Set message if no results
-                        $scope.posts = [];
                     } else {
                         $scope.notFoundMessage = '';  // Clear message if there are results
                         $scope.posts = posts;
-                        $scope.notFoundMessage = '';  // Clear message if there are results
-                        $scope.posts = posts;
                     }
-                    $scope.totalPagesCount = response.data.totalPages;
                     $scope.totalPagesCount = response.data.totalPages;
                 })
                 .catch(function (error) {
@@ -241,22 +232,19 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
         } else {
             $scope.notFoundMessage = '';
             $scope.getPosts();
-        } else {
-            $scope.notFoundMessage = '';
-            $scope.getPosts();
         }
     };
-    
+
 
     // Sorting function triggered when the user selects a sort option
     $scope.onSortChange = function () {
         $scope.selectedDistrict = ""; // Reset dropdown quận/huyện
         $scope.selectedVehicleType = ""; // Reset dropdown loại xe
-    
+
         $scope.currentPage = 0; // Reset về trang đầu tiên
         $scope.getPosts();
     };
-    
+
 
     // Format time function
     $scope.formatTimeAgo = function (date) {

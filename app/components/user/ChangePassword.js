@@ -1,5 +1,3 @@
-let app = angular.module("packingApp", []);
-
 app.controller("ChangePasswordController", function ($scope, $http) {
     $scope.oldPasswordFieldType = 'password';
     $scope.newPasswordFieldType = 'password';

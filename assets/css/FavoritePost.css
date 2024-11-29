@@ -29,3 +29,26 @@
     background: #e0e0e0;
     border-radius: 4px;
   }
+
+  .img-fluid {
+    width: auto;
+    height: 230px;
+    object-fit: cover;
+}
+
+.hl{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* Đảm bảo rằng ng-view có chiều cao và độ rộng cố định */
+.ng-enter,
+.ng-leave {
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.ng-enter.ng-enter-active,
+.ng-leave.ng-leave-active {
+  opacity: 1;
+}
