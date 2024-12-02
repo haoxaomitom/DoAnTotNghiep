@@ -1,0 +1,236 @@
+/* Basic Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    width: calc(100% - 250px);
+    background-color: #fff;
+    padding: 10px 20px;
+    z-index: 5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .search-bar-navbar {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.navbar .search-bar-navbar input[type="text"] {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    margin-right: 10px;
+}
+
+.navbar .search-bar-navbar button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar .search-bar-navbar button:hover {
+    background-color: #2980b9;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #2d98da;
+    padding: 20px;
+    color: white;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar .logo h2 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #45aaf2;
+}
+
+.sidebar ul {
+    list-style: none;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+/* Main Content Styling */
+.main-container {
+    display: flex;
+    width: calc(100% - 250px);
+    margin-top: 80px;
+    margin-left: 250px;
+    padding: 20px;
+    gap: 20px;
+}
+
+.leftside, .rightside {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leftside {
+    flex: 0 0 70%;
+}
+
+.title-section input,
+.description-input,
+.input-group input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.description-input {
+    height: 100px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.media-section, .address-section, .amenities-section {
+    margin-bottom: 20px;
+}
+
+/* Amenities Section */
+.amenities-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.amenities-section h3 {
+    margin-bottom: 10px;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cột */
+    gap: 10px;
+}
+
+/* Map and Button Styling */
+.map-section #map {
+    width: 100%;
+    height: 250px;
+    background-color: #bdc3c7;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-group button {
+    width: 48%;
+    padding: 12px;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-group button:nth-child(1) {
+    background-color: #27ae60;
+}
+
+.button-group button:nth-child(1):hover {
+    background-color: #218c52;
+}
+
+.button-group button:nth-child(2) {
+    background-color: #e74c3c;
+}
+
+.button-group button:nth-child(2):hover {
+    background-color: #c0392b;
+}
+
+/* Checkbox Styling */
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Improved Input Group Styling */
+.input-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+    background-color: #f8f9fa;
+}
