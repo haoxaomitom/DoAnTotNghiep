@@ -1,6 +1,7 @@
 app.service('ItemService', function ($http) {
+    const API_BASE = "doantotnghiepbe-production.up.railway.app";
     this.getPosts = function (page, size) {
-        return $http.get('/api/posts/top?page=' + page + '&size=' + size);
+        return $http.get('${API_BASE}/api/posts/top?page=' + page + '&size=' + size);
     };
 });
 
@@ -13,21 +14,22 @@ app.service('LocationService', ['$http', function ($http) {
 
 // API for fetching posts count by district and search
 app.service('PostService', ['$http', function ($http) {
+    const API_BASE = "doantotnghiepbe-production.up.railway.app";
     // Fetch paginated posts
     this.getPosts = function (page, size) {
-        return $http.get('/api/posts/top');
+        return $http.get('${API_BASE}/api/posts/top');
     };
 
     // Fetch posts count by district
     this.getPostsCountByDistrict = function () {
-        return $http.get('/api/posts/countByDistrict');
+        return $http.get('${API_BASE}/api/posts/countByDistrict');
     };
 
     // Search posts by search term and district
     this.searchPosts = function (searchTerm, selectedDistrictName, page) {
         return $http({
             method: 'GET',
-            url: '/api/posts/search',
+            url: '${API_BASE}/api/posts/search',
             params: {
                 searchTerm: searchTerm,
                 district: selectedDistrictName,
@@ -40,7 +42,7 @@ app.service('PostService', ['$http', function ($http) {
     this.searchPostsByVehicleType = function (vehicleType, page) {
         return $http({
             method: 'GET',
-            url: '/api/posts/searchVehicleType',
+            url: '${API_BASE}/api/posts/searchVehicleType',
             params: {
                 vehicleType: vehicleType,
                 page: page
@@ -52,7 +54,7 @@ app.service('PostService', ['$http', function ($http) {
     this.sortPostsByPrice = function (sortOrder, page, size) {
         return $http({
             method: 'GET',
-            url: '/api/posts/sort',
+            url: '${API_BASE}/api/posts/sort',
             params: {
                 sort: sortOrder,
                 page: page,
