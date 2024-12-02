@@ -53,6 +53,14 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
         });
     };
 
+    $scope.modalImage = null; // Lưu URL ảnh hiển thị trong Modal
+
+    $scope.openModal = function (imageUrl) {
+        $scope.modalImage = imageUrl; // Gán URL ảnh vào biến modalImage
+        const modal = new bootstrap.Modal(document.getElementById('imageModal')); // Khởi tạo Bootstrap Modal
+        modal.show(); // Hiển thị Modal
+    };
+
     $scope.isPostPromoted = function (topPostEnd) {
         // Check if topPostEnd exists and is still valid
         return topPostEnd && new Date(topPostEnd) > new Date();
@@ -84,7 +92,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
                 });
         }
     };
-    
+
 
     // Go to the next page
     $scope.nextPage = function () {
@@ -159,8 +167,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
     };
 
     $scope.checkLoginBeforeSubmit = function () {
-        const isLoggedIn = localStorage.getItem("token") && localStorage.getItem("userId");
-        if (!isLoggedIn) {
+        if (!$scope.isLoggedIn()) {
             // Show modal if not logged in
             $('#loginPromptModal').modal('show');
         } else {
@@ -169,12 +176,6 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
         }
     };
 
-    $scope.redirectToLogin = function () {
-        // Hide modal and redirect to login page
-        $('#loginPromptModal').modal('hide');
-        localStorage.setItem('redirectUrl', $window.location.href);
-        $window.location.href = 'http://127.0.0.1:5500/app/components/Login/LoginAndRegister.html';
-    };
 
     // Function to create a comment
     $scope.submitComment = function () {
@@ -271,15 +272,6 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
         }
     };
 
-    // $('#reportModal').on('shown.bs.modal', function () {
-    //     $scope.$apply(function () {
-    //         $scope.reportReason = 1; // Reset giá trị mặc định
-    //         $scope.reportDetails = '';
-    //         $scope.isOtherReason = false;
-    //     });
-    // });
-
-    
     $scope.isOtherReason = false;
 
     $scope.checkReportReason = function () {
@@ -316,7 +308,6 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
     };
 
 
-    // Fetch the initial favorite status when the page loads
     $scope.checkFavoriteStatus = function () {
         PostDetailService.checkFavoriteStatus(userId, id_post)
             .then(function (response) {
@@ -328,11 +319,22 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
             });
     };
 
+    // Function to check if user is logged in
+    $scope.isLoggedIn = function () {
+        const userId = localStorage.getItem('userId');  // Assuming userId is saved in localStorage
+        return userId !== null; // If userId exists in localStorage, the user is logged in
+    };
+
     // Toggle favorite status
     $scope.toggleFavorite = function () {
+        if (!$scope.isLoggedIn()) {
+            // If the user is not logged in, show the modal
+            $('#loginPromptModal').modal('show');
+            return;
+        }
 
+        // If the user is logged in, proceed with toggling the favorite status
         PostDetailService.toggleFavorite(userId, id_post)
-
             .then(function (response) {
                 $scope.isFavorite = response.data.data.isFavorite;
                 const actionMessage = $scope.isFavorite ? 'Đã lưu bài đăng' : 'Đã hủy lưu bài đăng';
@@ -344,6 +346,32 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
             });
     };
 
+
+    $scope.saveContactInfo = function () {
+        const data = {
+            user: userId,
+            post: id_post,
+            phoneNumber: $scope.phoneNumber,
+            typeCar: $scope.typeCar,
+            contactTime: $scope.contactTime,
+            description: $scope.description
+        };
+
+        console.log(data);
+
+        PostDetailService.saveContactInfo(data).then((response) => {
+            if (response.data.status) {
+                $scope.showToast("Đã gửi thông tin thành công !");
+                $('#leaveInfModal').modal('hide'); // Close the modal
+
+            } else {
+                alert(response.data.message);
+                $scope.showToast("Có lỗi khi gửi thông tin, vui lòng thử lại sau !");
+            }
+        }).catch((err) => {
+            console.error(err);
+        });
+    };
 
     // Show success toast
     $scope.showToast = function (message) {

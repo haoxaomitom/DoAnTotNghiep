@@ -101,5 +101,13 @@ app.service('PostDetailService', ['$http', function ($http) {
               console.error('Error fetching related posts:', error);
           });
     };
+    
+    this.saveContactInfo = function(data) {
+        return $http.post("http://localhost:8080/api/contactInformation/create", data);
+    };
 
+    // this.redirectToLogin = function() {
+    //     localStorage.setItem('redirectUrl', $window.location.href);
+    //     $window.location.href = '/app/components/Login/LoginAndRegister.html';
+    // };
 }]);

@@ -30,3 +30,36 @@
     background: #e0e0e0;
     border-radius: 4px;
   }
+
+.promoted-label {
+  position: absolute; /* Nằm trong luồng bình thường */
+  color: #333; /* Màu chữ tối để dễ đọc */
+  font-weight: bold;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Bóng mờ */
+  font-size: 0.9rem;
+  background-image: repeating-linear-gradient(130deg,
+      rgba(251, 213, 251, 1),
+      rgba(149, 233, 243, 1),
+      rgba(251, 213, 251, 1),
+      rgba(149, 233, 243, 1));
+  background-size: 300%;
+  animation: shimmer1 7s linear infinite;
+  margin-left: auto; /* Đẩy label về phía bên phải */
+  white-space: nowrap; /* Không cho nội dung label xuống dòng */
+  top:5px;
+
+}
+
+/* Keyframes for the shimmering effect */
+@keyframes shimmer1 {
+    0% {
+        background-position: 100% 50%;
+        /* Start from the right */
+    }
+
+    100% {
+        background-position: 0% 50%;
+        /* End at the left */
+    }
+}

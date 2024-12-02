@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="/assets/css/home.css">
+
 </head>
 
 <body ng-controller="detailUserController">
     <h3 class="mb-4">Thông tin tài khoản</h3>
     <!-- Form -->
-    <div class="profile-form">
+    <div class="profile-form" ng-class="{'fade-in': !loading}">
         <form ng-submit="update()">
             <div class="mb-3 row">
                 <div class="col-sm-6"><label for="name" class="form-label">Họ</label>

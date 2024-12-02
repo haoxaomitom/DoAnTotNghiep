@@ -16,8 +16,10 @@ app.directive("fileModel", ["$parse", function ($parse) {
     };
 }]);
 
-app.controller('detailUserController', function ($scope, $http, $window) {
-
+app.controller('detailUserController', function ($scope, $location,  $http, $window) {
+    const username = localStorage.getItem('username');
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
     $http.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
         .then(function (response) {
             // Lưu dữ liệu vào $scope
@@ -37,6 +39,60 @@ app.controller('detailUserController', function ($scope, $http, $window) {
         } else {
             $scope.districts = [];
         }
+    };
+
+    $scope.isLoggedIn = !!(username && token); // Kiểm tra người dùng đã đăng nhập hay chưa
+
+    if ($scope.isLoggedIn) {
+        // Nếu đã đăng nhập, lấy thông tin người dùng
+        $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Gửi token trong header
+            }
+        })
+        .then(function (response) {
+            if (response.data.status) {
+                const data = response.data.data;
+                $scope.firstName = data.firstName;
+                $scope.lastName = data.lastName;
+                $scope.gender = data.gender;
+                $scope.dateOfBirth = data.dateOfBirth;
+                $scope.phoneNumber = data.phoneNumber;
+                $scope.email = data.email;
+                $scope.fullName = data.lastName + ' ' + data.firstName;
+                $scope.avatar = data.avatar;
+                $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email";
+
+                // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
+                $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
+                if ($scope.selectedProvince) {
+                    $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
+
+                    $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
+
+                    $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
+                    if ($scope.selectedDistrict) {
+                        $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
+
+                        $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
+                    }
+                }
+            } else {
+                console.log(response.data.message);
+            }
+        }, function (error) {
+            console.log(error);
+        })
+    } else {
+        // Nếu chưa đăng nhập, không chuyển hướng, chỉ hiển thị các tùy chọn đăng nhập
+        $scope.isLoggedIn = false;
+    }
+
+    // Đăng xuất
+    $scope.logout = function () {
+        localStorage.clear();
+        // Chuyển hướng đến trang chủ
+        $window.location.href = '/app/index.html';
     };
 
     // Khi chọn Quận/Huyện
@@ -69,63 +125,6 @@ app.controller('detailUserController', function ($scope, $http, $window) {
         $scope.inputProvince = province.Name; // Cập nhật giá trị input
         $scope.suggestions = []; // Ẩn danh sách gợi ý
         $scope.onProvinceChange(); // Reset quận/huyện
-    };
-
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    if (username && token) {
-        $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
-            headers: {
-                'Authorization': `Bearer ${token}` // Gửi token trong header
-            }
-        })
-            .then(function (response) {
-                if (response.data.status) {
-                    const data = response.data.data;
-                    $scope.firstName = data.firstName;
-                    $scope.lastName = data.lastName;
-                    $scope.gender = data.gender;
-                    $scope.dateOfBirth = data.dateOfBirth;
-                    $scope.phoneNumber = data.phoneNumber;
-                    $scope.email = data.email;
-                    $scope.fullName = data.lastName + ' ' + data.firstName;
-                    $scope.avatar = data.avatar;
-                    $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email"
-
-                    // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
-
-                    $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
-                    if ($scope.selectedProvince) {
-                        $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
-
-                        $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
-
-                        $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
-                        if ($scope.selectedDistrict) {
-                            $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
-
-                            $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
-                        }
-                    }
-
-                } else {
-                    console.log(response.data.message);
-                }
-            }, function (error) {
-                console.log(error);
-            }
-            )
-    } else {
-        localStorage.setItem('redirectUrl', $window.location.href);
-        $window.location.href = '/app/components/Login/LoginAndRegister.html';
-    }
-    // Đăng xuất
-    $scope.logout = function () {
-
-        localStorage.clear();
-        // Chuyển hướng đến trang chủ
-        $window.location.href = '/app/index.html';
     };
 
     // load avata

@@ -1,4 +1,4 @@
-let app = angular.module('parkingApp', []);
+// let app = angular.module('parkingApp', []);
 
 app.controller('LoginController', function ($scope, $http, $window) {
     console.log("run");

@@ -1,6 +1,6 @@
 
 
-app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, $location, ItemService, LocationService, PostService) {
+app.controller('ParkingController', ['$scope', '$http','$window', '$location', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, $window, $location, ItemService, LocationService, PostService) {
 
     $scope.loading = false;
     $scope.posts = [];
@@ -41,10 +41,28 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
         }
     };
 
+    $scope.isLoggedIn = function() {
+        const userId = localStorage.getItem('userId');  // Assuming userId is stored in localStorage
+        return userId !== null; // If userId exists, the user is logged in
+    };
 
+    $scope.checkLoginBeforePost = function() {
+        if (!$scope.isLoggedIn()) {
+            // If the user is not logged in, show the modal
+            $('#loginPromptModal').modal('show');
+        } else {
+            // If the user is logged in, redirect to the post page
+            $location.path('/dang-tin');  // Change the URL based on your app's routing
+        }
+    };
 
+    $scope.redirectToLogin = function () {
+        // Hide modal and redirect to login page
+        $('#loginPromptModal').modal('hide');
+        localStorage.setItem('redirectUrl', $location.path());  // Store current URL to redirect after login
+        $location.path('/Login-and-Register');  // Change this URL based on your app's routing
+    };
 
-    
     // Phương thức đăng xuất
     $scope.logout = function () {
         // Xóa token và userId trong localStorage
@@ -96,14 +114,6 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
             $scope.getPosts();
             $scope.getPosts();
         }
-    };
-
-    // Function to format amount as Vietnamese currency
-    $scope.formatCurrency = function (amount) {
-        if (amount != null) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
-        return "0 VND";
     };
 
     // Function to format amount as Vietnamese currency
@@ -265,7 +275,7 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
         $scope.showSidebar = $location.path().startsWith('/user/');
     });
 
-    $scope.checkLoginStatus();
+   
     $scope.checkLoginStatus();
     $scope.getPosts();
     $scope.getProvinces();
