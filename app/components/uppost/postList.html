@@ -1,0 +1,35 @@
+<!-- app/views/postList.html -->
+<h2 class="text-center">Danh sách bài đăng</h2>
+
+<div class="alert alert-info text-center" ng-if="posts.length === 0 && !errorMessage">
+  Không có bài đăng nào.
+</div>
+
+<div class="alert alert-danger text-center" ng-if="errorMessage">
+  {{ errorMessage }}
+</div>
+
+<div class="row" ng-if="posts.length > 0">
+  <div class="col-md-4" ng-repeat="post in posts">
+    <div class="card mb-4">
+      <img
+        ng-src="{{ post.images[0] || 'https://via.placeholder.com/150' }}"
+        class="card-img-top"
+        alt="Ảnh bài đăng"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ post.parkingName }}</h5>
+        <p class="card-text">
+          {{ post.description || "Không có mô tả" }}
+        </p>
+        <p class="text-muted">
+          Giá: {{ post.price | currency:'VND':'symbol' }} / {{ post.priceUnit }}
+        </p>
+        <p class="text-muted">
+          Địa chỉ: {{ post.street }}, {{ post.wardName }}, {{ post.districtName }}, {{ post.provinceName }}
+        </p>
+        <a href="#" class="btn btn-primary">Xem chi tiết</a>
+      </div>
+    </div>
+  </div>
+</div>

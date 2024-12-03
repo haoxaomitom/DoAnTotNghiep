@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="postApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin bài đăng</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+
+<body ng-controller="PostController">
+
+    <!-- Form Thông tin bài đăng -->
+    <div class="form-container">
+        <h1>Đăng tin cho thuê</h1>
+        <form name="postForm">
+            <fieldset>
+                <legend>Thông tin bài đăng</legend>
+
+                <label for="title">Nhập tiêu đề</label>
+                <input type="text" id="title" ng-model="post.title" placeholder="Nhập tiêu đề" required>
+
+                <label for="description">Mô tả</label>
+                <textarea id="description" ng-model="post.description" placeholder="Nhập mô tả tại đây"
+                    required></textarea>
+
+                <label>Các tiện ích</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" ng-model="post.facilities.camera"> Có camera</label>
+                    <label><input type="checkbox" ng-model="post.facilities.lock"> Có khóa cổng ra vào tự do</label>
+                    <label><input type="checkbox" ng-model="post.facilities.charging"> Có trạm sạc xe điện</label>
+                    <label><input type="checkbox" ng-model="post.facilities.security247"> Có bảo vệ 24/7</label>
+                    <label><input type="checkbox" ng-model="post.facilities.roof"> Có mái che</label>
+                    <label><input type="checkbox" ng-model="post.facilities.security2424"> Có bảo vệ 24/24</label>
+                    <label><input type="checkbox" ng-model="post.facilities.carwash"> Có dịch vụ rửa xe</label>
+                </div>
+
+                <label for="otherFacilities">Tiện ích khác</label>
+                <input type="text" id="otherFacilities" ng-model="post.otherFacilities"
+                    placeholder="Nhập tiện ích tại đây">
+
+                <button type="button" class="submit-btn" ng-click="savePost()">Tiếp tục</button>
+            </fieldset>
+        </form>
+    </div>
+
+    <!-- AngularJS Script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!-- <script src="/assets/js/postInfo.js"></script> -->
+</body>
+<script>
+    // Tạo ứng dụng AngularJS
+    var app = angular.module('postApp', []);
+
+    // Tạo service để xử lý API
+    app.service('postService', function ($http) {
+        this.createPost = function (post) {
+            return $http.post('http://localhost:8080/api/posts', post)
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (error) {
+                    console.error('Error saving post:', error);
+                    throw error;
+                });
+        };
+    });
+
+    // Tạo controller
+    app.controller('PostController', function ($scope, postService) {
+        $scope.post = {
+            title: '',
+            description: '',
+            facilities: {
+                camera: false,
+                lock: false,
+                charging: false,
+                security247: false,
+                roof: false,
+                security2424: false,
+                carwash: false
+            },
+            otherFacilities: ''
+        };
+
+        $scope.savePost = function () {
+            const postData = {
+                title: $scope.post.title,
+                description: $scope.post.description,
+                facilities: $scope.post.facilities,
+                otherFacilities: $scope.post.otherFacilities
+            };
+
+            PostService.savePost(postData).then(function (response) {
+                alert("Bài đăng đã được lưu thành công!");
+                nextStep(); // Chuyển đến bước tiếp theo
+            }).catch(function (error) {
+                console.error("Error saving post:", error);
+                alert("Có lỗi xảy ra khi lưu bài đăng.");
+            });
+        };
+
+    });
+
+</script>
+
+</html>
