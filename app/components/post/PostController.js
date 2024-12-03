@@ -1,5 +1,4 @@
 
-
 app.controller('ParkingController', ['$scope', '$http','$window', '$location', 'ItemService', 'LocationService', 'PostService', function ($scope, $http, $window, $location, ItemService, LocationService, PostService) {
 
     $scope.loading = false;
@@ -63,18 +62,23 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
         $location.path('/Login-and-Register');  // Change this URL based on your app's routing
     };
 
-    // Phương thức đăng xuất
     $scope.logout = function () {
+        // Lưu URL hiện tại
+        const currentPath = $location.path();
+        
         // Xóa token và userId trong localStorage
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
+        
         // Đổi trạng thái đăng nhập
         $scope.isLoggedIn = false;
         $scope.user = {};
-        // Chuyển hướng về trang đăng nhập
-        $location.path('/app/index.html');
+        
+        // Chuyển hướng về lại trang hiện tại
+        $location.path(currentPath); 
     };
+    
 
     // Fetch posts with pagination
     $scope.getPosts = function () {

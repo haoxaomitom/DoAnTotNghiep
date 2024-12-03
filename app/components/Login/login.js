@@ -1,7 +1,6 @@
 // let app = angular.module('parkingApp', []);
 
-app.controller('LoginController', function ($scope, $http, $window) {
-    console.log("run");
+app.controller('LoginController', function ($scope, $location, $http, $window) {
     $scope.login = {
         username: '',
         password: ''
@@ -24,9 +23,9 @@ app.controller('LoginController', function ($scope, $http, $window) {
                     const redirectUrl = localStorage.getItem('redirectUrl');
                     if (redirectUrl) {
                         // Xóa URL đã lưu sau khi chuyển hướng
-                        localStorage.removeItem('redirectUrl');
+                        localStorage.removeItem('redirectUrl'); 
                         // Chuyển hướng đến trang trước đó
-                        $window.location.href = redirectUrl;
+                        $location.path(redirectUrl);
                     } else {
                         // Mặc định 
                         $window.location.href = '/app/index.html';
@@ -68,6 +67,7 @@ app.controller('LoginController', function ($scope, $http, $window) {
             return;
         } 
     }
+
     $scope.loginWithFacebook = function () {
         FB.login(function (response) {
             if (response.authResponse) {
@@ -122,7 +122,6 @@ app.controller('LoginController', function ($scope, $http, $window) {
     };
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    console.log("Authorization Code: " + code);
     
     if (code) {
         $http.post('/api/auth/google', { code: code })

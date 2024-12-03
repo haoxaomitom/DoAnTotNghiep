@@ -377,9 +377,10 @@
                     </div>
                 </div>
             </div>
-            <div ng-show="!hasMoreData && !loading" class="text-center">
+            <div ng-show="posts.length > 0 && !hasMoreData && !loading" class="text-center">
                 <p>Không còn bài đăng nào để hiển thị.</p>
             </div>
+            
         </div>
     </div>
 
