@@ -2,7 +2,7 @@ var app = angular.module('app', []);
 
 app.service('PostService', ['$http', function ($http) {
     this.savePost = function (postData) {
-        return $http.post('http://localhost:8080/api/posts/savePost', postData);
+        return $http.post('http://localhost:8080/api/upPosts/savePost', postData);
     };
 }]);
 
