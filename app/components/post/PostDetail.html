@@ -51,12 +51,13 @@
                             <div class="carousel-item active">
                                 <!-- Ảnh nền được làm mờ -->
                                 <div class="blur-background position-absolute w-100 h-100 top-0 start-0">
-                                    <img ng-src="{{post.images[0].imageUrl}}" loading="lazy" class="img-fluid w-100 h-100"
-                                        alt="Blurred Background Image" style="object-fit: cover;">
+                                    <img ng-src="{{post.images[0].imageUrl}}" loading="lazy"
+                                        class="img-fluid w-100 h-100" alt="Blurred Background Image"
+                                        style="object-fit: cover;">
                                 </div>
                                 <!-- Ảnh chính hiển thị -->
-                                <img ng-src="{{post.images[0].imageUrl}}" loading="lazy" class="img-fluid d-block mx-auto"
-                                    alt="Main Image">
+                                <img ng-src="{{post.images[0].imageUrl}}" loading="lazy"
+                                    class="img-fluid d-block mx-auto" alt="Main Image">
                             </div>
                             <!-- Các carousel item tiếp theo -->
                             <div class="carousel-item" ng-repeat="image in post.images.slice(1)">
@@ -159,7 +160,7 @@
                                 <span style="white-space: pre-wrap;">{{ post.description }}</span>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -272,7 +273,8 @@
                 </button>
 
                 <!-- Toast Notification -->
-                <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+                <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3"
+                    style="z-index: 1100">
 
                     <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="toast-header">
@@ -295,7 +297,7 @@
                 <div class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal">
                     <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo bài đăng
                 </div>
-                
+
                 <!-- Modal for reporting post -->
                 <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel"
                     aria-hidden="true">
@@ -328,7 +330,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                <button type="submit" form="reportForm" data-bs-dismiss="modal" class="btn btn-danger">Gửi báo cáo</button>
+                                <button type="submit" form="reportForm" data-bs-dismiss="modal"
+                                    class="btn btn-danger">Gửi báo cáo</button>
                             </div>
                         </div>
                     </div>
@@ -347,8 +350,8 @@
 
                                 <!-- User Avatar -->
                                 <div class="me-3">
-                                    <img ng-src="{{ comment.cud[0].avatar }}" loading="lazy" alt="User Avatar" class="rounded-circle"
-                                        style="width: 40px; height: 40px;">
+                                    <img ng-src="{{ comment.cud[0].avatar }}" loading="lazy" alt="User Avatar"
+                                        class="rounded-circle" style="width: 40px; height: 40px;">
                                 </div>
 
                                 <!-- Comment Details -->
@@ -444,7 +447,8 @@
             <div class="col-sm-4">
                 <h5 class="mb-3">Các bài đăng liên quan:</h5>
                 <div class="card mb-3" ng-repeat="post in relatedPosts">
-                    <a href="/post-detail?id={{post.idPost}}" loading="lazy" style="text-decoration: none; color: inherit;">
+                    <a href="/post-detail?id={{post.idPost}}" loading="lazy"
+                        style="text-decoration: none; color: inherit;">
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <div class="d-flex align-items-center justify-content-center"
@@ -503,7 +507,8 @@
 
 </body>
 <script async defer crossorigin="anonymous"
-src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=859833986138775" defer></script>
+    src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=859833986138775" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" defer></script>
+
 </html>
