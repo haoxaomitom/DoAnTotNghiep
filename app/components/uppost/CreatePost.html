@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng tin cho thuê</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/UpPost.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</head>
+
+<body ng-controller="UpPostController">
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Đăng Tin Cho Thuê</h1>
+
+        <div class="form-container mx-auto" style="z-index: -1;">
+            <!-- Step 1: Thông tin bài đăng -->
+            <section id="step-1" ng-show="currentStep === 1">
+                <h2 class="text-center mb-4">Thông Tin Bài Đăng</h2>
+                <form name="postForm">
+                    <fieldset>
+                        <label for="title">Tiêu Đề</label>
+                        <input type="text" id="title" ng-model="post.parking_name" class="form-control mb-3"
+                            placeholder="Nhập tiêu đề" required>
+
+                        <label for="description">Mô Tả</label>
+                        <textarea id="description" ng-model="post.description" class="form-control mb-3"
+                            placeholder="Nhập mô tả" required rows="4"></textarea>
+                    </fieldset>
+
+                    <div class="row-buttons">
+                        <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(1)"
+                            ng-disabled="!post.parking_name || !post.description">Tiếp Tục</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Step 2: Vị trí đăng tin -->
+            <section id="step-2" ng-show="currentStep === 2">
+                <h2 class="text-center mb-4">Vị Trí Đăng Tin</h2>
+                <form>
+                    <fieldset>
+                        <label for="province">Tỉnh/Thành Phố</label>
+                        <select id="province" class="form-select mb-3" ng-model="selectedProvince"
+                            ng-options="province as province.Name for province in provinces"
+                            ng-change="onProvinceChange()">
+                            <option value="">Chọn Tỉnh/Thành Phố</option>
+                        </select>
+
+                        <label for="district">Quận/Huyện</label>
+                        <select id="district" class="form-select mb-3" ng-model="selectedDistrict"
+                            ng-options="district as district.Name for district in selectedProvince.Districts"
+                            ng-change="onDistrictChange()" ng-disabled="!selectedProvince">
+                            <option value="">Chọn Quận/Huyện</option>
+                        </select>
+
+                        <label for="ward">Phường/Xã</label>
+                        <select id="ward" class="form-select mb-3" ng-model="selectedWard"
+                            ng-options="ward as ward.Name for ward in selectedDistrict.Wards"
+                            ng-disabled="!selectedDistrict">
+                            <option value="">Chọn Phường/Xã</option>
+                        </select>
+
+                        <label for="street">Tên Đường</label>
+                        <input type="text" id="street" ng-model="post.street" class="form-control mb-3"
+                            placeholder="Nhập tên đường">
+                    </fieldset>
+
+                    <div class="row-buttons">
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay Lại</button>
+                        </div>
+                        <div class="col-md-9">
+                            <button type="button" class="btn btn-primary" ng-click="nextStep(2)"
+                                ng-disabled="!selectedProvince || !selectedDistrict || !selectedWard">Tiếp Tục</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <!-- Step 3: Vị trí bản đồ -->
+            <section class="section" id="step-3" ng-show="currentStep === 3">
+                <h2>Vị trí bản đồ</h2>
+                <div class="map-container m-3" id="map"></div>
+                <div class="row-buttons">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay lại</button>
+                    </div>
+                    <div class="col-md-9">
+                        <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(3)">Tiếp
+                            tục</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Diện tích và giá -->
+            <section class="section" id="step-4" ng-show="currentStep === 4">
+                <h2>Thông tin và Giá tiền</h2>
+                <form>
+                    <fieldset>
+                        <label for="capacity">Sức chứa xe:</label>
+                        <input type="number" id="capacity" ng-model="post.capacity" class="form-control"
+                            placeholder="Nhập sức chứa">
+
+                        <label for="price">Giá (VNĐ):</label>
+                        <input type="number" id="price" ng-model="post.price" class="form-control"
+                            placeholder="Nhập giá" required>
+
+                        <label for="price_unit">Đơn vị giá:</label>
+                        <select id="price_unit" ng-model="post.price_unit" class="form-select" required>
+                            <option value="VND/giờ">VND/giờ</option>
+                            <option value="VND/ngày">VND/ngày</option>
+                            <option value="VND/tháng">VND/tháng</option>
+                        </select>
+
+                        <div class="row-buttons">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay lại</button>
+                            </div>
+                            <div class="col-md-9">
+                                <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(4)"
+                                    ng-disabled="!post.price || !post.price_unit">Tiếp tục</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </section>
+
+            <!-- Step 5: Tiện ích -->
+            <section class="section" id="step-5" ng-show="currentStep === 5">
+                <h2>Tiện ích</h2>
+                <div ng-repeat="(key, value) in selectedAmenities" ng-if="value">
+                    <span>{{key}} <button ng-click="removeTag(key)">X</button></span>
+                </div>
+
+                <div class="checkbox-group">
+                    <label ng-repeat="(key, label) in checkboxOptions">
+                        <input type="checkbox" class="tag-checkbox" ng-model="post.amenities[key]"
+                            ng-change="toggleCheckbox(key, label)">
+                        {{label}}
+                    </label>
+                </div>
+
+                <div class="manual-input">
+                    <input type="text" ng-model="manualInput" placeholder="Nhập tiện ích..."
+                        ng-keydown="addTagOnEnter($event)">
+                    <button class="btn btn-primary" ng-click="addTag(manualInput)">Thêm</button>
+                </div>
+
+                <div class="row-buttons">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay lại</button>
+                    </div>
+                    <div class="col-md-9">
+                        <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(5)">Tiếp theo</button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Step 6: Upload ảnh -->
+            <section class="section" id="step-6" ng-show="currentStep === 6">
+                <h2>Hình ảnh</h2>
+                <div class="image-upload">
+                    <label for="file-input">
+                        <div class="image-placeholder">
+                            <span>+</span>
+                            <p>Nhấp để đưa ảnh lên</p>
+                        </div>
+                    </label>
+                    <input id="file-input" type="file" multiple
+                        onchange="angular.element(this).scope().onFileSelect(this.files)" accept="image/*">
+
+                    <p class="note">Bạn cần ít nhất 1 ảnh (Tối đa 10 ảnh) để đăng tin</p>
+                </div>
+
+                <div class="preview-images" ng-if="selectedFiles.length > 0">
+                    <h3>Ảnh đã chọn:</h3>
+                    <div class="row">
+                        <div class="col-md-3" ng-repeat="file in selectedFiles">
+                            <img ng-src="{{file.preview}}" alt="Preview Image" class="img-thumbnail" />
+                            <p>{{file.name}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row-buttons">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay lại</button>
+                    </div>
+                    <div class="col-md-9">
+                        <button type="button" class="btn btn-primary submit-btn" ng-click="submitPost()"
+                    ng-disabled="selectedFiles.length === 0 || selectedFiles.length > 10">
+                    <span ng-if="isLoading" class="spinner-border spinner-border-sm" role="status"
+                        aria-hidden="true"></span>
+                    Hoàn tất và đăng bài
+                </button>
+                    </div>
+                </div>
+                
+                
+            </section>
+        </div>
+
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaqWzB_IIAlUg3Iwp8yFfgjIIFhhMF0IQ&callback=initMap"
+        async defer></script>
+    <script src="UpPostService.js"></script>
+    <script src="UpPostController.js"></script>
+</body>
+
+</html>
