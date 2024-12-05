@@ -11,7 +11,12 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
     $scope.activePosts = []; // Bài đăng đang hoạt động
     $scope.pendingPosts = []; // Bài đăng chờ duyệt
     $scope.cancelledPosts = []; // Bài đăng bị hủy
+    $scope.posts = []; // Tất cả bài đăng
+    $scope.activePosts = []; // Bài đăng đang hoạt động
+    $scope.pendingPosts = []; // Bài đăng chờ duyệt
+    $scope.cancelledPosts = []; // Bài đăng bị hủy
     $scope.loading = true;
+
 
     const userId = localStorage.getItem('userId');
     let postIdToDelete = null; // Biến lưu trữ postId cần xóa
@@ -20,7 +25,19 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
     // Hàm để lấy dữ liệu bài viết
     $scope.getPosts = function () {
         PostsService.getPostsByUserId(userId, token)
+        PostsService.getPostsByUserId(userId, token)
             .then(function (response) {
+                $scope.posts = response.data;
+
+                // Phân loại bài đăng dựa trên trạng thái
+                $scope.activePosts = $scope.posts.filter(post => post.status === 'ACTIVE');
+                $scope.pendingPosts = $scope.posts.filter(post => post.status === 'WAITING');
+                $scope.cancelledPosts = $scope.posts.filter(post => post.status === 'REJECT');
+
+                $scope.loading = false;
+            })
+            .catch(function (error) {
+                $scope.loading = false;
                 $scope.posts = response.data;
 
                 // Phân loại bài đăng dựa trên trạng thái

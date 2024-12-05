@@ -230,6 +230,13 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
                     $('#deleteCommentModal').modal('show');
                 };
 
+                $scope.openDeleteModal = function (commentId) {
+                    // Save comment ID to delete
+                    $scope.commentIdToDelete = commentId;
+                    // Show delete confirmation modal
+                    $('#deleteCommentModal').modal('show');
+                };
+
 
 
                 $scope.shareOnFacebook = function (postId) {

@@ -94,6 +94,10 @@
                     ng-if="isPostPromoted(post.topPostEnd)">
                     Bài viết được quảng cáo
                 </span>
+                <span class="promoted-label d-flex justify-content-center mb-3 align-items-center"
+                    ng-if="isPostPromoted(post.topPostEnd)">
+                    Bài viết được quảng cáo
+                </span>
                 <h4 class="mb-3">{{post.parkingName}}</h4>
                 <p class="mb-4">Địa chỉ: {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}</p>
                 <div class="d-flex mb-5 align-items-center">
@@ -204,6 +208,35 @@
                                 ng-click="showPhone = !showPhone">
                                 {{showPhone ? 'Ẩn Số Điện Thoại' : 'Hiển Thị Số Điện Thoại'}}
                             </button>
+                        </div>
+
+                        <!-- Facebook Profile Button -->
+                        <div class="mt-3" ng-if="user.facebook">
+                            <a href="{{user.facebook}}"
+                                class="social btn w-100 d-flex align-items-center justify-content-center border border-primary border-2 p-2"
+                                target="_blank" style="border-radius: 8px;">
+                                <i class="fa-brands fa-facebook me-2" style="color: #007cdb;"></i> Liên hệ qua Facebook
+                            </a>
+                        </div>
+                        <!-- Zalo profile button -->
+                        <div class="mt-3">
+                            <a href="https://zalo.me/{{user.phoneNumber}}"
+                                class="social btn w-100 d-flex align-items-center justify-content-center border border-primary border-2 p-2"
+                                target="_blank" style="border-radius: 8px;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+                                    alt="File:Icon of Zalo.svg" height="20" width="20" class="me-2">
+                                Liên hệ qua Zalo
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Leave information -->
+                    <div class="leave-info-card border border-5 p-3 rounded mb-3 mt-5 text-center">
+                        <div class="p-3 d-flex flex-column align-items-center">
+                            <i class="bi bi-envelope-fill text-white fs-3 mb-2"></i>
+                            <!-- Bootstrap icon for email/message -->
+                            <h5 class="fw-bold text-white mb-1">Bạn thấy ưng ý ?</h5>
+                            <p class="text-white">Nhấn vào để gửi thông tin tới chủ bãi đỗ xe</p>
+                            <button class="btn btn-light fw-bold mt-2 px-4">Gửi Thông Tin</button>
                         </div>
 
                         <!-- Facebook Profile Button -->

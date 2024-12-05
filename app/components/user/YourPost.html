@@ -10,6 +10,9 @@
     <!-- <link rel="stylesheet" href="/assets/css/YourPost.css"> -->
     <link rel="stylesheet" href="/assets/css/home.css">
     <base href="/user/your-post">
+    <!-- <link rel="stylesheet" href="/assets/css/YourPost.css"> -->
+    <link rel="stylesheet" href="/assets/css/home.css">
+    <base href="/user/your-post">
 </head>
 
 
@@ -133,23 +136,30 @@
                                     style="height: 100%; background: #f8f9fa;">
                                     <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
                                         alt="Images" />
+                                    <div class="d-flex align-items-center justify-content-center"
+                                        style="height: 100%; background: #f8f9fa;">
+                                        <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                            alt="Images" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8 d-flex flex-column">
-                                <div class="card-title mb-0">
-                                    <div class="card-header bg-transparent border-0">
-                                        <h4 class="font-weight-bold">{{post.parkingName}}</h4>
-                                    </div>
-                                    <div class="card-body flex-grow-1">
-                                        <h7 class="card-text district d-flex mb-2">
-                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
-                                        </h7>
-                                        <h4 class="card-text text-danger">
-                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
-                                        </h4>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-between mt-auto">
-                                        <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                <div class="col-md-8 d-flex flex-column">
+                                    <div class="card-title mb-0">
+                                        <div class="card-header bg-transparent border-0">
+                                            <h4 class="font-weight-bold">{{post.parkingName}}</h4>
+                                        </div>
+                                        <div class="card-body flex-grow-1">
+                                            <h7 class="card-text district d-flex mb-2">
+                                                {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
+                                            </h7>
+                                            <h4 class="card-text text-danger">
+                                                {{formatCurrency(post.price) + " " + post.priceUnit}}
+                                                {{formatCurrency(post.price) + " " + post.priceUnit}}
+                                            </h4>
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-between mt-auto">
+                                            <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                            <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
