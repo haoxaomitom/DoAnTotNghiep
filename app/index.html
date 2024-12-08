@@ -30,7 +30,7 @@
     <script src="https://kit.fontawesome.com/5c73425aee.js" async crossorigin="anonymous"></script>
     <!-- Application Scripts -->
     <script src="/app/app.js"></script>
-    <base href="/">
+    <base href="/"> 
 </head>
 
 <body ng-controller="ParkingController">
@@ -85,9 +85,14 @@
                             </li>
 
                             <!-- Nút Đăng tin -->
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link btn btn-outline-primary px-3" ng-href="/dang-tin">Đăng tin</a>
+                            </li> -->
+                            <!-- Nút Đăng tin -->
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-outline-primary px-3" ng-click="checkLoginBeforePost()">Đăng tin</a>
                             </li>
+                            
                         </ul>
                     </div>
                 </div>
@@ -95,7 +100,7 @@
         </nav>
         <div ng-if="!showSidebar">
             <!-- Hiển thị nội dung chính -->
-            <div ng-view></div>
+            <div ng-view class="sb-ft"></div>
         </div>
 
         <!-- Hiển thị nội dung trong form user -->
@@ -170,5 +175,7 @@
 <script src="/app/components/payment/VNPayService.js" defer></script>
 <script src="/app/components/payment/VNPayController.js" defer></script>
 <script src="/app/components/user/ChangePassword.js" defer></script>
+<script src="/app/components/uppost/UpPostController.js" defer></script>
+<script src="/app/components/uppost/UpdatePostController.js" defer></script>
 
 </html>

@@ -46,22 +46,22 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
     };
 
     $scope.checkLoginBeforePost = function() {
-        if (!$scope.isLoggedIn()) {
-            // If the user is not logged in, show the modal
+        if (userId == null) {
+            // Show modal if not logged in
             $('#loginPromptModal').modal('show');
         } else {
             // If the user is logged in, redirect to the post page
             $location.path('/dang-tin');  // Change the URL based on your app's routing
         }
     };
-
+    
     $scope.redirectToLogin = function () {
         // Hide modal and redirect to login page
         $('#loginPromptModal').modal('hide');
         localStorage.setItem('redirectUrl', $location.path());  // Store current URL to redirect after login
         $location.path('/Login-and-Register');  // Change this URL based on your app's routing
     };
-
+    
     $scope.logout = function () {
         // Lưu URL hiện tại
         const currentPath = $location.path();

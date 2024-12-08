@@ -139,3 +139,75 @@ fieldset {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
+.tag-container {
+    min-height: 60px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.tag .close {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #ff0000;
+}
+
+.image-upload {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: auto;
+}
+
+.image-upload:hover {
+    background-color: #f1f1f1;
+}
+
+.image-upload span {
+    font-size: 40px;
+    color: #007bff;
+}
+
+.image-upload p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+#file-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.preview-container {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+
+.preview-container img {
+    max-width: 100%;
+    border-radius: 10px;
+}

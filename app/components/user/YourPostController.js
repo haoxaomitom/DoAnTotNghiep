@@ -1,6 +1,8 @@
 app.controller('PostsController', ['$scope', '$window', 'PostsService', function ($scope, $window, PostsService) {
     // Lấy token từ localStorage
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
     if (!token) {
         localStorage.setItem('redirectUrl', $window.location.href);
         $window.location.href = '/app/components/Login/LoginAndRegister.html';
@@ -16,52 +18,99 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
     $scope.cancelledPosts = []; // Bài đăng bị hủy
     $scope.loading = false;
 
-    const userId = localStorage.getItem('userId');
     let postIdToDelete = null; // Biến lưu trữ postId cần xóa
 
     // Hàm để lấy dữ liệu bài viết
-    $scope.getPosts = function () {
-        if ($scope.loading || !$scope.hasMoreData) return;
+    // $scope.getPosts = function () {
+    //     if ($scope.loading || !$scope.hasMoreData) return;
 
+    //     $scope.loading = true;
+
+    //     PostsService.getPostsByUserId(userId)
+    //         .then(function (response) {
+    //             const data = response.data;
+    //             console.log(response.data);
+    //             // Gộp dữ liệu mới vào danh sách bài đăng
+    //             $scope.posts = $scope.posts.concat(data.content);
+
+    //             // Phân loại bài đăng dựa trên trạng thái
+    //             $scope.activePosts = $scope.posts.filter(post => post.status === 'ACTIVE');
+    //             $scope.pendingPosts = $scope.posts.filter(post => post.status === 'WAITING');
+    //             $scope.cancelledPosts = $scope.posts.filter(post => post.status === 'REJECT');
+
+    //             // Kiểm tra xem còn dữ liệu để tải không
+    //             // $scope.hasMoreData = $scope.page < data.totalPages - 1;
+    //             $scope.page++; // Tăng chỉ số trang
+    //             $scope.loading = false;
+    //         })
+    //         .catch(function (error) {
+    //             $scope.loading = false;
+    //             console.error('Error fetching posts:', error);
+    //         });
+    // };
+
+    $scope.getPosts = function (status) {
         $scope.loading = true;
-
-        PostsService.getPostsByUserId(userId, token, $scope.page, $scope.size)
+    
+        PostsService.getPostsByStatus(userId, status, $scope.page, $scope.size)
             .then(function (response) {
                 const data = response.data;
-
-                // Gộp dữ liệu mới vào danh sách bài đăng
-                $scope.posts = $scope.posts.concat(data.content);
-
-                // Phân loại bài đăng dựa trên trạng thái
-                $scope.activePosts = $scope.posts.filter(post => post.status === 'ACTIVE');
-                $scope.pendingPosts = $scope.posts.filter(post => post.status === 'WAITING');
-                $scope.cancelledPosts = $scope.posts.filter(post => post.status === 'REJECT');
-
-                // Kiểm tra xem còn dữ liệu để tải không
+    
+                // Thêm từng bài viết mới vào cuối mảng bài viết cũ
+                data.content.forEach(post => {
+                    $scope.posts.push(post); // Thêm vào danh sách chung
+                    // Phân loại bài viết theo trạng thái
+                    if (post.status === 'ACTIVE') {
+                        $scope.activePosts.push(post);
+                    } else if (post.status === 'WAITING') {
+                        $scope.pendingPosts.push(post);
+                    } else if (post.status === 'REJECT') {
+                        $scope.cancelledPosts.push(post);
+                    }
+                });
+    
+                // Kiểm tra còn dữ liệu không
                 $scope.hasMoreData = $scope.page < data.totalPages - 1;
-                $scope.page++; // Tăng chỉ số trang
+                $scope.page++;
+    
                 $scope.loading = false;
             })
             .catch(function (error) {
                 $scope.loading = false;
-                console.error('Error fetching posts:', error);
+                console.error('Error fetching posts by status:', error);
             });
     };
+    
+    
+    
+    $scope.selectTab = function (status) {
+        // Reset về trang đầu tiên và các mảng dữ liệu
+        $scope.page = 0; // Reset trang
+        $scope.posts = []; // Reset danh sách bài viết
+        $scope.activePosts = []; // Reset bài viết đang hoạt động
+        $scope.pendingPosts = []; // Reset bài viết chờ duyệt
+        $scope.cancelledPosts = []; // Reset bài viết bị hủy
+        $scope.selectedStatus = status; // Lưu trạng thái đã chọn
+    
+        $scope.getPosts(status); // Gọi API lấy bài viết theo trạng thái
+    };
+
+
 
     angular.element(window).on('scroll', function () {
         if ($scope.loading || !$scope.hasMoreData) return;
-    
+
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const offsetHeight = document.documentElement.offsetHeight;
         const innerHeight = window.innerHeight;
-    
+
         // Kiểm tra nếu cuộn gần cuối trang
         if (scrollTop + innerHeight >= offsetHeight - 50) {
-            $scope.getPosts(); // Tải thêm dữ liệu
+            $scope.getPosts($scope.selectedStatus);
         }
     });
 
-    
+
     // Hàm tính số ngày bài đăng còn lại
     $scope.calculateRemainingDays = function (topPostEnd) {
         if (!topPostEnd) return null; // Nếu không có giá trị, trả về null
@@ -123,4 +172,5 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
 
     // Gọi hàm để lấy dữ liệu bài viết khi controller được khởi tạo
     $scope.getPosts();
+
 }]);

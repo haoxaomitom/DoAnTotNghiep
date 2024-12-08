@@ -6,6 +6,7 @@
     <title>PFR - Cho thuê chỗ để xe</title>
     <link rel="stylesheet" href="/assets/css/PostDetail.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js" defer></script>
+<base href="/">
 </head>
 
 <body ng-controller="PostController" class="d-flex flex-column min-vh-100">
@@ -131,7 +132,7 @@
                                         <h5 class="card-title">Các loại xe được gửi</h5>
                                         <ul class="list-unstyled row">
                                             <div class="col-sm-6" ng-repeat="vehicleType in post.vehicleTypes">
-                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypeName}}</li>
+                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypesName}}</li>
                                             </div>
                                         </ul>
                                     </div>
@@ -573,8 +574,7 @@
     <div id="fb-root"></div>
 
 
-    <!-- Bootstrap JS and dependencies -->
-
+    
 </body>
 <script async defer crossorigin="anonymous"
     src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v21.0&appId=859833986138775" defer></script>
