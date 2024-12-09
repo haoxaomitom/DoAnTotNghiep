@@ -55,7 +55,7 @@
     // Tạo service để xử lý API
     app.service('postService', function ($http) {
         this.createPost = function (post) {
-            return $http.post('http://localhost:8080/api/posts', post)
+            return $http.post('https://doantotnghiepbe-production.up.railway.app/api/posts', post)
                 .then(function (response) {
                     return response.data;
                 })

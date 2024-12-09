@@ -51,7 +51,7 @@ app.controller("ChangePasswordController", function ($scope, $http) {
             confirm: $scope.confirm
         };
 
-        $http.put(`http://localhost:8080/api/users/${userId}/changePassword`, data, {
+        $http.put(`https://doantotnghiepbe-production.up.railway.app/api/users/${userId}/changePassword`, data, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -26,7 +26,7 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
     $scope.checkLoginStatus = function () {
         if (token && username) {
             $scope.isLoggedIn = true;
-            $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
+            $http.get(`https://doantotnghiepbe-production.up.railway.app/api/users/getUserByUsername?username=${username}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             }).then(function (response) {
                 $scope.$applyAsync(() => {  // Ensures Angular detects the update

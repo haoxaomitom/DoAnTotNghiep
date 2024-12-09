@@ -168,7 +168,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
     };
 
 
-    const apiUrl = `http://localhost:8080/api/posts/${postId}`;
+    const apiUrl = `https://doantotnghiepbe-production.up.railway.app/api/posts/${postId}`;
 
     $scope.post = {};
 
@@ -253,7 +253,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         formData.append('postId', postId);
         console.log("imgpostId: "+postId);
         try {
-            const url = `http://localhost:8080/api/images/upload/${postId}`;  // Update URL to match the correct endpoint
+            const url = `https://doantotnghiepbe-production.up.railway.app/api/images/upload/${postId}`;  // Update URL to match the correct endpoint
             const response = await $http.post(url, formData, {
                 headers: { 'Content-Type': undefined, 'Authorization': `Bearer ${token}` }, // Add token in header
                 transformRequest: angular.identity
@@ -298,7 +298,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
             };
 
             // Send the request to update the post
-            const url = `http://localhost:8080/api/updatePosts/${postId}`; // Ensure the endpoint is correct
+            const url = `https://doantotnghiepbe-production.up.railway.app/api/updatePosts/${postId}`; // Ensure the endpoint is correct
             const response = await $http.put(url, postData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,

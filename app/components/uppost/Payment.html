@@ -145,13 +145,13 @@
         var app = angular.module('paymentApp', []);
 
         app.controller('paymentController', function ($scope, $http) {
-            $http.get('http://localhost:8080/admin/payments/all').then(function (response) {
+            $http.get('https://doantotnghiepbe-production.up.railway.app/admin/payments/all').then(function (response) {
                 $scope.payments = response.data;
                 $scope.sortCriteria = 'paymentDate';
             });
 
             $scope.viewPayment = function (paymentId) {
-                $http.get('http://localhost:8080/admin/payments/' + paymentId).then(function (response) {
+                $http.get('https://doantotnghiepbe-production.up.railway.app/admin/payments/' + paymentId).then(function (response) {
                     $scope.selectedPayment = response.data;
                     $('#paymentModal').modal('show');
                 });

@@ -45,7 +45,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
 
     if ($scope.isLoggedIn) {
         // Nếu đã đăng nhập, lấy thông tin người dùng
-        $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/users/getUserByUsername?username=${username}`, {
             headers: {
                 'Authorization': `Bearer ${token}` // Gửi token trong header
             }
@@ -143,7 +143,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
         const formData = new FormData();
         formData.append('file', file);
 
-        const apiUrl = `http://localhost:8080/api/users/avatar/${$scope.username}`; // Thay $scope.username bằng username người dùng
+        const apiUrl = `https://doantotnghiepbe-production.up.railway.app/api/users/avatar/${$scope.username}`; // Thay $scope.username bằng username người dùng
 
         // Gửi request POST
         $http.post(apiUrl, formData, {
@@ -185,7 +185,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
             email: $scope.email,
 
         }
-        $http.put('http://localhost:8080/api/users/update', data, {
+        $http.put('https://doantotnghiepbe-production.up.railway.app/api/users/update', data, {
             headers: {
                 'Authorization': `Bearer ${token}` // Gửi token trong header
             }
@@ -206,7 +206,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     $scope.verified = function () {
         $scope.isLoading = true; // Hiển thị hiệu ứng loading
     
-        $http.get(`http://localhost:8080/api/email/send-verification-email?userId=${userId}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/email/send-verification-email?userId=${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -22,7 +22,7 @@ app.controller('ContactController', function ($scope, $http, $window) {
         }
         console.log(data);
         if (token) {
-            $http.post("http://localhost:8080/api/contactInformation/create", data, {
+            $http.post("https://doantotnghiepbe-production.up.railway.app/api/contactInformation/create", data, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

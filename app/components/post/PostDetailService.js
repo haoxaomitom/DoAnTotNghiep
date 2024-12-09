@@ -5,7 +5,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Fetch post by ID
     this.getPostById = function (id_post) {
-        return $http.get(`http://localhost:8080/api/posts/${id_post}`)
+        return $http.get(`https://doantotnghiepbe-production.up.railway.app/api/posts/${id_post}`)
             .then(response => response.data)
             .catch(error => {
                 console.error('Error fetching post by ID:', error);
@@ -15,14 +15,14 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Get posts count by district
     this.getPostsCountByDistrict = function () {
-        return $http.get('http://localhost:8080/api/posts/countByDistrict');
+        return $http.get('https://doantotnghiepbe-production.up.railway.app/api/posts/countByDistrict');
     };
 
     // Search posts
     this.searchPosts = function (searchTerm, selectedDistrictName, page) {
         return $http({
             method: 'GET',
-            url: 'http://localhost:8080/api/posts/search',
+            url: 'https://doantotnghiepbe-production.up.railway.app/api/posts/search',
             params: {
                 searchTerm: searchTerm,
                 district: selectedDistrictName,
@@ -33,7 +33,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Create a comment
     this.createComment = function (commentDTO) {
-        return $http.post('http://localhost:8080/api/comments', commentDTO, {
+        return $http.post('https://doantotnghiepbe-production.up.railway.app/api/comments', commentDTO, {
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
           .catch(error => {
@@ -44,7 +44,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Delete a comment
     this.deleteComment = function (commentId, userId) {
-        return $http.delete(`http://localhost:8080/api/comments/${commentId}`, {
+        return $http.delete(`https://doantotnghiepbe-production.up.railway.app/api/comments/${commentId}`, {
             params: { userId: userId },
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
@@ -56,7 +56,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Fetch comments by post ID
     this.getCommentsByPostId = function (postId, page, size) {
-        return $http.get(`http://localhost:8080/api/comments/post/${postId}`, {
+        return $http.get(`https://doantotnghiepbe-production.up.railway.app/api/comments/post/${postId}`, {
             params: { page: page, size: size }
         }).then(response => response.data)
           .catch(error => {
@@ -67,7 +67,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Submit a report
     this.submitReport = function (reportData) {
-        return $http.post('http://localhost:8080/api/reports', reportData, {
+        return $http.post('https://doantotnghiepbe-production.up.railway.app/api/reports', reportData, {
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
           .catch(error => {
@@ -78,7 +78,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Check if the post is favorited by the user
     this.checkFavoriteStatus = function (userId, postId) {
-        return $http.get('http://localhost:8080/api/favorites/check', {
+        return $http.get('https://doantotnghiepbe-production.up.railway.app/api/favorites/check', {
             headers: { 'Authorization': `Bearer ${token}` },
             params: { userId: userId, postId: postId }
         });
@@ -86,7 +86,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Toggle favorite status
     this.toggleFavorite = function (userId, postId) {
-        return $http.post('http://localhost:8080/api/favorites/toggle', null, {
+        return $http.post('https://doantotnghiepbe-production.up.railway.app/api/favorites/toggle', null, {
             headers: { 'Authorization': `Bearer ${token}` },
             params: { userId: userId, postId: postId }
         });
@@ -94,7 +94,7 @@ app.service('PostDetailService', ['$http', function ($http) {
 
     // Fetch related posts
     this.getPostsRelated = function (districtName, page, size) {
-        return $http.get('http://localhost:8080/api/posts/related', {
+        return $http.get('https://doantotnghiepbe-production.up.railway.app/api/posts/related', {
             params: { districtName: districtName, page: page, size: size }
         }).then(response => response.data)
           .catch(error => {
@@ -103,7 +103,7 @@ app.service('PostDetailService', ['$http', function ($http) {
     };
     
     this.saveContactInfo = function(data) {
-        return $http.post("http://localhost:8080/api/contactInformation/create", data);
+        return $http.post("https://doantotnghiepbe-production.up.railway.app/api/contactInformation/create", data);
     };
 
     // this.redirectToLogin = function() {

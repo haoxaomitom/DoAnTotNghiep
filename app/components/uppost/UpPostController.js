@@ -166,7 +166,7 @@ app.controller('UpPostController', function ($scope, $http, $location) {
 
         try {
             // Chèn postId vào URL
-            const url = `http://localhost:8080/api/upPosts/images/${postId}`;
+            const url = `https://doantotnghiepbe-production.up.railway.app/api/upPosts/images/${postId}`;
 
             const response = await $http.post(url, formData, {
                 headers: { 'Content-Type': undefined, 'Authorization': `Bearer ${token}` }, // Add token in header
@@ -214,7 +214,7 @@ app.controller('UpPostController', function ($scope, $http, $location) {
             console.log("Dữ liệu gửi lên:", postData);
 
             // Gửi request tạo bài đăng
-            const response = await $http.post('http://localhost:8080/api/upPosts', postData, {
+            const response = await $http.post('https://doantotnghiepbe-production.up.railway.app/api/upPosts', postData, {
                 headers: { 'Authorization': `Bearer ${token}` } // Add token in header
             });
 
