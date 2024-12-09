@@ -2,19 +2,23 @@ let app = angular.module('ParkingApp', ['ngRoute', 'ngSanitize']);
 
 app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
-    //Post
+        //Post
         .when('/', {
-            templateUrl: 'app/components/post/Post.html',
+            templateUrl: '/app/components/post/Post.html',
             controller: 'ParkingController'
         })
         .when('/post-detail', {
             templateUrl: 'app/components/post/PostDetail.html',
             controller: 'PostController'
         })
-        // .when('/dang-tin', {
-        //     templateUrl: 'app/components/post/DangTin.html',
-        //     controller: 'PostNewsController'
-        // })
+        .when('/dang-tin', {
+            templateUrl: 'app/components/uppost/CreatePost.html',
+            controller: 'UpPostController'
+        })
+        .when('/update-post', {
+            templateUrl: 'app/components/uppost/UpdatePost.html',
+            controller: 'UpdatePostController'
+        })
 
         //Login
         .when('/Login-and-Register', {
@@ -36,19 +40,19 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             controller: 'PostsController'
         })
         .when('/user/change-password', {
-        templateUrl: 'app/components/user/ChangePassword.html',
-        controller: 'ChangePasswordController'
-    })
+            templateUrl: 'app/components/user/ChangePassword.html',
+            controller: 'ChangePasswordController'
+        })
 
-    //Payment
-    .when('/payment', {
-        templateUrl: 'app/components/payment/VNPay.html',
-        controller: 'PaymentController'
-    })
+        //Payment
+        .when('/payment', {
+            templateUrl: 'app/components/payment/VNPay.html',
+            controller: 'PaymentController'
+        })
 
-    .otherwise({
-        redirectTo: '/'
-    });
+        .otherwise({
+            redirectTo: '/'
+        });
 
-$locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true);
 }]);

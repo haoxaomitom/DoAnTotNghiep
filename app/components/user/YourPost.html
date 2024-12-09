@@ -19,19 +19,19 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="active-posts-tab" data-bs-toggle="tab"
                     data-bs-target="#active-posts" type="button" role="tab" aria-controls="active-posts"
-                    aria-selected="true">
+                    aria-selected="true" ng-click="selectTab('ACTIVE')">
                     Bài đăng đang hoạt động
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pending-posts-tab" data-bs-toggle="tab" data-bs-target="#pending-posts"
-                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false">
+                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false" ng-click="selectTab('WAITING')">
                     Bài đăng chờ duyệt
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="cancelled-posts-tab" data-bs-toggle="tab" data-bs-target="#cancelled-posts"
-                    type="button" role="tab" aria-controls="cancelled-posts" aria-selected="false">
+                    type="button" role="tab" aria-controls="cancelled-posts" aria-selected="false" ng-click="selectTab('REJECT')">
                     Bài đăng bị từ chối
                 </button>
             </li>
@@ -135,7 +135,7 @@
                 <div ng-repeat="post in activePosts" ng-class="{'fade-in': !loading}" class="card mb-3 post-item">
                     <!-- Reuse your post HTML -->
                     <!-- Nội dung bài đăng của bạn -->
-                    <a href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                    <a href="/post-detail?id={{post.postId}}" style="text-decoration: none; color: inherit;">
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <div class="d-flex align-items-center justify-content-center"
@@ -164,7 +164,7 @@
                                             {{formatCurrency(post.price) + " " + post.priceUnit}}
                                         </h4>
                                         <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                            {{vehicleType.vehicleTypeName}}
+                                            {{vehicleType.vehicleTypesName}}
                                             <span ng-if="!$last"> - </span>
                                         </span>
                                     </div>
@@ -187,9 +187,9 @@
                     <div class="row">
                         <div class="col text-center">
                             
-                            <a ng-href="#" class="btn btn-success m-2">Chỉnh sửa bài đăng</a>
-                            <a ng-href="/payment?postId={{post.idPost}}" class="btn btn-primary m-2">Đẩy top</a>
-                            <a ng-href="#" class="btn btn-info m-2">Xem lịch sử thanh toán</a>
+                            <a ng-href="/update-post?postId={{post.postId}}" class="btn btn-success m-2">Chỉnh sửa bài đăng</a>
+                            <a ng-href="/payment?postId={{post.postId}}" class="btn btn-primary m-2">Đẩy top</a>
+                            <!-- <a ng-href="#" class="btn btn-info m-2">Xem lịch sử thanh toán</a> -->
                             <a ng-href="#" class="btn btn-danger m-2" ng-click="openDeleteModal(post.idPost)">Xóa bài
                                 đăng</a>
                         </div>
@@ -279,7 +279,7 @@
                                         {{formatCurrency(post.price) + " " + post.priceUnit}}
                                     </h4>
                                     <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                        {{vehicleType.vehicleTypeName}}
+                                        {{vehicleType.vehicleTypesName}}
                                         <span ng-if="!$last"> - </span>
                                     </span>
                                 </div>
@@ -377,9 +377,10 @@
                     </div>
                 </div>
             </div>
-            <div ng-show="!hasMoreData && !loading" class="text-center">
+            <div ng-show="posts.length > 0 && !hasMoreData && !loading" class="text-center">
                 <p>Không còn bài đăng nào để hiển thị.</p>
             </div>
+            
         </div>
     </div>
 
