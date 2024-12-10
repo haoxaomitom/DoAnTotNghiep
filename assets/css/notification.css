@@ -1,0 +1,6 @@
+.truncate-text {
+    white-space: nowrap; /* Không cho phép xuống dòng */
+    overflow: hidden;    /* Ẩn phần văn bản vượt quá */
+    text-overflow: ellipsis; /* Thêm dấu "..." ở cuối */
+    max-width: 100%;    /* Đặt độ rộng tối đa */
+}
