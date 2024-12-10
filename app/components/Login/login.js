@@ -25,10 +25,10 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
                         // Xóa URL đã lưu sau khi chuyển hướng
                         localStorage.removeItem('redirectUrl'); 
                         // Chuyển hướng đến trang trước đó
-                        $location.path(redirectUrl);
+                        $location.absUrl(redirectUrl);
                     } else {
                         // Mặc định 
-                        $window.location.href = '/app/index.html';
+                        $window.location.href = 'index.html';
                     }
                 } else {
                     $scope.message = response.data.message;

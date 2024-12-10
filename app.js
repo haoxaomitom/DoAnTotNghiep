@@ -4,11 +4,11 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
     $routeProvider
         //Post
         .when('/', {
-            templateUrl: '/app/components/post/Post.html',
+            templateUrl: 'app/components/post/Post.html',
             controller: 'ParkingController'
         })
         .when('/post-detail', {
-            templateUrl: 'app/components/post/PostDetail.html',
+            templateUrl: '/app/components/post/PostDetail.html',
             controller: 'PostController'
         })
         .when('/dang-tin', {

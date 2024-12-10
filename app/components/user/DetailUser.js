@@ -92,7 +92,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     $scope.logout = function () {
         localStorage.clear();
         // Chuyển hướng đến trang chủ
-        $window.location.href = '/app/index.html';
+        // $window.location.href = '/index.html';
     };
 
     // Khi chọn Quận/Huyện
