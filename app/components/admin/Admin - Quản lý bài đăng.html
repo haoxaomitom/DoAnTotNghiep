@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý bài đăng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="/app/components/admin/PostController.js"></script>
+</head>
+
+<body ng-controller="PostController" class="d-flex">
+
+    <!-- Sidebar -->
+    <aside class="bg-primary text-white d-flex flex-column p-4" style="width: 300px; height: 100vh;">
+        <!-- Logo/Header -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="font-size: 2rem;">PTR</h2>
+        </div>
+    
+        <!-- Control Panel Link -->
+        <div class="mb-4">
+            <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                <i class="fas fa-house me-3" style="font-size: 1.5rem;"></i>
+                <span>Control Panel</span>
+            </a>
+        </div>
+        <hr class="border-light">
+    
+        <!-- Navigation Links -->
+        <ul class="list-unstyled">
+            <li class="mb-3">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                    <i class="fas fa-cogs me-3" style="font-size: 1.5rem;"></i>
+                    <span>Quản lý</span>
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                    <i class="fas fa-file-alt me-3" style="font-size: 1.5rem;"></i>
+                    <span>Quản lý bài đăng</span>
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                    <i class="fas fa-user me-3" style="font-size: 1.5rem;"></i>
+                    <span>Quản lý tài khoản</span>
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                    <i class="fas fa-receipt me-3" style="font-size: 1.5rem;"></i>
+                    <span>Quản lý hóa đơn</span>
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                    <i class="fas fa-parking me-3" style="font-size: 1.5rem;"></i>
+                    <span>Tiện ích bãi đỗ</span>
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="#" class="text-white text-decoration-none d-flex align-items-center" style="font-size: 1.2rem; font-weight: 600;">
+                    <i class="fas fa-flag me-3" style="font-size: 1.5rem;"></i>
+                    <span>Quản lý báo cáo bài đăng</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+    
+    
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 ms-3 mt-3">
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-3">
+            <div class="container-fluid">
+                <form class="d-flex w-100">
+                    <input class="form-control me-2" type="search" placeholder="Tìm kiếm bài đăng..." id="searchInputNav" ng-model="searchQuery">
+                    <button class="btn btn-primary" type="button" ng-click="searchPosts()">Tìm kiếm</button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- Table Controls -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <input type="checkbox" id="selectAll" ng-click="selectAllPosts()" class="form-check-input me-2">
+                <label for="selectAll" class="form-check-label">Chọn tất cả</label>
+                <button class="btn btn-success ms-2" ng-click="loadPosts()">Làm mới</button>
+            </div>
+            <div>
+                <button class="btn btn-primary me-2" ng-click="openAddPostModal()"><i class="fas fa-plus"></i> Thêm</button>
+                <button class="btn btn-danger me-2" ng-click="deleteSelectedPosts()"><i class="fas fa-trash"></i> Xóa</button>
+                <span>Trang {{ page + 1 }} / {{ totalPages }}</span>
+                <button class="btn btn-secondary ms-2" ng-click="page = page - 1; loadPosts()" ng-disabled="page <= 0">Trang trước</button>
+                <button class="btn btn-secondary ms-2" ng-click="page = page + 1; loadPosts()" ng-disabled="page >= totalPages - 1">Trang sau</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th><input type="checkbox" id="selectAllHeader" class="form-check-input"></th>
+                    <th ng-click="sortPosts('idPost')">ID <i class="fas" ng-class="getSortIcon('idPost')"></i></th>
+                    <th ng-click="sortPosts('user.firstName')">Người Đăng <i class="fas" ng-class="getSortIcon('user.firstName')"></i></th>
+                    <th ng-click="sortPosts('parkingName')">Tên Bãi Đỗ <i class="fas" ng-class="getSortIcon('parkingName')"></i></th>
+                    <th ng-click="sortPosts('createdAt')">Thời gian tạo <i class="fas" ng-class="getSortIcon('createdAt')"></i></th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="post in posts">
+                    <td><input type="checkbox" ng-model="post.selected" class="form-check-input"></td>
+                    <td>{{ post.idPost }}</td>
+                    <td>{{ post.user.firstName + ' ' + post.user.lastName }}</td>
+                    <td>{{ post.parkingName }}</td>
+                    <td>{{ post.createdAt | date: 'medium' }}</td>
+                    <td>{{ post.status }}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" ng-click="viewDetails(post)">Xem</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Add Post Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" ng-show="showAddPostModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm Bài Đăng</h5>
+                    <button type="button" class="btn-close" aria-label="Close" ng-click="closeAddPostModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="createPost()">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" ng-model="newPost.username" placeholder="Tên người dùng" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" ng-model="newPost.parkingName" placeholder="Tên bãi đỗ" required>
+                        </div>
+                        <!-- Add other fields here -->
+                        <button type="submit" class="btn btn-primary w-100">Lưu bài đăng</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
