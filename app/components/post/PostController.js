@@ -34,8 +34,28 @@ app.controller('ParkingController', ['$scope', '$http', '$location', 'ItemServic
         }
     };
 
+    $scope.isLoggedIn = function () {
+        const userId = localStorage.getItem('userId');  // Assuming userId is stored in localStorage
+        return userId !== null; // If userId exists, the user is logged in
+    };
 
-    // Phương thức đăng xuất
+    $scope.checkLoginBeforePost = function () {
+        if (userId == null) {
+            // Show modal if not logged in
+            $('#loginPromptModal').modal('show');
+        } else {
+            // If the user is logged in, redirect to the post page
+            $location.path('/dang-tin');  // Change the URL based on your app's routing
+        }
+    };
+
+    $scope.redirectToLogin = function () {
+        // Hide modal and redirect to login page
+        $('#loginPromptModal').modal('hide');
+        localStorage.setItem('redirectUrl', $location.path());  // Store current URL to redirect after login
+        $location.path('/Login-and-Register');  // Change this URL based on your app's routing
+    };
+
     $scope.logout = function () {
         // Xóa token và userId trong localStorage
         localStorage.removeItem('token');

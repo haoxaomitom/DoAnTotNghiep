@@ -120,7 +120,8 @@
                                         <h5 class="card-title">Các loại xe được gửi</h5>
                                         <ul class="list-unstyled row">
                                             <div class="col-sm-6" ng-repeat="vehicleType in post.vehicleTypes">
-                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypeName}}</li>
+                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypesName}}
+                                                </li>
                                             </div>
                                         </ul>
                                     </div>
@@ -278,7 +279,7 @@
                                 </div>
                                 <p>Hoặc chia sẻ bài đăng này với bạn bè hoặc trên mạng xã hội.</p>
                                 <div class="d-flex justify-content-around">
-                                    <button class="btn btn-primary" ng-click="shareOnFacebook(post.idPost)">
+                                    <button class="btn btn-primary" ng-click="shareOnFacebook(post.postId)">
                                         <i class="fa-brands fa-facebook"></i> Facebook
                                     </button>
                                     <button class="btn btn-primary" ng-click="copyLink()">
@@ -480,8 +481,15 @@
             </div>
             <div class="col-sm-4">
                 <h5 class="mb-3">Các bài đăng liên quan:</h5>
-                <div class="card mb-3" ng-repeat="post in relatedPosts">
-                    <a href="/post-detail?id={{post.idPost}}" loading="lazy"
+
+                <!-- Kiểm tra nếu danh sách liên quan không có bài viết -->
+                <div ng-if="relatedPosts.length === 0" class="alert alert-info">
+                    Hiện không có bài đăng nào phù hợp.
+                </div>
+
+                <!-- Danh sách bài đăng liên quan -->
+                <div class="card mb-3" ng-repeat="post in relatedPosts" ng-if="relatedPosts.length > 0">
+                    <a href="/post-detail?id={{post.postId}}" loading="lazy"
                         style="text-decoration: none; color: inherit;">
                         <div class="row g-0">
                             <div class="col-md-4">
@@ -535,7 +543,6 @@
         <div id="fb-root"></div>
 
 
-        <!-- Bootstrap JS and dependencies -->
 
 </body>
 <script async defer crossorigin="anonymous"

@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="/assets/css/FavoritePost.css">
     <link rel="stylesheet" href="/assets/css/home.css">
 
-
-    <base href="/user/save-post">
 </head>
 
 <body ng-controller="FavoritesController">
@@ -82,8 +80,10 @@
         Bạn chưa lưu bài đăng nào!
     </div>
 
-    <div class="card mb-3 post-item" ng-repeat="favorite in favorites" ng-if="!loading">
-        <a ng-href="/post-detail?id={{favorite.post}}" style="text-decoration: none; color: inherit;">
+
+    <!-- Listings -->
+    <div class="card mb-3 post-item" ng-repeat="post in posts" ng-class="{'fade-in': !loading}">
+        <a href="/post-detail?id={{post.postId}}" style="text-decoration: none; color: inherit;">
             <div class="row g-0">
                 <div class="col-md-4">
                     <div class="d-flex align-items-center justify-content-center"

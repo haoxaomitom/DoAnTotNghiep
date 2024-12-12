@@ -54,10 +54,9 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
 
     // Perform the unfavorite action after user confirms
     $scope.toggleFavorite = function () {
-        const postId = $scope.favoriteToUnfavorite.post;
-        const userId = $scope.favoriteToUnfavorite.user;
+        const postId = $scope.postToUnfavorite.postId;
 
-        // Call the API to toggle the favorite status
+        // Gọi API để hủy lưu bài đăng
         FavoritesService.toggleFavorite(userId, postId)
             .then(function (response) {
                 $scope.isFavorite = response.data.data.isFavorite;
@@ -66,7 +65,15 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
                 const actionMessage = $scope.isFavorite ? 'Đã lưu bài đăng' : 'Đã hủy lưu bài đăng';
                 $scope.showToast(actionMessage);
                 $('#confirmationModal').modal('hide');
-                $scope.getFavorites();
+
+                // Loại bỏ bài đăng khỏi danh sách $scope.posts
+                $scope.posts = $scope.posts.filter(post => post.postId !== postId);
+
+                // Nếu danh sách rỗng, đánh dấu là không còn dữ liệu
+                if ($scope.posts.length === 0) {
+                    $scope.isEmpty = true;
+                    $scope.hasMoreData = false;
+                }
             })
             .catch(function (error) {
                 console.error("Lỗi khi thay đổi trạng thái yêu thích:", error);

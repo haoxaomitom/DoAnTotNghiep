@@ -2,13 +2,22 @@ let app = angular.module('ParkingApp', ['ngRoute', 'ngSanitize']);
 
 app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider
-        .when('/home', {
+        //Post
+        .when('/', {
             templateUrl: 'app/components/post/Post.html',
             controller: 'ParkingController'
         })
         .when('/post-detail', {
-            templateUrl: 'app/components/post/PostDetail.html',
+            templateUrl: '/app/components/post/PostDetail.html',
             controller: 'PostController'
+        })
+        .when('/dang-tin', {
+            templateUrl: 'app/components/uppost/CreatePost.html',
+            controller: 'UpPostController'
+        })
+        .when('/update-post', {
+            templateUrl: 'app/components/uppost/UpdatePost.html',
+            controller: 'UpdatePostController'
         })
 
         //Login
@@ -30,6 +39,10 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             templateUrl: 'app/components/user/YourPost.html',
             controller: 'PostsController'
         })
+        .when('/user/change-password', {
+            templateUrl: 'app/components/user/ChangePassword.html',
+            controller: 'ChangePasswordController'
+        })
 
         //Payment
         .when('/payment', {
@@ -38,7 +51,7 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
         })
 
         .otherwise({
-            redirectTo: '/home'
+            redirectTo: '/'
         });
 
     $locationProvider.html5Mode(true);
