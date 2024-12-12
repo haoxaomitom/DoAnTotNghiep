@@ -1,101 +1,74 @@
-var app = angular.module('myApp', []);
+let app = angular.module('myApp', []);
+app.controller('ApprovalPostController', function($scope, $http) {
 
-app.controller('ApprovalController', function ($scope, $http) {
-    const apiUrl = "http://localhost:8080/api/approval-posts";
+    // Khởi tạo các biến
+    $scope.approvalPosts = [];
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.totalPages = 0;
+    $scope.userId = localStorage.getItem("userId"); // Giả sử đây là ID của admin hoặc người thực hiện
 
-    $scope.items = [];
-    $scope.sortField = 'id';
-    $scope.reverseSort = false;
-    $scope.searchField = 'status';
-    $scope.searchText = '';
-
-    // Load data từ backend
-    $scope.loadItems = function () {
-        $http.get(apiUrl).then(function (response) {
-            $scope.items = response.data.map(item => {
-                try {
-                    // Parse rejectionReason nếu là JSON hợp lệ
-                    item.rejectionReason = item.rejectionReason ? JSON.parse(item.rejectionReason).reason : 'N/A';
-                } catch (e) {
-                    console.error("Error parsing rejectionReason:", e);
-                    item.rejectionReason = 'Invalid format';
-                }
-
-                // Nếu status là "Waiting", xóa thông tin "reviewedBy"
-                if (item.status === 'Waiting') {
-                    item.reviewedByUsername = '';
-                    item.reviewedAt = '';
-                }
-
-                return item;
-            });
-        }, function (error) {
-            console.error("Error loading data:", error);
-            $scope.items = []; // Xóa dữ liệu nếu lỗi xảy ra
-        });
-    };
-
-    // Approve bài đăng
-    $scope.approve = function (item) {
-        $http.put(`${apiUrl}/approve/${item.approvalPostId}`)
-            .then(function () {
-                alert('Bài đăng đã được duyệt!');
-                $scope.loadItems(); // Tải lại danh sách bài viết
+    // Lấy tất cả bài viết với phân trang
+    $scope.getAllApprovalPosts = function(page, size) {
+        $http.get('http://localhost:8080/api/approval-posts', { params: { page: page, size: size } })
+            .then(function(response) {
+                // Lặp qua từng bài viết và chuyển đổi reviewedAt
+                $scope.approvalPosts = response.data.content.map(function(post) {
+                    // Chuyển đổi reviewedAt thành định dạng hợp lệ
+                    post.reviewedAtFormatted = post.reviewedAt ? new Date(post.reviewedAt).toLocaleString('en-GB') : 'N/A';
+                    return post;
+                });
+                console.log($scope.approvalPosts);
+                $scope.totalPages = response.data.totalPages;
+                $scope.currentPage = response.data.number;
             })
-            .catch(function (error) {
-                console.error("Error approving post:", error);
-                alert('Không thể duyệt bài đăng. Vui lòng thử lại.');
+            .catch(function(error) {
+                console.error("Lỗi khi lấy danh sách bài viết:", error);
             });
     };
     
 
-    // Reject bài đăng
-    $scope.reject = function (item) {
-        const reason = "Thông tin không hợp lệ"; // Lý do từ chối
-        const username = "admin"; // Tên người dùng hiện tại
-    
-        $http.put(`${apiUrl}/reject/${item.approvalPostId}`, 
-            { reason: reason, username: username }, 
-            { headers: { "Content-Type": "application/json" } }
-        )
-        .then(function () {
-            alert('Bài đăng đã bị từ chối!');
-            $scope.loadItems(); // Tải lại danh sách
-        })
-        .catch(function (error) {
-            console.error("Error rejecting post:", error);
-            alert(`Không thể từ chối bài đăng. Lỗi: ${error.status} - ${error.data?.message || 'Chi tiết không xác định'}`);
-        });
+    // Duyệt bài viết
+    $scope.approvePost = function(postId, userId) {
+        $http.post(`http://localhost:8080/api/approval-posts/approve/${postId}`, null, { params: { userId: userId } })
+            .then(function(response) {
+                alert("Bài viết đã được duyệt!");
+                $scope.getAllApprovalPosts($scope.currentPage, $scope.pageSize); // Refresh danh sách
+            })
+            .catch(function(error) {
+                console.error("Lỗi khi duyệt bài viết:", error);
+            });
     };
-    
-    
-    
-    
-    
-        
 
-    // Thiết lập trường sắp xếp
-    $scope.setSortField = function (field) {
-        if ($scope.sortField === field) {
-            $scope.reverseSort = !$scope.reverseSort;
-        } else {
-            $scope.sortField = field;
-            $scope.reverseSort = false;
+    // Từ chối bài viết
+    $scope.rejectPost = function(postId, rejectionReason, userId) {
+        rejectionReason = prompt("Nhập lý do từ chối:");
+        if (rejectionReason) {
+            $http.post(`http://localhost:8080/api/approval-posts/reject/${postId}`, null, { 
+                params: { rejectionReason: rejectionReason, userId: userId } 
+            })
+            .then(function(response) {
+                alert("Bài viết đã bị từ chối!");
+                $scope.getAllApprovalPosts($scope.currentPage, $scope.pageSize); // Refresh danh sách
+            })
+            .catch(function(error) {
+                console.error("Lỗi khi từ chối bài viết:", error);
+            });
         }
     };
 
-    // Xem chi tiết bài đăng
-    $scope.viewDetails = function (item) {
-        window.location.href = `Admin - Chi tiết quản lý bài đăng.html?id=${item.approvalPostId}`;
+    // Hàm xem chi tiết bài viết
+    $scope.viewDetails = function(item) {
+        alert(`Chi tiết bài viết:\nID: ${item.approvalPostId}\nTrạng thái: ${item.status}\nLý do: ${item.rejectionReason || 'N/A'}`);
     };
 
-    // Perform tìm kiếm
-    $scope.search = function () {
-        if (!$scope.searchText) {
-            alert('Vui lòng nhập từ khóa để tìm kiếm.');
+    // Hàm chuyển trang
+    $scope.changePage = function(newPage) {
+        if (newPage >= 0 && newPage < $scope.totalPages) {
+            $scope.getAllApprovalPosts(newPage, $scope.pageSize);
         }
     };
 
-    // Khởi tạo dữ liệu
-    $scope.loadItems();
+    // Khởi chạy lần đầu
+    $scope.getAllApprovalPosts($scope.currentPage, $scope.pageSize);
 });

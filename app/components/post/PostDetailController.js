@@ -81,7 +81,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
                 .then(function (response) {
                     if (response && response.content) {
                         // Lọc bài viết loại trừ bài viết hiện tại
-                        $scope.relatedPosts = response.content.filter(relatedPost => relatedPost.idPost !== $scope.post.idPost);
+                        $scope.relatedPosts = response.content.filter(relatedPost => relatedPost.postId !== $scope.post.postId);
                         $scope.totalPagesCount = response.totalPages;
                     } else {
                         console.error('Unexpected response structure:', response);

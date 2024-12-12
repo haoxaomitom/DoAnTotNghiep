@@ -121,7 +121,7 @@ body {
     flex: 0 0 70%;
 }
 
-.title-section input,
+/* .title-section input,
 .description-input,
 .input-group input,
 textarea {
@@ -131,7 +131,7 @@ textarea {
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-top: 10px;
-}
+} */
 
 .description-input {
     height: 100px;

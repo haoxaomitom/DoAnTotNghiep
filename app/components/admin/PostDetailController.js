@@ -1,5 +1,7 @@
+let app = angular.module('myApp', []);
+
 // let app = angular.module('app', [])
-app.controller('UpdatePostController', function ($scope, $http, $location) {
+app.controller('PostController', function ($scope, $http, $location) {
     // Retrieve userId from localStorage
     const token = localStorage.getItem('token');
     $scope.user_id = localStorage.getItem('userId');
@@ -23,7 +25,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         wifi: 'Có rửa xe',
         key: 'Có khóa cổng riêng'
     };
-
+    
     $scope.vehicleCheckboxOptions = {
         car: 'Ô tô',
         motorbike: 'Xe máy',
@@ -322,3 +324,31 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
     $scope.loadPostData();
 });
 
+
+let map;
+let marker;
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), { center: { lat: 10.8231, lng: 106.6297 }, zoom: 13 });
+    map.addListener("click", (e) => placeMarker(e.latLng));
+}
+
+function placeMarker(location) {
+    if (marker) marker.setMap(null);
+    marker = new google.maps.Marker({ position: location, map: map });
+
+    const scope = angular.element(document.getElementById('map')).scope();
+
+    // Cập nhật tọa độ vào scope
+    if (!scope.$$phase) {
+        scope.$apply(() => {
+            scope.post.latitude = location.lat();
+            scope.post.longitude = location.lng();
+        });
+    } else {
+        scope.post.latitude = location.lat();
+        scope.post.longitude = location.lng();
+    }
+
+    alert("Đã lưu tọa độ: " + location.lat() + ", " + location.lng());
+}
