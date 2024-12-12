@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Posts</title>
-    <link rel="stylesheet" href="/assets/css/YourPost.css">
+    <!-- <link rel="stylesheet" href="/assets/css/YourPost.css"> -->
+    <link rel="stylesheet" href="/assets/css/home.css">
+    <base href="/user/your-post">
 </head>
 
 <body ng-controller="PostsController">
@@ -127,40 +129,34 @@
                 <div ng-if="!loading && pendingPosts.length === 0" class="text-center">Không có bài đăng chờ duyệt.
                 </div>
                 <div ng-repeat="post in pendingPosts" class="card mb-3 post-item">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="d-flex align-items-center justify-content-center"
-                                style="height: 100%; background: #f8f9fa;">
-                                <img ng-src="{{post.images[0].imageUrl}}" loading="lazy" class="img-fluid rounded-start"
-                                    alt="Images" />
+                    <a ng-href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center justify-content-center"
+                                    style="height: 100%; background: #f8f9fa;">
+                                    <img ng-src="{{post.images[0].imageUrl}}" class="img-fluid rounded-start"
+                                        alt="Images" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-8 d-flex flex-column">
-                            <div class="card h-100 d-flex flex-column">
-                                <div class="card-header bg-transparent border-0">
-                                    <h4 class="font-weight-bold">{{post.parkingName}}</h4>
-                                </div>
-                                <div class="card-body flex-grow-1">
-                                    <h7 class="card-text district d-flex mb-2">
-                                        {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                        {{post.provinceName}}
-                                    </h7>
-                                    <h4 class="card-text text-danger">
-                                        {{formatCurrency(post.price) + " " + post.priceUnit}}
-                                    </h4>
-                                    <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                        {{vehicleType.vehicleTypesName}}
-                                        <span ng-if="!$last"> - </span>
-                                    </span>
-                                </div>
-                                <div class="card-footer bg-transparent d-flex justify-content-between mt-auto">
-                                    <p class="card-text username font-weight-bold mb-0">
-                                        Đăng bởi: {{post.user.firstName}} {{post.user.lastName}}
+                            <div class="col-md-8 d-flex flex-column">
+                                <div class="card-title mb-0">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h4 class="font-weight-bold">{{post.parkingName}}</h4>
+                                    </div>
+                                    <div class="card-body flex-grow-1">
+                                        <h7 class="card-text district d-flex mb-2">
+                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
+                                        </h7>
+                                        <h4 class="card-text text-danger">
+                                            {{formatCurrency(post.price) + " " + post.priceUnit}}
+                                        </h4>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between mt-auto">
                                         <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </a>
                 </div>
             </div>
