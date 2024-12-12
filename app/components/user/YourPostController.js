@@ -68,7 +68,7 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
                         $scope.cancelledPosts.push(post);
                     }
                 });
-    
+
                 // Kiểm tra còn dữ liệu không
                 $scope.hasMoreData = $scope.page < data.totalPages - 1;
                 $scope.page++;
@@ -80,9 +80,9 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
                 console.error('Error fetching posts by status:', error);
             });
     };
-    
-    
-    
+
+
+
     $scope.selectTab = function (status) {
         // Reset về trang đầu tiên và các mảng dữ liệu
         $scope.page = 0; // Reset trang
@@ -91,7 +91,7 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
         $scope.pendingPosts = []; // Reset bài viết chờ duyệt
         $scope.cancelledPosts = []; // Reset bài viết bị hủy
         $scope.selectedStatus = status; // Lưu trạng thái đã chọn
-    
+
         $scope.getPosts(status); // Gọi API lấy bài viết theo trạng thái
     };
 

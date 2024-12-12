@@ -50,39 +50,39 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
                 'Authorization': `Bearer ${token}` // Gửi token trong header
             }
         })
-        .then(function (response) {
-            if (response.data.status) {
-                const data = response.data.data;
-                $scope.firstName = data.firstName;
-                $scope.lastName = data.lastName;
-                $scope.gender = data.gender;
-                $scope.dateOfBirth = data.dateOfBirth;
-                $scope.phoneNumber = data.phoneNumber;
-                $scope.email = data.email;
-                $scope.fullName = data.lastName + ' ' + data.firstName;
-                $scope.avatar = data.avatar;
-                $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email";
+            .then(function (response) {
+                if (response.data.status) {
+                    const data = response.data.data;
+                    $scope.firstName = data.firstName;
+                    $scope.lastName = data.lastName;
+                    $scope.gender = data.gender;
+                    $scope.dateOfBirth = data.dateOfBirth;
+                    $scope.phoneNumber = data.phoneNumber;
+                    $scope.email = data.email;
+                    $scope.fullName = data.lastName + ' ' + data.firstName;
+                    $scope.avatar = data.avatar;
+                    $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email";
 
-                // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
-                $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
-                if ($scope.selectedProvince) {
-                    $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
+                    // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
+                    $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
+                    if ($scope.selectedProvince) {
+                        $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
 
-                    $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
+                        $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
 
-                    $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
-                    if ($scope.selectedDistrict) {
-                        $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
+                        $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
+                        if ($scope.selectedDistrict) {
+                            $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
 
-                        $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
+                            $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
+                        }
                     }
+                } else {
+                    console.log(response.data.message);
                 }
-            } else {
-                console.log(response.data.message);
-            }
-        }, function (error) {
-            console.log(error);
-        })
+            }, function (error) {
+                console.log(error);
+            })
     } else {
         // Nếu chưa đăng nhập, không chuyển hướng, chỉ hiển thị các tùy chọn đăng nhập
         $scope.isLoggedIn = false;
@@ -92,7 +92,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     $scope.logout = function () {
         localStorage.clear();
         // Chuyển hướng đến trang chủ
-        // $window.location.href = '/index.html';
+        $window.location.href = '/app/index.html';
     };
 
     // Khi chọn Quận/Huyện

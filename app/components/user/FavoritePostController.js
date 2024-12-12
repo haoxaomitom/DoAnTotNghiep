@@ -89,7 +89,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
     // Perform the unfavorite action after user confirms
     $scope.toggleFavorite = function () {
         const postId = $scope.postToUnfavorite.postId;
-    
+
         // Gọi API để hủy lưu bài đăng
         FavoritesService.toggleFavorite(userId, postId)
             .then(function (response) {
@@ -101,7 +101,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
     
                 // Loại bỏ bài đăng khỏi danh sách $scope.posts
                 $scope.posts = $scope.posts.filter(post => post.postId !== postId);
-    
+
                 // Nếu danh sách rỗng, đánh dấu là không còn dữ liệu
                 if ($scope.posts.length === 0) {
                     $scope.isEmpty = true;

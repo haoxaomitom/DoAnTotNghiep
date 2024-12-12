@@ -24,7 +24,8 @@
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pending-posts-tab" data-bs-toggle="tab" data-bs-target="#pending-posts"
-                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false" ng-click="selectTab('WAITING')">
+                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false"
+                    ng-click="selectTab('WAITING')">
                     Bài đăng chờ duyệt
                 </button>
             </li>
@@ -150,14 +151,13 @@
                                 </div>
                             </div>
                             <div class="col-md-8 d-flex flex-column">
-                                <div class="card h-100 d-flex flex-column">
+                                <div class="card-title mb-0">
                                     <div class="card-header bg-transparent border-0">
                                         <h4 class="font-weight-bold">{{post.parkingName}}</h4>
                                     </div>
                                     <div class="card-body flex-grow-1">
                                         <h7 class="card-text district d-flex mb-2">
-                                            {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                            {{post.provinceName}}
+                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
                                         </h7>
                                         <h4 class="card-text text-danger">
                                             {{formatCurrency(post.price) + " " + post.priceUnit}}
@@ -286,10 +286,7 @@
                                     <p class="card-text username font-weight-bold mb-0">
                                         Đăng bởi: {{post.user.firstName}} {{post.user.lastName}}
                                         <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                    </p>
-                                    <p class="card-text text-muted mb-0">
-                                        <i class="fa-regular fa-comment"></i> {{post.commentCount}}
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
