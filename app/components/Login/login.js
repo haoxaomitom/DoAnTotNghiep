@@ -1,105 +1,101 @@
-let app = angular.module('parkingApp', []);
+// let app = angular.module('parkingApp', []);
 
-app.controller('LoginController', function ($scope, $http, $window) {
-    console.log("run");
-    app.controller('LoginController', function ($scope, $http, $window) {
-        console.log("run");
-        $scope.login = {
-            username: '',
-            password: ''
+app.controller('LoginController', function ($scope, $location, $http, $window) {
+    $scope.login = {
+        username: '',
+        password: ''
+    }
+
+    $scope.submitFormLogin = function () {
+        const data = {
+            username: $scope.login.username,
+            password: $scope.login.password
         }
+        $http.post('http://localhost:8080/api/users/login', data)
+            .then(function (response) {
+                if (response.data.status) {
 
-        $scope.submitFormLogin = function () {
-            const data = {
-                username: $scope.login.username,
-                password: $scope.login.password
+                    const token = response.data.data.token;
+                    const userId = response.data.data.userId;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('username', $scope.login.username);
+                    localStorage.setItem('userId', userId);
+                    const redirectUrl = localStorage.getItem('redirectUrl');
+                    if (redirectUrl) {
+                        // Xóa URL đã lưu sau khi chuyển hướng
+                        localStorage.removeItem('redirectUrl');
+                        // Chuyển hướng đến trang trước đó
+                        $location.absUrl(redirectUrl);
+                    } else {
+                        // Mặc định 
+                        $window.location.href = 'index.html';
+                    }
+                } else {
+                    $scope.message = response.data.message;
+                }
+            }, function (error) {
+                console.log(error);
             }
-            $http.post('http://localhost:8080/api/users/login', data)
+            )
+    }
+    $scope.submitFormRegister = function () {
+        const data = {
+            firstName: $scope.firstName,
+            lastName: $scope.lastName,
+            username: $scope.username,
+            email: $scope.email,
+            password: $scope.password,
+            confirmPassword: $scope.confirmPassword
+        }
+        if (data.confirmPassword === data.password) {
+            $http.post('http://localhost:8080/api/users/register', data)
                 .then(function (response) {
+                    console.log(data);
                     if (response.data.status) {
-
-                        const token = response.data.data.token;
-                        const userId = response.data.data.userId;
-                        localStorage.setItem('token', token);
-                        localStorage.setItem('username', $scope.login.username);
-                        localStorage.setItem('userId', userId);
-                        const redirectUrl = localStorage.getItem('redirectUrl');
-                        if (redirectUrl) {
-                            // Xóa URL đã lưu sau khi chuyển hướng
-                            localStorage.removeItem('redirectUrl');
-                            // Chuyển hướng đến trang trước đó
-                            $location.path(redirectUrl);
-                        } else {
-                            // Mặc định 
-                            $window.location.href = '/app/index.html';
-                            $window.location.href = '/app/index.html';
-                        }
+                        alert(response.data.message);
+                        console.log(response.data.message)
                     } else {
                         $scope.message = response.data.message;
+                        console.log(response.data.message)
                     }
                 }, function (error) {
                     console.log(error);
                 }
                 )
-        }
-        $scope.submitFormRegister = function () {
-            const data = {
-                firstName: $scope.firstName,
-                lastName: $scope.lastName,
-                username: $scope.username,
-                email: $scope.email,
-                password: $scope.password,
-                confirmPassword: $scope.confirmPassword
-            }
-            if (data.confirmPassword === data.password) {
-                $http.post('http://localhost:8080/api/users/register', data)
-                    .then(function (response) {
-                        console.log(data);
-                        if (response.data.status) {
-                            alert(response.data.message);
-                            console.log(response.data.message)
-                        } else {
-                            $scope.message = response.data.message;
-                            console.log(response.data.message)
-                        }
-                    }, function (error) {
-                        console.log(error);
-                    }
-                    )
-            } else {
-                $scope.message = "Mật khẩu và xác nhận mật khẩu ko giống nhau";
-                return;
-            }
+        } else {
+            $scope.message = "Mật khẩu và xác nhận mật khẩu ko giống nhau";
+            return;
         }
     }
+
     $scope.loginWithFacebook = function () {
-            FB.login(function (response) {
-                if (response.authResponse) {
-                    const facebookToken = response.authResponse.accessToken;
-                    // Send the Facebook token to the server for login
-                    $http.post('http://localhost:8080/api/users/facebook-login', { token: facebookToken })
-                        .then(function (response) {
-                            if (response.data.status) {
-                                const token = response.data.data.token;
-                                const userId = response.data.data.userId;
-                                localStorage.setItem('token', token);
-                                localStorage.setItem('userId', userId);
-                                const redirectUrl = localStorage.getItem('redirectUrl');
-                                if (redirectUrl) {
-                                    localStorage.removeItem('redirectUrl');
-                                    $window.location.href = redirectUrl;
-                                } else {
-                                    $window.location.href = '/home';
-                                }
+        FB.login(function (response) {
+            if (response.authResponse) {
+                const facebookToken = response.authResponse.accessToken;
+                // Send the Facebook token to the server for login
+                $http.post('http://localhost:8080/api/users/facebook-login', { token: facebookToken })
+                    .then(function (response) {
+                        if (response.data.status) {
+                            const token = response.data.data.token;
+                            const userId = response.data.data.userId;
+                            localStorage.setItem('token', token);
+                            localStorage.setItem('userId', userId);
+                            const redirectUrl = localStorage.getItem('redirectUrl');
+                            if (redirectUrl) {
+                                localStorage.removeItem('redirectUrl');
+                                $window.location.href = redirectUrl;
                             } else {
-                                $scope.message = response.data.message;
+                                $window.location.href = '/home';
                             }
-                        }, function (error) {
-                            console.log('Login failed:', error);
-                        });
-                }
-            });
-        };
+                        } else {
+                            $scope.message = response.data.message;
+                        }
+                    }, function (error) {
+                        console.log('Login failed:', error);
+                    });
+            }
+        });
+    };
 
     $scope.registerUser = function () {
         const user = {
@@ -126,7 +122,6 @@ app.controller('LoginController', function ($scope, $http, $window) {
     };
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    console.log("Authorization Code: " + code);
 
     if (code) {
         $http.post('/api/auth/google', { code: code })
