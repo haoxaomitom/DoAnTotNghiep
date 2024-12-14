@@ -10,7 +10,7 @@
 
 <body ng-controller="PostController" class="d-flex flex-column min-vh-100">
 
-    <div class="container flex-fill">
+    <div class="container flex-fill" ng-class="{'fade-in': !loading}">
 
         <!-- Loading spinner -->
         <div class="d-flex justify-content-center align-items-center" style="height: 50vh;" ng-if="loading">
@@ -55,9 +55,9 @@
                                         class="img-fluid w-100 h-100" alt="Blurred Background Image"
                                         style="object-fit: cover;">
                                 </div>
-                                <!-- Ảnh chính hiển thị -->
                                 <img ng-src="{{post.images[0].imageUrl}}" loading="lazy"
-                                    class="img-fluid d-block mx-auto" alt="Main Image">
+                                    class="img-fluid d-block mx-auto" alt="Main Image"
+                                    ng-click="openModal(post.images[0].imageUrl)">
                             </div>
                             <!-- Các carousel item tiếp theo -->
                             <div class="carousel-item" ng-repeat="image in post.images.slice(1)">
@@ -81,10 +81,21 @@
                         </button>
                     </div>
                 </div>
-                <span class="promoted-label d-flex justify-content-center mb-3 align-items-center"
-                    ng-if="isPostPromoted(post.topPostEnd)">
-                    Bài viết được quảng cáo
-                </span>
+
+                <!-- Modal -->
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <img ng-src="{{modalImage}}" class="img-fluid w-100" alt="Zoomed Image">
+                            </div>
+                            <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+
                 <span class="promoted-label d-flex justify-content-center mb-3 align-items-center"
                     ng-if="isPostPromoted(post.topPostEnd)">
                     Bài viết được quảng cáo
@@ -220,36 +231,10 @@
                             <!-- Bootstrap icon for email/message -->
                             <h5 class="fw-bold text-white mb-1">Bạn thấy ưng ý ?</h5>
                             <p class="text-white">Nhấn vào để gửi thông tin tới chủ bãi đỗ xe</p>
-                            <button class="btn btn-light fw-bold mt-2 px-4">Gửi Thông Tin</button>
-                        </div>
+                            <button type="button" class="btn btn-light fw-bold mt-2 px-4" data-bs-toggle="modal"
+                                data-bs-target="#leaveInfModal">Gửi Thông Tin</button>
 
-                        <!-- Facebook Profile Button -->
-                        <div class="mt-3" ng-if="user.facebook">
-                            <a href="{{user.facebook}}"
-                                class="social btn w-100 d-flex align-items-center justify-content-center border border-primary border-2 p-2"
-                                target="_blank" style="border-radius: 8px;">
-                                <i class="fa-brands fa-facebook me-2" style="color: #007cdb;"></i> Liên hệ qua Facebook
-                            </a>
-                        </div>
-                        <!-- Zalo profile button -->
-                        <div class="mt-3">
-                            <a href="https://zalo.me/{{user.phoneNumber}}"
-                                class="social btn w-100 d-flex align-items-center justify-content-center border border-primary border-2 p-2"
-                                target="_blank" style="border-radius: 8px;">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
-                                    alt="File:Icon of Zalo.svg" height="20" width="20" class="me-2">
-                                Liên hệ qua Zalo
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Leave information -->
-                    <div class="leave-info-card border border-5 p-3 rounded mb-3 mt-5 text-center">
-                        <div class="p-3 d-flex flex-column align-items-center">
-                            <i class="bi bi-envelope-fill text-white fs-3 mb-2"></i>
-                            <!-- Bootstrap icon for email/message -->
-                            <h5 class="fw-bold text-white mb-1">Bạn thấy ưng ý ?</h5>
-                            <p class="text-white">Nhấn vào để gửi thông tin tới chủ bãi đỗ xe</p>
-                            <button class="btn btn-light fw-bold mt-2 px-4">Gửi Thông Tin</button>
+
                         </div>
                     </div>
                 </div>
@@ -370,7 +355,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- Comment and related Posts Section -->
         <div class="row" ng-if="!loading">
@@ -427,13 +411,11 @@
                         </div>
                     </div>
                     <div ng-if="comments.length === 0" class="text-muted mb-3">
-                        Chưa có bình luận nào, hãy là người đầu tiên bình luận cho
-                        bài đăng này !
+                        Chưa có bình luận nào, hãy là người đầu tiên bình luận cho bài đăng này !
                     </div>
                     <div class="mb-3">
                         <a ng-if="commentsPage < totalCommentsPages - 1" ng-click="loadMoreComments()"
-                            style="cursor:pointer">Tải
-                            thêm bình luận</a>
+                            style="cursor:pointer">Tải thêm bình luận</a>
                     </div>
                 </div>
 
@@ -453,29 +435,7 @@
                             lại</small>
                     </div>
 
-                    <!-- Modal for login prompt -->
-                    <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="loginPromptModalLabel">Login Required</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    Bạn cần phải đăng nhập mới được bình luận. Đi tới trang đăng nhập chứ ?
-                                </div>
-                                <div class="modal-footer">
 
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Không</button>
-                                    <button type="button" class="btn btn-primary"
-                                        ng-click="redirectToLogin()">Có</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -508,13 +468,12 @@
                                         <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
                                             {{vehicleType.vehicleTypeName}}
                                             <span ng-if="!$last"> - </span>
-                                            <!-- Optional separator between items -->
                                         </span>
                                         <h5 class="card-text text-danger">
                                             {{formatCurrency(post.price) + " " + post.priceUnit}}
                                         </h5>
                                     </div>
-                                    <div class="card-footer ">
+                                    <div class="card-footer">
                                         <h7 class="card-text username font-weight-bold">
                                             {{post.street}} {{post.wardName}}, {{post.districtName}},
                                             {{post.provinceName}}
@@ -531,8 +490,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-3" ng-if="relatedPosts.length > 0">
                     <button class="btn btn-primary" ng-click="previousPage()"
                         ng-disabled="currentPage === 0">Trước</button>
-                    <span>Trang {{ currentPage + 1 }} trên tổng {{ totalPagesCount
-                        }} trang</span>
+                    <span>Trang {{ currentPage + 1 }} trên tổng {{ totalPagesCount }} trang</span>
                     <button class="btn btn-primary" ng-click="nextPage()"
                         ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
                 </div>
@@ -540,7 +498,80 @@
 
         </div>
 
-        <div id="fb-root"></div>
+    </div>
+
+    <!-- Modal for login prompt -->
+    <!-- <div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginPromptModalLabel">Yêu cầu đăng nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn cần phải đăng nhập mới được sử dụng tính năng này. Đi tới trang đăng nhập chứ ?
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                    <button type="button" class="btn btn-primary" ng-click="redirectToLogin()">Có</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Modal leave information -->
+    <div class="modal fade" id="leaveInfModal" tabindex="-1" aria-labelledby="leaveInfModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h1 class="modal-title fs-5 " id="leaveInfModalLabel">Thông tin liên hệ</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="shadow-sm bg-light">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" name="fullName" id="fullName" ng-model="fullName" class="form-control"
+                                placeholder="Họ và tên">
+                            <label for="fullName">Họ và tên</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" name="phoneNumber" id="phoneNumber" ng-model="phoneNumber"
+                                class="form-control" placeholder="Số điện thoại">
+                            <label for="phoneNumber">Số điện thoại</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" name="typeCar" id="typeCar" ng-model="typeCar" class="form-control"
+                                placeholder="Loại xe">
+                            <label for="typeCar">Loại xe</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" name="contactTime" id="contactTime" ng-model="contactTime"
+                                class="form-control" placeholder="Thời gian có thể liên lạc">
+                            <label for="contactTime">Thời gian có thể liên lạc</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea name="description" id="description" ng-model="description" class="form-control"
+                                placeholder="Thông tin khác" style="height: 100px;"></textarea>
+                            <label for="description">Thông tin khác</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="saveContactInfo()">Save
+                        changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fb-root"></div>
 
 
 

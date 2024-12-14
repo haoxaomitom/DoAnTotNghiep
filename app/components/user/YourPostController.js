@@ -9,38 +9,52 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
         return; // Ngừng thực thi phần còn lại của controller
     }
 
-    $scope.posts = []; // Tất cả bài đăng
+    $scope.page = 0; // Trang hiện tại
+    $scope.size = 5; // Kích thước mỗi trang
+    $scope.posts = []; // Danh sách bài đăng
+    $scope.hasMoreData = true; // Còn dữ liệu để tải không
     $scope.activePosts = []; // Bài đăng đang hoạt động
     $scope.pendingPosts = []; // Bài đăng chờ duyệt
     $scope.cancelledPosts = []; // Bài đăng bị hủy
-    $scope.posts = []; // Tất cả bài đăng
-    $scope.activePosts = []; // Bài đăng đang hoạt động
-    $scope.pendingPosts = []; // Bài đăng chờ duyệt
-    $scope.cancelledPosts = []; // Bài đăng bị hủy
-    $scope.loading = true;
+    $scope.loading = false;
 
-
-    const userId = localStorage.getItem('userId');
-    let postIdToDelete = null; // Biến lưu trữ postId cần xóa
     let postIdToDelete = null; // Biến lưu trữ postId cần xóa
 
     // Hàm để lấy dữ liệu bài viết
-    $scope.getPosts = function () {
-        PostsService.getPostsByUserId(userId, token)
-        PostsService.getPostsByUserId(userId, token)
+    // $scope.getPosts = function () {
+    //     if ($scope.loading || !$scope.hasMoreData) return;
+
+    //     $scope.loading = true;
+
+    //     PostsService.getPostsByUserId(userId)
+    //         .then(function (response) {
+    //             const data = response.data;
+    //             console.log(response.data);
+    //             // Gộp dữ liệu mới vào danh sách bài đăng
+    //             $scope.posts = $scope.posts.concat(data.content);
+
+    //             // Phân loại bài đăng dựa trên trạng thái
+    //             $scope.activePosts = $scope.posts.filter(post => post.status === 'ACTIVE');
+    //             $scope.pendingPosts = $scope.posts.filter(post => post.status === 'WAITING');
+    //             $scope.cancelledPosts = $scope.posts.filter(post => post.status === 'REJECT');
+
+    //             // Kiểm tra xem còn dữ liệu để tải không
+    //             // $scope.hasMoreData = $scope.page < data.totalPages - 1;
+    //             $scope.page++; // Tăng chỉ số trang
+    //             $scope.loading = false;
+    //         })
+    //         .catch(function (error) {
+    //             $scope.loading = false;
+    //             console.error('Error fetching posts:', error);
+    //         });
+    // };
+
+    $scope.getPosts = function (status) {
+        $scope.loading = true;
+
+        PostsService.getPostsByStatus(userId, status, $scope.page, $scope.size)
             .then(function (response) {
-                $scope.posts = response.data;
-
-                // Phân loại bài đăng dựa trên trạng thái
-                $scope.activePosts = $scope.posts.filter(post => post.status === 'ACTIVE');
-                $scope.pendingPosts = $scope.posts.filter(post => post.status === 'WAITING');
-                $scope.cancelledPosts = $scope.posts.filter(post => post.status === 'REJECT');
-
-                $scope.loading = false;
-            })
-            .catch(function (error) {
-                $scope.loading = false;
-                $scope.posts = response.data;
+                const data = response.data;
 
                 // Thêm từng bài viết mới vào cuối mảng bài viết cũ
                 data.content.forEach(post => {

@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+
 </head>
 
 <body ng-controller="detailUserController">
-
+    <h3 class="mb-4">Thông tin tài khoản</h3>
     <!-- Form -->
-    <div class="profile-form">
+    <div class="profile-form" ng-class="{'fade-in': !loading}">
         <form ng-submit="update()">
             <div class="mb-3 row">
                 <div class="col-sm-6"><label for="name" class="form-label">Họ</label>
@@ -84,16 +85,34 @@
                 <div class="input-group">
                     <input type="email" class="form-control rounded-start" id="email" placeholder="Email"
                         ng-model="email">
-                    <button class="btn btn-outline-secondary rounded-end" type="button" id="confirm-email-button">Xác
-                        nhận email</button>
+                    <button class="btn btn-outline-secondary rounded-end" type="button" id="confirm-email-button"
+                        ng-click="verified()"
+                        ng-disabled="isLoading || isVerified === 'Đã xác thực' || isVerified === 'Đã gửi'">
+                        <span ng-if="isLoading" class="spinner-border spinner-border-sm"></span>
+                        <span ng-if="!isLoading">{{isVerified}}</span>
+                    </button>
+
                 </div>
             </div>
             <button type="submit" ng-click="uploadAvatar()" class="btn btn-primary rounded-pill">Cập
                 nhật</button>
         </form>
     </div>
-
+    <!-- Toast Notification -->
+    <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822083/1_au4rfg.jpg"
+                    style="height:auto; width:50px" class="rounded me-2" alt="logo">
+                <strong class="me-auto">Thông báo</strong>
+                <!-- <small>11 mins ago</small> -->
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
+        </div>
+    </div>
 </body>
-
 
 </html>

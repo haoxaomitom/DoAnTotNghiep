@@ -224,14 +224,6 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
         $('#deleteCommentModal').modal('show');
     };
 
-    $scope.openDeleteModal = function (commentId) {
-        // Save comment ID to delete
-        $scope.commentIdToDelete = commentId;
-        // Show delete confirmation modal
-        $('#deleteCommentModal').modal('show');
-    };
-
-
 
     $scope.shareOnFacebook = function (postId) {
         // const url = `http://127.0.0.1:5500/app/components/post/PostDetail.html?id=${postId}`;

@@ -1,3 +1,4 @@
+
 // Directive cho input file, dùng để gán file vào model
 app.directive("fileModel", ["$parse", function ($parse) {
     return {

@@ -2,9 +2,14 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
-    $scope.favorites = [];
-    $scope.loading = true;
+    $scope.page = 0; // Trang bắt đầu
+    $scope.size = 5; // Số lượng mục trên mỗi trang
+    $scope.posts = []; // Danh sách yêu thích
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.loading = false;
     $scope.id_post = "";
+    $scope.hasMoreData = true; // Kiểm tra còn dữ liệu hay không
+    $scope.isEmpty = false; // Ban đầu không rỗng
 
     function isTokenExpired(token) {
         if (!token) return true;
@@ -19,22 +24,50 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
         return;
     }
 
-    // Fetch favorites
-    $scope.getFavorites = function () {
-        FavoritesService.getFavoritesByUserId(userId)
+    // Hàm tải thêm dữ liệu
+
+
+    $scope.loadMoreFavorites = function () {
+        if ($scope.loading || !$scope.hasMoreData) return;
+
+        $scope.loading = true;
+        FavoritesService.getFavoritesByUserId(userId, $scope.page, $scope.size)
             .then(function (response) {
-                $scope.favorites = response.data.data;
-                console.log(response.data.data.favoriteId);
+                const data = response.data.content;
+                if ($scope.page === 0 && data.length === 0) {
+                    // Nếu trang đầu tiên mà không có dữ liệu
+                    $scope.isEmpty = true;
+                    $scope.hasMoreData = false;
+                } else {
+                    $scope.posts = $scope.posts.concat(data);
+                    $scope.page++;
+                    $scope.hasMoreData = $scope.page < response.data.totalPages;
+                }
                 $scope.loading = false;
             }, function (error) {
+                $scope.loading = false;
                 if (error.status === 401) {
                     $window.location.href = '/app/components/Login/LoginAndRegister.html';
                 } else {
-                    $scope.loading = false;
                     console.error('Error fetching favorites:', error);
                 }
             });
     };
+
+
+    // Sự kiện khi cuộn xuống cuối trang
+    $scope.onScroll = function () {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+
+        if (scrollTop + clientHeight >= scrollHeight - 10) { // Gần cuối trang
+            $scope.loadMoreFavorites();
+        }
+    };
+
+    // Lắng nghe sự kiện cuộn
+    window.addEventListener('scroll', $scope.onScroll);
 
     // Function to format amount as Vietnamese currency
     $scope.formatCurrency = function (amount) {
@@ -46,10 +79,11 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
 
 
     // Show confirmation modal and set the post to unfavorite
-    $scope.confirmUnfavorite = function (favorite) {
-        // Set the favorite post and user for the confirmation
-        $scope.favoriteToUnfavorite = favorite;
-        $('#confirmationModal').modal('show'); // Show the modal
+    $scope.confirmUnfavorite = function (post) {
+        console.log(post); // Kiểm tra dữ liệu
+
+        $scope.postToUnfavorite = post;
+        $('#confirmationModal').modal('show');
     };
 
     // Perform the unfavorite action after user confirms
@@ -59,11 +93,10 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
         // Gọi API để hủy lưu bài đăng
         FavoritesService.toggleFavorite(userId, postId)
             .then(function (response) {
-                $scope.isFavorite = response.data.data.isFavorite;
-
-                // Show the toast after favorites are loaded
-                const actionMessage = $scope.isFavorite ? 'Đã lưu bài đăng' : 'Đã hủy lưu bài đăng';
+                const actionMessage = 'Đã hủy lưu bài đăng';
                 $scope.showToast(actionMessage);
+
+                // Ẩn modal xác nhận
                 $('#confirmationModal').modal('hide');
 
                 // Loại bỏ bài đăng khỏi danh sách $scope.posts
@@ -81,7 +114,6 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
             });
     };
 
-
     // Show success toast
     $scope.showToast = function (message) {
         $scope.toastMessage = message;
@@ -90,6 +122,5 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
         toast.show();
     };
 
-    // Fetch favorites on page load
-    $scope.getFavorites();
+    $scope.loadMoreFavorites();
 }]);

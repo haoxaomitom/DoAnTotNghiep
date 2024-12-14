@@ -1,55 +1,13 @@
-
 app.service('PostsService', ['$http', function ($http) {
-    this.getPostsByUserId = function (userId, token) {
-        if (!token) {
-            console.error("Token is missing!");
-            return Promise.reject("Token is missing!");
-        }
-        return $http.get(`http://localhost:8080/api/posts/user/${userId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    };
+    const token = localStorage.getItem('token');
+    // this.getPostsByUserId = function (userId) {
+    //     return $http.get(`http://localhost:8080/api/posts/user/${userId}`, {
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`
+    //         }
+    //     });
+    // };
 
-    // Method to get all active posts
-    this.getPostsActive = function (token) {
-        if (!token) {
-            console.error("Token is missing!");
-            return Promise.reject("Token is missing!");
-        }
-        return $http.get('http://localhost:8080/api/posts/waiting', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    };
-
-    // Method to get all posts with WAITING status
-    this.getPostsWaiting = function (token) {
-        if (!token) {
-            console.error("Token is missing!");
-            return Promise.reject("Token is missing!");
-        }
-        return $http.get('http://localhost:8080/api/posts/waiting', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    };
-
-    // Method to get all posts with REJECT status
-    this.getPostsReject = function (token) {
-        if (!token) {
-            console.error("Token is missing!");
-            return Promise.reject("Token is missing!");
-        }
-        return $http.get('http://localhost:8080/api/posts/rejected', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-    };
 
     // Method for deleting a post
     this.deletePost = function (postId, token) {
@@ -59,5 +17,19 @@ app.service('PostsService', ['$http', function ($http) {
             }
         });
     };
-}]);
 
+    this.getPostsByStatus = function (userId, status, page, size) {
+        return $http.get(`http://localhost:8080/api/posts/user`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            params: {
+                userId: userId,
+                status: status,
+                page: page,
+                size: size
+            }
+        });
+    };
+
+}]);
