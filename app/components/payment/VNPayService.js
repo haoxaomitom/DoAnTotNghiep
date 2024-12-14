@@ -2,7 +2,7 @@
 // const token = localStorage.getItem('token');
 app.service('PaymentService', function($http) {
     this.getPrices = function() {
-        return $http.get('http://localhost:8080/api/prices', {
+        return $http.get('http://127.0.0.1:8080/api/prices/active', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

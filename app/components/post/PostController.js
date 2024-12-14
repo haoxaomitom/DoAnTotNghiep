@@ -154,27 +154,32 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
 
     // Search posts based on search term and selected district
     $scope.searchPosts = function () {
-        PostService.searchPosts($scope.searchTerm, $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
-            .then(function (response) {
-                const posts = response.data.content || []; // Get the content from the response
-
-                // Check if posts array is empty
-                if (posts.length === 0) {
-                    $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
-                    $scope.posts = []; // Clear posts if no data found
-                } else {
-                    $scope.notFoundMessage = ''; // Clear the not found message if results are found
-                    $scope.posts = posts; // Update posts list with search results
-                }
-            })
-            .catch(function (error) {
-                console.error('Error fetching posts:', error);
-                $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
-                $scope.posts = []; // Clear posts on error
-            });
+        if (!$scope.searchTerm || $scope.searchTerm.trim() === '') {
+            // Nếu ô tìm kiếm trống, gọi lại getPosts
+            $scope.getPosts();
+        } else {
+            // Nếu có từ khóa tìm kiếm, gọi phương thức tìm kiếm
+            PostService.searchPosts($scope.searchTerm, $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
+                .then(function (response) {
+                    const posts = response.data.content || []; // Get the content from the response
+    
+                    // Check if posts array is empty
+                    if (posts.length === 0) {
+                        $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
+                        $scope.posts = []; // Clear posts if no data found
+                    } else {
+                        $scope.notFoundMessage = ''; // Clear the not found message if results are found
+                        $scope.posts = posts; // Update posts list with search results
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error fetching posts:', error);
+                    $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
+                    $scope.posts = []; // Clear posts on error
+                });
+        }
     };
-
-    // Load the count of posts by district  
+    
     // Load the count of posts by district  
     $scope.loadDistrictPostCounts = function () {
         PostService.getPostsCountByDistrict().then(function (response) {

@@ -43,6 +43,10 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             templateUrl: 'app/components/user/ChangePassword.html',
             controller: 'ChangePasswordController'
         })
+        .when('/user/payment', {
+            templateUrl: 'app/components/user/Payment.html',
+            controller: 'userPaymentController'
+        })
 
         //Payment
         .when('/payment', {

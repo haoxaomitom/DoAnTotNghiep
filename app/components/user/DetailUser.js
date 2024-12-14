@@ -92,7 +92,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     $scope.logout = function () {
         localStorage.clear();
         // Chuyển hướng đến trang chủ
-        $window.location.href = '/app/index.html';
+        $window.location.href = 'index.html';
     };
 
     // Khi chọn Quận/Huyện
@@ -128,36 +128,45 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     };
 
     // load avata
-    $scope.avatar = 'https://via.placeholder.com/100'; // Avatar mặc định
-    $scope.file = null; // File người dùng chọn
-
-    // Hàm upload ảnh
-    $scope.uploadAvatar = function (file) {
-        console.log("Run avt");
-        if (!file) {
-            // alert('Vui lòng chọn một file hợp lệ!');
+    $scope.uploadAvatar = function () {
+        const formData = new FormData();
+        formData.append("file", $scope.file);
+        console.log(formData);
+        if (!$scope.file || !/^image\//.test($scope.file.type)) {
+            console.error("Chỉ chấp nhận các định dạng ảnh.");
+            $scope.uploadResult = {
+                status: false,
+                message: "Chỉ chấp nhận các định dạng ảnh.",
+            };
             return;
         }
 
-        // Tạo FormData để gửi file
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const apiUrl = `http://localhost:8080/api/users/avatar/${$scope.username}`; // Thay $scope.username bằng username người dùng
-
-        // Gửi request POST
-        $http.post(apiUrl, formData, {
-            headers: { 'Content-Type': undefined } // Để trình duyệt tự set Content-Type
-        })
+        // Gửi yêu cầu PUT đến API
+        $http
+            .put(`http://localhost:8080/api/users/avatar/${username}`, formData, {
+                headers: {
+                    "Content-Type": undefined,
+                    'Authorization': `Bearer ${token}`
+                },
+                transformRequest: angular.identity,
+            })
             .then(function (response) {
-                // Cập nhật avatar mới sau khi upload thành công
-                $scope.avatar = response.data.avatarUrl;
-                // alert('Ảnh đã được cập nhật thành công!');
-                $scope.showToast("Ảnh đã được cập nhật thành công !");
+                $scope.uploadResult = response.data;
+                console.log($scope.uploadResult.message);
+
+
+                // Cập nhật URL của avatar nếu upload thành công
+                if ($scope.uploadResult.status) {
+                    $scope.avatar = $scope.uploadResult.data.avatar;
+                    console.log("thành công");
+                }
             })
             .catch(function (error) {
-                console.error('Upload lỗi:', error);
-                alert('Đã xảy ra lỗi khi upload ảnh!');
+                console.error("Lỗi tải ảnh:", error);
+                $scope.uploadResult = {
+                    status: false,
+                    message: "Tải ảnh thất bại. Vui lòng thử lại.",
+                };
             });
     };
 

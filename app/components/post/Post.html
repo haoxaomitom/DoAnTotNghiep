@@ -12,11 +12,11 @@
         <div class="row">
             <div class="col-md-9">
                 <form class="d-flex mb-3" role="search" ng-submit="searchPosts()">
-                    <input class="form-control me-2" type="search" ng-model="searchTerm"
+                    <input class="form-control me-2" type="search" ng-model="searchTerm" ng-change="searchPosts()" 
                         placeholder="Tìm kiếm theo nội dung đăng, quận,..." aria-label="Search">
                     <button class="btn btn-outline-success flex-shrink-0" type="submit">Tìm kiếm</button>
                 </form>
-
+                
                 <div class="filter-group d-flex mb-4">
                     <select id="district" class="form-select me-2" ng-model="selectedDistrict"
                         ng-options="district as district.Name for district in districts" ng-change="onDistrictChange()">
@@ -230,7 +230,11 @@
                                             <span ng-if="!$last"> - </span>
                                         </span>
                                     </div>
-                                    <div class="card-footer d-flex justify-content-between mt-auto">
+                                    <div
+                                        class="card-footer bg-transparent d-flex justify-content-between align-items-center mt-auto">
+                                        <span class="promoted-label" ng-if="isPostPromoted(post.topPostEnd)">
+                                            Bài viết được quảng cáo
+                                        </span>
                                         <p class="card-text username font-weight-bold mb-0">
                                             Đăng bởi: {{post.user.firstName}} {{post.user.lastName}}
                                             <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
@@ -250,10 +254,8 @@
                 <div class="d-flex justify-content-between align-items-center" ng-if="!loading && !notFoundMessage">
                     <button class="btn btn-primary" ng-click="previousPage()"
                         ng-disabled="currentPage === 0">Trước</button>
-                        ng-disabled="currentPage === 0">Trước</button>
                     <span>Trang {{ currentPage + 1 }} trên tổng {{ totalPagesCount }} trang</span>
                     <button class="btn btn-primary" ng-click="nextPage()"
-                        ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
                         ng-disabled="currentPage >= totalPagesCount - 1">Sau</button>
                 </div>
 

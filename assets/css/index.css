@@ -109,3 +109,14 @@
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
+
+      /* Đánh dấu dấu * màu đỏ cho các trường required */
+      label.required::after {
+        content: " *";
+        color: red; /* Màu đỏ cho dấu * */
+    }
+
+    /* Thêm border đỏ cho input khi không điền dữ liệu */
+    /* input:required:invalid {
+        border: 2px solid red;
+    } */

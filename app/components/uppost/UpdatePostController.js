@@ -165,6 +165,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         $http.get(apiUrl)
             .then(function (response) {
                 $scope.post = response.data;
+                console.log($scope.post );
                 // Populate form with data from API (province, district, ward)
 
                 $scope.selectedProvince = $scope.provinces.find(province => province.Name === $scope.post.provinceName);
@@ -266,7 +267,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         try {
             // Prepare the post data
             const postData = {
-                parkingName: $scope.post.parking_name,
+                parkingName: $scope.post.parkingName,
                 description: $scope.post.description,
                 street: $scope.post.street,
                 wardName: $scope.selectedWard ? $scope.selectedWard.Name : null,
@@ -283,7 +284,6 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
                 vehicleTypes: $scope.vehicleTags.map(tag => {
                     return { vehicleTypesName: tag }; // Format vehicle types correctly
                 }),
-                userId: $scope.user_id, // Include the userId to associate the post
             };
 
             // Send the request to update the post

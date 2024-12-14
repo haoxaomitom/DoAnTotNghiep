@@ -30,17 +30,22 @@ app.controller('UpPostController', function ($scope, $http, $location) {
     $scope.checkboxOptions = {
         camera: 'Camera giám sát',
         security247: 'Bảo vệ 24/7',
-        privatePath: 'Lối đi riêng',
-        electricParking: 'Chỗ để xe điện',
-        wifi: 'Wifi'
+        privatePath: 'Bảo vệ 24/24',
+        electricParking: 'Chỗ để / sạc xe điện',
+        wifi: 'Có rửa xe',
+        key: 'Có khóa cổng riêng'
     };
+
     $scope.vehicleCheckboxOptions = {
         car: 'Ô tô',
         motorbike: 'Xe máy',
-        bike: 'Xe đạp',
-        electricCar: 'Xe điện',
-        truck: 'Xe tải'
+        bike: 'Xe du lịch 16 chỗ',
+        electricCar: 'Xe oto điện',
+        truck: 'Xe tải con',
+        bigtruck: 'Xe tải trung',
+        supertruck: 'Xe siêu tải trọng'
     };
+    
     $scope.selectedFiles = [];
     $scope.selectedAmenities = {}; // To keep track of selected amenities
     $scope.manualInput = ""; // For manual input of amenities
@@ -235,6 +240,7 @@ app.controller('UpPostController', function ($scope, $http, $location) {
 
             // Thông báo và chuyển hướng về trang chủ
             alert('Bài đăng đã được tạo thành công!');
+            console.log("redirect về trang chủ");
             $location.path = '/'; // Chuyển hướng về trang chủ
 
         } catch (error) {
@@ -246,6 +252,12 @@ app.controller('UpPostController', function ($scope, $http, $location) {
         }
     };
     
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
 });
 
 let map;
@@ -272,6 +284,6 @@ function placeMarker(location) {
         scope.post.latitude = location.lat();
         scope.post.longitude = location.lng();
     }
-
-    alert("Đã lưu tọa độ: " + location.lat() + ", " + location.lng());
+    // $scope.showToast("Đã lưu tọa độ: " + location.lat() + ", " + location.lng());
+    // alert("Đã lưu tọa độ: " + location.lat() + ", " + location.lng());
 }
