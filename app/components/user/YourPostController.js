@@ -51,7 +51,7 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
 
     $scope.getPosts = function (status) {
         $scope.loading = true;
-    
+
         PostsService.getPostsByStatus(userId, status, $scope.page, $scope.size)
             .then(function (response) {
                 const data = response.data;

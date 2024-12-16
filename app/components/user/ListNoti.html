@@ -7,7 +7,7 @@
     <title>Thông tin liên hệ</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/notification.css">
+    <link rel="stylesheet" href="/assets/css/Table.css">
 </head>
 
 <body ng-controller="NotificationController">
@@ -15,25 +15,22 @@
         <h3 class="mb-4">Thông tin liên hệ</h3>
         <div class="row">
             <div class="col-sm-3">
-                <select class="form-select" aria-label="Default select example">
-                    <option value="1">Chưa đọc</option>
+                <select class="form-select" aria-label="Default select example" ng-model="selectedOption"
+                    ng-change="handleOptionChange()">
+                    <option value="1">Tất cả</option>
                     <option value="2">Đã đọc</option>
-                    <option value="3">Chưa liên hệ</option>
-                    <option value="">Đã liên hệ</option>
+                    <option value="3">Chưa đọc</option>
                 </select>
             </div>
         </div>
-        <table class="table">
+        <table class="w-100 mt-3">
             <tbody>
-                <tr class="row" ng-repeat="noti in notifications" ng-click="detail(noti.notificationId)"
-                    data-bs-toggle="modal" data-bs-target="#contactInformationModal">
-                    <td class="truncate-text" style="max-width: 200px;">{{noti.title}}</td>
-                    <td class="truncate-text" style="max-width: 200px;">{{noti.content}}</td>
-                    <td>{{noti.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
-                    <td>
-                        <i class="fa-regular fa-circle" ng-if="info.contacted" style="color: rgb(37, 255, 161);"></i>
-                        <i class="fa-regular fa-circle" ng-if="!info.contacted" style="color: rgb(239, 58, 58);"></i>
-                    </td>
+                <tr class="row p-1" ng-repeat="noti in notifications"
+                    ng-click="detail(noti.notificationId, noti.isRead)" ng-class="noti.isRead?
+                '':'bg-secondary-subtle'" data-bs-toggle="modal" data-bs-target="#contactInformationModal">
+                    <td class="col-sm-5 truncate-text">{{noti.title}}</td>
+                    <td class="col-sm-5 truncate-text">{{noti.content}}</td>
+                    <td class="col-sm-2">{{noti.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
                 </tr>
             </tbody>
         </table>
@@ -41,10 +38,12 @@
     <!-- Modal -->
     <div class="modal fade" id="contactInformationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header bg-info">
-                    <h1 class="modal-title fs-5 " id="exampleModalLabel">{{notification.title}}</h1>
+                    <h1 class="modal-title fs-5 " id="exampleModalLabel">
+                        {{notification.title}}
+                    </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

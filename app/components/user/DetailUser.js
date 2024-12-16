@@ -16,7 +16,7 @@ app.directive("fileModel", ["$parse", function ($parse) {
     };
 }]);
 
-app.controller('detailUserController', function ($scope, $location,  $http, $window) {
+app.controller('detailUserController', function ($scope, $location, $http, $window) {
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
@@ -201,7 +201,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
             .then(function (response) {
                 if (response.data.status) {
                     // alert("Cập nhật thành công!");
-                
+
                     $scope.showToast("Cập nhật thông tin thành công !");
                 } else {
                     $scope.message = response.data.message
@@ -210,10 +210,10 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     }
     $scope.isLoading = false; // Biến để kiểm soát trạng thái loading
     $scope.isVerified = "Chưa xác thực"; // Trạng thái nút
-    
+
     $scope.verified = function () {
         $scope.isLoading = true; // Hiển thị hiệu ứng loading
-    
+
         $http.get(`http://localhost:8080/api/email/send-verification-email?userId=${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -233,7 +233,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
             console.error("Lỗi:", error);
         });
     };
-    
+
     $scope.showToast = function (message) {
         $scope.toastMessage = message;
         const toastElement = document.getElementById('toast');

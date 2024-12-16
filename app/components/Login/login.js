@@ -23,7 +23,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
                     const redirectUrl = localStorage.getItem('redirectUrl');
                     if (redirectUrl) {
                         // Xóa URL đã lưu sau khi chuyển hướng
-                        localStorage.removeItem('redirectUrl'); 
+                        localStorage.removeItem('redirectUrl');
                         // Chuyển hướng đến trang trước đó
                         $location.absUrl(redirectUrl);
                     } else {
@@ -65,7 +65,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
         } else {
             $scope.message = "Mật khẩu và xác nhận mật khẩu ko giống nhau";
             return;
-        } 
+        }
     }
 
     $scope.loginWithFacebook = function () {
@@ -111,7 +111,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             });
     };
 
-    $scope.loginWithGoogle = function() {
+    $scope.loginWithGoogle = function () {
         const clientId = '326720550153-k9n1s1v6vdomueidjne4bggu8o6n2u6d.apps.googleusercontent.com';
         const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
         const scope = 'openid profile email';
@@ -122,19 +122,19 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
     };
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    
+
     if (code) {
         $http.post('/api/auth/google', { code: code })
-            .then(function(response) {
+            .then(function (response) {
                 console.log('User Info:', response.data);
                 $scope.user = response.data;
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error('Login error:', error);
             });
     }
-    
-    
+
+
 
 }
 )

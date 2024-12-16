@@ -36,10 +36,10 @@ app.service('PostDetailService', ['$http', function ($http) {
         return $http.post('http://localhost:8080/api/comments', commentDTO, {
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error creating comment:', error);
-              return null;
-          });
+            .catch(error => {
+                console.error('Error creating comment:', error);
+                return null;
+            });
     };
 
     // Delete a comment
@@ -48,10 +48,10 @@ app.service('PostDetailService', ['$http', function ($http) {
             params: { userId: userId },
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error deleting comment:', error);
-              throw error; // Re-throw to handle it in the controller
-          });
+            .catch(error => {
+                console.error('Error deleting comment:', error);
+                throw error; // Re-throw to handle it in the controller
+            });
     };
 
     // Fetch comments by post ID
@@ -59,10 +59,10 @@ app.service('PostDetailService', ['$http', function ($http) {
         return $http.get(`http://localhost:8080/api/comments/post/${postId}`, {
             params: { page: page, size: size }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error fetching comments for post:', error);
-              return [];
-          });
+            .catch(error => {
+                console.error('Error fetching comments for post:', error);
+                return [];
+            });
     };
 
     // Submit a report
@@ -70,10 +70,10 @@ app.service('PostDetailService', ['$http', function ($http) {
         return $http.post('http://localhost:8080/api/reports', reportData, {
             headers: { 'Authorization': `Bearer ${token}` }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error submitting report:', error);
-              throw error;
-          });
+            .catch(error => {
+                console.error('Error submitting report:', error);
+                throw error;
+            });
     };
 
     // Check if the post is favorited by the user
@@ -97,12 +97,12 @@ app.service('PostDetailService', ['$http', function ($http) {
         return $http.get('http://localhost:8080/api/posts/related', {
             params: { districtName: districtName, page: page, size: size }
         }).then(response => response.data)
-          .catch(error => {
-              console.error('Error fetching related posts:', error);
-          });
+            .catch(error => {
+                console.error('Error fetching related posts:', error);
+            });
     };
-    
-    this.saveContactInfo = function(data) {
+
+    this.saveContactInfo = function (data) {
         return $http.post("http://localhost:8080/api/contactInformation/create", data);
     };
 

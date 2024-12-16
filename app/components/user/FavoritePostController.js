@@ -29,7 +29,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
 
     $scope.loadMoreFavorites = function () {
         if ($scope.loading || !$scope.hasMoreData) return;
-    
+
         $scope.loading = true;
         FavoritesService.getFavoritesByUserId(userId, $scope.page, $scope.size)
             .then(function (response) {
@@ -53,7 +53,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
                 }
             });
     };
-    
+
 
     // Sự kiện khi cuộn xuống cuối trang
     $scope.onScroll = function () {
@@ -81,7 +81,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
     // Show confirmation modal and set the post to unfavorite
     $scope.confirmUnfavorite = function (post) {
         console.log(post); // Kiểm tra dữ liệu
-        
+
         $scope.postToUnfavorite = post;
         $('#confirmationModal').modal('show');
     };
@@ -95,7 +95,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
             .then(function (response) {
                 const actionMessage = 'Đã hủy lưu bài đăng';
                 $scope.showToast(actionMessage);
-    
+
                 // Ẩn modal xác nhận
                 $('#confirmationModal').modal('hide');
     
@@ -112,8 +112,8 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
                 console.error("Lỗi khi thay đổi trạng thái yêu thích:", error);
                 $scope.showToast('Lỗi khi thay đổi trạng thái yêu thích');
             });
-    };  
-    
+    };
+
     // Show success toast
     $scope.showToast = function (message) {
         $scope.toastMessage = message;
