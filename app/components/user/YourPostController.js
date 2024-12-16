@@ -55,7 +55,6 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
         PostsService.getPostsByStatus(userId, status, $scope.page, $scope.size)
             .then(function (response) {
                 const data = response.data;
-    console.log(data);
                 // Thêm từng bài viết mới vào cuối mảng bài viết cũ
                 data.content.forEach(post => {
                     $scope.posts.push(post); // Thêm vào danh sách chung
@@ -162,7 +161,7 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
             .then(function (response) {
                 $('#deleteModal').modal('hide'); // Đóng modal
                 alert("Bài đăng đã được xóa thành công!");
-                $scope.getPosts(status); // Làm mới danh sách bài viết
+                $scope.getPosts(); // Làm mới danh sách bài viết
             })
             .catch(function (error) {
                 console.error('Error deleting post:', error);

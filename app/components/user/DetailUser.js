@@ -172,7 +172,6 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
 
     // Gọi hàm upload khi người dùng chọn một file
     $scope.$watch("file", function (newFile) {
-        console.log("File selected:", newFile);
         if (newFile) {
             $scope.uploadAvatar();
         }

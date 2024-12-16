@@ -22,8 +22,8 @@
 </head>
 
 <body ng-controller="UpdatePostController">
-    <div class="container py-5">
-        <h1 class="text-center mb-4">Đăng Tin Cho Thuê</h1>
+    <div class="container py-3">
+        <h1 class="text-center mb-4">Sửa bài viết</h1>
         <div class="form-container mx-auto" style="z-index: -1;">
 
             <!-- Step 1: Thông tin bài đăng -->
@@ -31,10 +31,10 @@
                 <h2 class="text-center mb-4">Thông Tin Bài Đăng</h2>
                 <form name="postForm">
                     <fieldset>
-                        <label for="title">Tiêu Đề</label>
+                        <label for="title" class="required">Tiêu Đề</label>
                         <input type="text" id="title" ng-model="post.parkingName" class="form-control mb-3"
                             placeholder="Nhập tiêu đề" required>
-                            <label for="title">Mô tả</label>
+                            <label for="title" class="required">Mô tả</label>
                             <textarea id="description" ng-model="post.description" class="form-control mb-3"
                             placeholder="Nhập mô tả" required rows="4"></textarea>
 
@@ -42,7 +42,7 @@
 
                     <div class="row-buttons">
                         <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(1)"
-                            ng-disabled="!post.parkingName || !post.description">Tiếp Tục</button>
+                            ng-disabled="!post.parkingName || !post.description">Tiếp theo</button>
                     </div>
                 </form>
             </section>
@@ -52,21 +52,21 @@
                 <h2 class="text-center mb-4">Vị Trí Đăng Tin</h2>
                 <form>
                     <fieldset>
-                        <label for="province">Tỉnh/Thành Phố</label>
+                        <label for="province" class="required">Tỉnh / Thành Phố</label>
                         <select id="province" class="form-select mb-3" ng-model="selectedProvince"
                             ng-options="province as province.Name for province in provinces"
                             ng-change="onProvinceChange()">
                             <option value="">Chọn Tỉnh/Thành Phố</option>
                         </select>
             
-                        <label for="district">Quận/Huyện</label>
+                        <label for="district" class="required">Quận / Huyện</label>
                         <select id="district" class="form-select mb-3" ng-model="selectedDistrict"
                             ng-options="district as district.Name for district in selectedProvince.Districts"
                             ng-change="onDistrictChange()" ng-disabled="!selectedProvince">
                             <option value="">Chọn Quận/Huyện</option>
                         </select>
             
-                        <label for="ward">Phường/Xã</label>
+                        <label for="ward" class="required">Phường / Xã</label>
                         <select id="ward" class="form-select mb-3" ng-model="selectedWard"
                             ng-options="ward as ward.Name for ward in selectedDistrict.Wards"
                             ng-disabled="!selectedDistrict">
@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-9">
                             <button type="button" class="btn btn-primary" ng-click="nextStep(2)"
-                                ng-disabled="!selectedProvince || !selectedDistrict || !selectedWard">Tiếp Tục</button>
+                                ng-disabled="!selectedProvince || !selectedDistrict || !selectedWard">Tiếp theo</button>
                         </div>
                     </div>
                 </form>
@@ -95,13 +95,14 @@
             <section class="section" id="step-3" ng-show="currentStep === 3">
                 <h2 class="text-center">Vị trí bản đồ</h2>
                 <div class="map-container m-3" id="map"></div>
+                <p class="m-2">Hướng dẫn: tìm vị trí trên bản đồ và nhấn chọn vào trong bản đồ vị trí của bạn</p>
                 <div class="row-buttons">
                     <div class="col-md-3">
                         <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay lại</button>
                     </div>
                     <div class="col-md-9">
                         <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(3)">Tiếp
-                            tục</button>
+                            theo hoặc bỏ qua</button>
                     </div>
                 </div>
             </section>
@@ -115,11 +116,11 @@
                         <input type="number" id="capacity" ng-model="post.capacity" class="form-control"
                             placeholder="Nhập sức chứa">
 
-                        <label class="m-2" for="price">Giá (VNĐ):</label>
+                        <label class="m-2 required" for="price">Giá (VNĐ):</label>
                         <input type="number" id="price" ng-model="post.price" class="form-control"
                             placeholder="Nhập giá" required>
 
-                            <label class="m-2" for="priceUnit">Đơn vị giá:</label>
+                            <label class="m-2 required" for="priceUnit">Đơn vị giá:</label>
                             <select id="priceUnit" ng-model="post.priceUnit" class="form-select" required>
                                 <option value="VND/giờ">VND / giờ</option>
                                 <option value="VND/ngày">VND / ngày</option>
@@ -133,7 +134,7 @@
                             </div>
                             <div class="col-md-9">
                                 <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(4)"
-                                    ng-disabled="!post.price || !post.priceUnit">Tiếp tục</button>
+                                    ng-disabled="!post.price || !post.priceUnit">Tiếp theo</button>
                             </div>
                         </div>
 
@@ -171,7 +172,7 @@
                 </div>
 
                 <!-- Nhập tiện ích tùy chỉnh -->
-                <div class="input-group m-3">
+                <div class="input-group">
                     <input type="text" class="form-control" ng-model="manualInput" placeholder="Nhập tiện ích..."
                         ng-keydown="addTagOnEnter($event)">
                     <button class="btn btn-success" style="width:auto !important" type="button"
@@ -185,7 +186,7 @@
                     </div>
                     <div class="col text-end">
                         <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(5)">Tiếp
-                            Theo</button>
+                            tục</button>
                     </div>
                 </div>
             </section>
@@ -220,7 +221,7 @@
                 </div>
 
                 <!-- Nhập loại xe tùy chỉnh -->
-                <div class="input-group m-3">
+                <div class="input-group">
                     <input type="text" class="form-control" ng-model="manualVehicleInput" placeholder="Nhập loại xe..."
                         ng-keydown="addVehicleTagOnEnter($event)">
                     <button class="btn btn-success" style="width:auto !important" type="button"
@@ -234,13 +235,13 @@
                     </div>
                     <div class="col text-end">
                         <button type="button" class="btn btn-primary submit-btn" ng-click="nextStep(6)">Tiếp
-                            Theo</button>
+                            theo</button>
                     </div>
                 </div>
             </section>
 
             <!-- Section 7: Upload ảnh -->
-            <section class="section" id="step-7" ng-show="currentStep === 7">
+            <section class="section" id="step-7" ng-show="currentStep === 1">
                 <h2 class="text-center">Hình ảnh</h2>
                 <div class="image-upload">
                     <label for="file-input" class="text-center">
@@ -251,16 +252,15 @@
                     </label>
                     <input id="file-input" type="file" multiple
                         onchange="angular.element(this).scope().onFileSelect(this.files)" accept="image/*">
-
-
                 </div>
-                <p class="note">Bạn cần ít nhất 1 ảnh (Tối đa 10 ảnh) để đăng tin</p>
-                <div class="preview-images" ng-if="selectedFiles.length > 0">
+                <p class="note">Lưu ý: Bạn cần ít nhất 1 ảnh (Tối đa 10 ảnh) để đăng tin</p>
+            
+                <div class="preview-images" ng-if="imageUrls.length > 0 || newImages.length > 0">
                     <h3>Ảnh đã tải lên:</h3>
                     <div class="row">
-                        <div class="col-md-3" ng-repeat="image in selectedFiles">
-                            <img ng-src="{{image.file.preview}}" alt="Preview Image" class="img-thumbnail" />
-                            <p>{{image.file.name}}</p>
+                        <div class="col-md-3" ng-repeat="image in imageUrls.concat(newImages)">
+                            <img ng-src="{{image.preview || image}}" alt="Preview Image" class="img-thumbnail" />
+                            <p>{{image.name || 'Ảnh cũ'}}</p>
                             <button type="button" class="btn btn-danger" ng-click="removeImage(image)">Xóa ảnh</button>
                         </div>
                     </div>
@@ -271,17 +271,19 @@
                         <button type="button" class="btn btn-secondary" ng-click="prevStep()">Quay lại</button>
                     </div>
                     <div class="col-md-9">
-                        <button type="button" class="btn btn-primary submit-btn" ng-click="submitPost()"
-                            ng-disabled="isLoading || selectedFiles.length === 0 || selectedFiles.length > 10 || isSubmitted">
-                            <span ng-if="isLoading" class="spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary submit-btn" 
+                            ng-click="submitPost()" 
+                            ng-disabled="isLoading || (imageUrls.length + newImages.length) === 0 || (imageUrls.length + newImages.length) > 10 || isSubmitted">
+                            <span ng-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             Hoàn tất và đăng bài
                         </button>
                     </div>
-
                 </div>
-
+                
             </section>
+            
         </div>
     </div>
 

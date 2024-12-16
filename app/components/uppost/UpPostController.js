@@ -1,4 +1,4 @@
-app.controller('UpPostController', function ($scope, $http, $location) {
+app.controller('UpPostController', function ($scope, $http,$window, $location) {
     // Retrieve userId from localStorage
     const token = localStorage.getItem('token');
     $scope.user_id = localStorage.getItem('userId');
@@ -33,19 +33,21 @@ app.controller('UpPostController', function ($scope, $http, $location) {
         privatePath: 'Bảo vệ 24/24',
         electricParking: 'Chỗ để / sạc xe điện',
         wifi: 'Có rửa xe',
-        key: 'Có khóa cổng riêng'
+        key: 'Có khóa cổng riêng',
+        cover: 'Có mái che'
     };
 
     $scope.vehicleCheckboxOptions = {
-        car: 'Ô tô',
+        car: 'Xe oto',
         motorbike: 'Xe máy',
         bike: 'Xe du lịch 16 chỗ',
         electricCar: 'Xe oto điện',
         truck: 'Xe tải con',
         bigtruck: 'Xe tải trung',
         supertruck: 'Xe siêu tải trọng'
+
     };
-    
+
     $scope.selectedFiles = [];
     $scope.selectedAmenities = {}; // To keep track of selected amenities
     $scope.manualInput = ""; // For manual input of amenities
@@ -190,10 +192,10 @@ app.controller('UpPostController', function ($scope, $http, $location) {
 
     $scope.submitPost = async function () {
         if ($scope.isLoading || $scope.isSubmitted) return;  // Không cho phép nhấn khi đang loading hoặc đã gửi bài
-
+    
         $scope.isLoading = true; // Bắt đầu quá trình loading
         $scope.isSubmitted = true; // Đánh dấu là bài đã được gửi
-
+    
         try {
             const postData = {
                 parkingName: $scope.post.parking_name,
@@ -215,19 +217,19 @@ app.controller('UpPostController', function ($scope, $http, $location) {
                     .map(key => ({ vehicleTypesName: $scope.vehicleCheckboxOptions[key] || key })),
                 userId: $scope.user_id,
             };
-
+    
             console.log("Dữ liệu gửi lên:", postData);
-
+    
             // Gửi request tạo bài đăng
             const response = await $http.post('http://localhost:8080/api/upPosts', postData, {
                 headers: { 'Authorization': `Bearer ${token}` } // Add token in header
             });
-
+    
             const postId = response.data.postId;
             if (!postId) throw new Error('Không nhận được postId từ backend.');
-
+    
             console.log('Tạo bài đăng thành công với postId:', postId);
-
+    
             // Upload ảnh nếu có
             if ($scope.selectedFiles.length > 0) {
                 const imageUrls = await $scope.uploadImages(postId);
@@ -237,12 +239,17 @@ app.controller('UpPostController', function ($scope, $http, $location) {
             } else {
                 console.log('Không có ảnh nào được chọn.');
             }
-
-            // Thông báo và chuyển hướng về trang chủ
-            alert('Bài đăng đã được tạo thành công!');
-            console.log("redirect về trang chủ");
-            $location.path = '/'; // Chuyển hướng về trang chủ
-
+    
+            // Hiển thị modal thay vì alert
+            const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+            modal.show(); // Hiển thị modal
+    
+            // Thêm sự kiện click vào nút "Về trang chủ"
+            document.getElementById('redirectBtn').addEventListener('click', function () {
+                window.location.href = 'index.html'; // Chuyển hướng về trang chủ
+                modal.hide(); // Đóng modal
+            });
+    
         } catch (error) {
             console.error('Lỗi khi đăng bài:', error);
             alert('Có lỗi xảy ra, vui lòng thử lại.');
@@ -252,6 +259,7 @@ app.controller('UpPostController', function ($scope, $http, $location) {
         }
     };
     
+
     $scope.showToast = function (message) {
         $scope.toastMessage = message;
         const toastElement = document.getElementById('toast');
@@ -260,11 +268,24 @@ app.controller('UpPostController', function ($scope, $http, $location) {
     };
 });
 
+app.filter('currencyFormat', function () {
+    return function (amount) {
+        if (!amount) return '';
+        return parseInt(amount).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+    };
+});
+
 let map;
 let marker;
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), { center: { lat: 10.8231, lng: 106.6297 }, zoom: 13 });
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 10.8231, lng: 106.6297 },
+        zoom: 13
+    });
     map.addListener("click", (e) => placeMarker(e.latLng));
 }
 
@@ -277,13 +298,53 @@ function placeMarker(location) {
     // Cập nhật tọa độ vào scope
     if (!scope.$$phase) {
         scope.$apply(() => {
-            scope.post.latitude = location.lat();
-            scope.post.longitude = location.lng();
+            // Truy cập trực tiếp các thuộc tính lat và lng
+            scope.post.latitude = location.lat;  // Không cần gọi location.lat()
+            scope.post.longitude = location.lng; // Không cần gọi location.lng()
         });
     } else {
-        scope.post.latitude = location.lat();
-        scope.post.longitude = location.lng();
+        scope.post.latitude = location.lat;
+        scope.post.longitude = location.lng;
     }
-    // $scope.showToast("Đã lưu tọa độ: " + location.lat() + ", " + location.lng());
-    // alert("Đã lưu tọa độ: " + location.lat() + ", " + location.lng());
 }
+
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const location = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                placeMarker(location);
+                map.setCenter(location);
+                console.log(location);
+            },
+            (error) => {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("Bạn đã từ chối quyền truy cập vị trí.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Không thể xác định vị trí hiện tại.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("Hết thời gian chờ để lấy vị trí.");
+                        break;
+                    default:
+                        alert("Đã xảy ra lỗi khi lấy vị trí.");
+                }
+            },
+            {
+                enableHighAccuracy: true, // Bật chế độ chính xác cao
+                timeout: 50000,          // Thời gian chờ tối đa (ms)
+                maximumAge: 0            // Không sử dụng dữ liệu vị trí cũ
+            }
+        );
+    } else {
+        alert("Trình duyệt của bạn không hỗ trợ Geolocation.");
+    }
+}
+
+
+window.onload = initMap;
