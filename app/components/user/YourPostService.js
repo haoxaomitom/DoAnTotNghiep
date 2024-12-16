@@ -34,18 +34,3 @@ app.service('PostsService', ['$http', function ($http) {
 
 }]);
 
-    this.getPostsByStatus = function (userId, status, page, size) {
-        return $http.get(`http://localhost:8080/api/posts/user`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            params: {
-                userId: userId,
-                status: status,
-                page: page,
-                size: size
-            }
-        });
-    };
-
-}]);

@@ -8,7 +8,7 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             controller: 'ParkingController'
         })
         .when('/post-detail', {
-            templateUrl: '/app/components/post/PostDetail.html',
+            templateUrl: 'app/components/post/PostDetail.html',
             controller: 'PostController'
         })
         .when('/dang-tin', {
@@ -47,7 +47,14 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
             templateUrl: 'app/components/user/Payment.html',
             controller: 'userPaymentController'
         })
-
+        .when('/user/list-contact', {
+            templateUrl: 'app/components/user/ListContact.html',
+            controller: 'ContactController'
+        })
+        .when('/user/notification', {
+            templateUrl: 'app/components/user/ListNoti.html',
+            controller: 'NotificationController'
+        })
         //Payment
         .when('/payment', {
             templateUrl: 'app/components/payment/VNPay.html',

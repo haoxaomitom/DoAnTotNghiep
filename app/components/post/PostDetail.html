@@ -329,6 +329,7 @@
                             <div class="modal-body">
                                 <form id="reportForm" ng-submit="submitReport()">
                                     <div class="mb-3">
+                                        <p>ID bài đăng: {{post.postId}}</p>
                                         <label for="reportReason" class="form-label">Lý do báo cáo</label>
                                         <select class="form-select" id="reportReason" ng-change="checkReportReason()"
                                             ng-model="reportReason" required>

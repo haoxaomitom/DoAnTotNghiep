@@ -1,4 +1,4 @@
-let app = angular.module("app", [])
+// let app = angular.module("app", [])
 app.controller("ContactController", function ($scope, $http) {
 
     const userId = localStorage.getItem("userId");
@@ -123,7 +123,8 @@ app.controller("ContactController", function ($scope, $http) {
     $scope.handleOptionChange = function () {
         switch ($scope.selectedOption) {
             case "1": // Chưa đọc
-                $scope.listWatched(false); // watched = false
+            $scope.getAll()
+                
                 break;
             case "2": // Đã đọc
                 $scope.listWatched(true); // watched = true
@@ -135,7 +136,7 @@ app.controller("ContactController", function ($scope, $http) {
                 $scope.listContacted(true); // contacted = true
                 break;
             case "5":// Tất cả
-                $scope.getAll();
+            $scope.listWatched(false); // watched = false
                 break;
             default:
                 console.log("Không hợp lệ!");

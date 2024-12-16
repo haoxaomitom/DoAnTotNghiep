@@ -1,4 +1,4 @@
-let app = angular.module("app", [])
+// let app = angular.module("app", [])
 app.controller("NotificationController", function ($scope, $http) {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId")

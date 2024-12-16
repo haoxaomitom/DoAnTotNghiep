@@ -102,8 +102,8 @@ app.service('PostDetailService', ['$http', function ($http) {
             });
     };
 
-    this.saveContactInfo = function (data) {
-        return $http.post("http://localhost:8080/api/contactInformation/create", data);
+    this.saveContactInfo = function (postId, data) {
+        return $http.post(`http://localhost:8080/api/contactInformation/create/${postId}`, data);
     };
 
     // this.redirectToLogin = function() {
