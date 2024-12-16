@@ -11,19 +11,20 @@
         .pagination {
             justify-content: center;
         }
+
         form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-form input {
-    margin-right: 10px;
-}
+        form input {
+            margin-right: 10px;
+        }
 
-form button {
-    min-width: 100px;
-}
+        form button {
+            min-width: 100px;
+        }
     </style>
 </head>
 
@@ -36,18 +37,13 @@ form button {
             <!-- Form tìm kiếm -->
             <form ng-submit="searchPayments(searchQuery)" class="d-flex flex-grow-1 me-3">
                 <div class="form-floating flex-grow-1 me-2">
-                    <input 
-                        type="text" 
-                        ng-model="searchQuery" 
-                        class="form-control" 
-                        placeholder="Tìm kiếm thanh toán..." 
-                        ng-keypress="onSearchKeyPress($event)"
-                    >
+                    <input type="text" ng-model="searchQuery" class="form-control" placeholder="Tìm kiếm thanh toán..."
+                        ng-keypress="onSearchKeyPress($event)">
                     <label for="fullname">Tìm kiếm theo ID bài đăng, ID thanh toán</label>
                 </div>
                 <button type="submit" class="btn btn-primary flex-shrink-0">Tìm kiếm</button>
             </form>
-        
+
             <!-- Dropdown sắp xếp -->
             <div class="flex-grow-0">
                 <select ng-model="sortCriteria" class="form-select">
@@ -57,14 +53,15 @@ form button {
                 </select>
             </div>
         </div>
-        
-        
+
+
 
         <!-- Payment Table -->
         <table class="table table-bordered table-hover">
             <thead class="thead-dark">
                 <tr class="text-center">
-                    <th>ID thanh toán</th>
+                    <th>Mã thanh toán</th>
+                    <th>ID bài đăng</th>
                     <th>Tên bài đăng</th>
                     <th>Số tiền</th>
                     <th>Ngày thanh toán</th>
@@ -75,12 +72,14 @@ form button {
             <tbody>
                 <tr ng-repeat="payment in userPayments | filter: searchQuery | orderBy: sortCriteria">
                     <td>{{ payment.paymentId }}</td>
+                    <td>{{ payment.postId.postId }}</td>
                     <td>{{ payment.postId.parkingName }}</td>
                     <td>{{formatCurrency(payment.paymentAmount) + " " + payment.currency}}</td>
                     <td>{{ payment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td>{{ payment.paymentStatus }}</td>
                     <td>
-                        <button class="btn btn-info btn-sm" ng-click="viewPayment(payment.paymentId)">Xem chi tiết</button>
+                        <button class="btn btn-info btn-sm" ng-click="showPaymentDetails(payment)">Xem
+                            chi tiết</button>
                     </td>
                 </tr>
             </tbody>
@@ -98,32 +97,34 @@ form button {
             </ul>
         </nav>
 
-        <!-- Modal -->
         <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="paymentModalLabel">Chi tiết thanh toán</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p><strong>ID:</strong> {{ selectedPayment.paymentId }}</p>
-                        <p><strong>Tên bài đăng:</strong> {{ selectedPayment.postId.parkingName }}</p>
-                        <p><strong>Số tiền:</strong> {{ selectedPayment.paymentAmount | currency:'VND' }}</p>
-                        <p><strong>Ngày thanh toán:</strong> {{ selectedPayment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</p>
-                        <p><strong>Trạng thái:</strong> {{ selectedPayment.paymentStatus }}</p>
-                        <p><strong>Ngân hàng:</strong> {{ selectedPayment.bankCode }}</p>
-                        <p><strong>TxnRef:</strong> {{ selectedPayment.vnpTxnRef }}</p>
+                        <p><strong>Mã thanh toán:</strong> {{ selectedPayment.vnpTxnRef || 'N/A' }}</p>
+                        <p><strong>ID bài đăng:</strong> {{ selectedPayment.postId.postId || 'N/A' }}</p>
+                        <p><strong>Tên bài đăng:</strong> {{ selectedPayment.postId.parkingName || 'N/A' }}</p>
+                        <p><strong>Số tiền:</strong> {{ formatCurrency(selectedPayment.paymentAmount) + " " +
+                            selectedPayment.currency }}</p>
+                        <p><strong>Ngày thanh toán:</strong> {{ selectedPayment.paymentDate | date:'dd/MM/yyyy HH:mm' }}
+                        </p>
+                        <p><strong>Trạng thái:</strong> {{ selectedPayment.paymentStatus || 'N/A' }}</p>
+                        <p><strong>Số ngày đẩy top:</strong> {{ selectedPayment.priceId.duration + " ngày" || 'N/A' }}</p>
+                        <p><strong>Ngân hàng:</strong> {{ selectedPayment.bankCode || 'N/A' }}</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
 
 

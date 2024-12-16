@@ -24,7 +24,9 @@ app.controller('userPaymentController', function ($scope, $http) {
             params: { page: page, size: size },
             headers: config.headers
         }).then(function (response) {
+            
             $scope.userPayments = response.data.content; // Payments for the current page
+            console.log($scope.userPayments);
             $scope.totalPages = response.data.totalPages; // Total pages
             $scope.currentPage = response.data.number;   // Current page
         }).catch(function (error) {
@@ -32,17 +34,14 @@ app.controller('userPaymentController', function ($scope, $http) {
         });
     };
 
-    // View payment details
-    $scope.viewPayment = function (paymentId) {
-        $http.get(`http://localhost:8080/api/vnpay/${paymentId}`, config)
-            .then(function (response) {
-                $scope.selectedPayment = response.data;
-                $('#paymentModal').modal('show');
-            })
-            .catch(function (error) {
-                console.error('Lỗi khi lấy chi tiết thanh toán:', error);
-            });
+    // Hiển thị modal chi tiết thanh toán
+    $scope.showPaymentDetails = function (payment) {
+        $scope.selectedPayment = payment; // Gán payment cụ thể vào selectedPayment
+        console.log($scope.selectedPayment);
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        paymentModal.show(); // Hiển thị modal
     };
+    
 
     // Load next page
     $scope.nextPage = function () {

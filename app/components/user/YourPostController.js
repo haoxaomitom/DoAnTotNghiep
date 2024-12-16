@@ -160,15 +160,21 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
         PostsService.deletePost(postIdToDelete, token)
             .then(function (response) {
                 $('#deleteModal').modal('hide'); // Đóng modal
-                alert("Bài đăng đã được xóa thành công!");
+                $scope.showToast('Bài đăng đã được xóa thành công !');
                 $scope.getPosts(); // Làm mới danh sách bài viết
             })
             .catch(function (error) {
                 console.error('Error deleting post:', error);
-                alert("Có lỗi xảy ra khi xóa bài đăng!");
+                $scope.showToast('Có lỗi xảy ra khi xóa bài đăng !');
             });
     };
 
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
     // Gọi hàm để lấy dữ liệu bài viết khi controller được khởi tạo
     $scope.getPosts();
 

@@ -154,7 +154,7 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
 
     // Search posts based on search term and selected district
     $scope.searchPosts = function () {
-        if (!$scope.searchTerm || $scope.searchTerm.trim() === '') {
+        if ($scope.searchTerm === null) {
             // Nếu ô tìm kiếm trống, gọi lại getPosts
             $scope.getPosts();
         } else {
