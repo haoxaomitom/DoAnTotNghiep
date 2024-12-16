@@ -5,146 +5,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"> -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/assets/css/admin/PostDetail.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="/app/components/admin/AdminPostDetailService.js"></script>
-    <script src="/app/components/admin/AdminPostDetailController.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General Reset */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            display: block;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .sidebar a i {
+            margin-right: 8px;
+        }
+
+        .sidebar hr {
+            border: 1px solid #34495e;
+            margin: 20px 0;
+        }
+
+        .main-container {
+            margin-left: 270px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            /* 3 items per row */
+            gap: 20px;
+        }
+
+        .sidebar-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .sidebar-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-item a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .sidebar-item a i {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 
-<body ng-app="myApp" ng-controller="PostController">
-
+<body>
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="logo"><h2>PTR</h2></div>
+        <div class="logo">
+            <h2>PTR</h2>
+        </div>
         <a href="#"><i class="fa-solid fa-house"></i> Control Panel</a>
         <hr>
-        <ul>
-            <li><a href="#">Quản lý</a></li>
-            <li><a href="#">Quản lý bài đăng</a></li>
-            <li><a href="#">Quản lý tài khoản</a></li>
-            <li><a href="#">Quản lý hóa đơn</a></li>
-            <li><a href="#">Tiện ích bãi đỗ</a></li>
-            <li><a href="#">Quản lý báo cáo bài đăng</a></li>
-        </ul>
     </aside>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="search-bar-navbar">
-            <input type="text" placeholder="Tìm kiếm..." id="searchInputNav">
-            <button type="button" onclick="search()">Tìm kiếm</button>
-        </div>
-    </nav>
 
     <!-- Main Content -->
     <div class="main-container">
-        <!-- Leftside Section -->
-        <div class="leftside">
-            <div class="title-section">
-                <h3>Tiêu đề</h3>
-                <!-- Hiển thị tiêu đề bài đăng -->
-                <input type="text" placeholder="Nhập tiêu đề" class="title-input" ng-model="currentPost.title" disabled>
-                <h3>Mô tả</h3>
-                <!-- Hiển thị mô tả bài đăng -->
-                <textarea placeholder="Nhập mô tả" class="description-input" ng-model="currentPost.description" disabled></textarea>
-            </div>
-
-            <div class="form-grid">
-                <!-- Left Column -->
-                <div class="left-column">
-                    <!-- Tiện ích Section -->
-                    <div class="amenities-section">
-                        <h3>Tiện ích</h3>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('camera')" disabled> Camera</label>
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('guard_24_7')" disabled> Có bảo vệ 24/7</label>
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('guard_24_24')" disabled> Bảo vệ 24/24</label>
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('auto_gate')" disabled> Khóa cổng ra vào tự do</label>
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('covered')" disabled> Có mái che</label>
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('parking_service')" disabled> Có dịch vụ gửi xe</label>
-                            <label><input type="checkbox" ng-checked="currentPost.amenities.includes('charging_station')" disabled> Có trạm sạc xe điện</label>
-                        </div>
-                    </div>
-
-                    <!-- Diện tích và Giá Section -->
-                    <div class="input-group">
-                        <label for="area">Diện tích (m²)</label>
-                        <!-- Hiển thị diện tích -->
-                        <input type="number" id="area" ng-model="currentPost.area" disabled>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="price">Giá</label>
-                        <!-- Hiển thị giá -->
-                        <input type="number" id="price" ng-model="currentPost.price" disabled>
-                        <select id="price_unit" ng-model="currentPost.priceUnit" disabled>
-                            <option value="day">Ngày</option>
-                            <option value="month">Tháng</option>
-                            <option value="year">Năm</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Right Column -->
-                <div class="right-column">
-                    <!-- Ảnh và Video Section -->
-                    <div class="media-section">
-                        <h3>Ảnh và Video</h3>
-                        <div class="input-group">
-                            <label for="video_link">Link video</label>
-                            <!-- Hiển thị link video -->
-                            <input type="url" id="video_link" ng-model="currentPost.videoLink" disabled>
-                        </div>
-                        <button type="button" onclick="editPostDate()">Xem/Chỉnh sửa ngày đăng bài</button>
-                    </div>
-
-                    <!-- Địa chỉ Section -->
-                    <div class="address-section">
-                        <h3>Địa chỉ</h3>
-                        <div class="input-group">
-                            <label for="province">Tỉnh/Thành</label>
-                            <!-- Hiển thị tỉnh/thành -->
-                            <input type="text" id="province" ng-model="currentPost.province" disabled>
-                        </div>
-                        <div class="input-group">
-                            <label for="district">Quận/Huyện</label>
-                            <!-- Hiển thị quận/huyện -->
-                            <input type="text" id="district" ng-model="currentPost.district" disabled>
-                        </div>
-                        <div class="input-group">
-                            <label for="ward">Xã/Phường</label>
-                            <!-- Hiển thị xã/phường -->
-                            <input type="text" id="ward" ng-model="currentPost.ward" disabled>
-                        </div>
-                        <div class="input-group">
-                            <label for="street_number">Số nhà</label>
-                            <!-- Hiển thị số nhà -->
-                            <input type="text" id="street_number" ng-model="currentPost.streetNumber" disabled>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="sidebar-item">
+            <a href="#"><i class="fa-solid fa-list"></i> Quản lý</a>
         </div>
-
-        <!-- Rightside Section -->
-        <div class="rightside">
-            <!-- Bản đồ Section -->
-            <div class="map-section">
-                <h3>Chỉnh sửa vị trí trên bản đồ</h3>
-                <div id="map">Bản đồ sẽ hiển thị ở đây</div>
-                <button type="button" onclick="editMapLocation()">Chỉnh vị trí trên bản đồ</button>
-            </div>
-
-            <!-- Nút Cập nhật và Xóa -->
-            <div class="button-group">
-                <button type="button" onclick="updatePost()">Cập nhật</button>
-                <button type="button" onclick="deletePost()">Xóa bài đăng</button>
-            </div>
+        <div class="sidebar-item">
+            <a href="#"><i class="fa-solid fa-pen"></i> Quản lý bài đăng</a>
+        </div>
+        <div class="sidebar-item">
+            <a href="#"><i class="fa-solid fa-user"></i> Quản lý tài khoản</a>
+        </div>
+        <div class="sidebar-item">
+            <a href="#"><i class="fa-solid fa-file-invoice"></i> Quản lý hóa đơn</a>
+        </div>
+        <div class="sidebar-item">
+            <a href="#"><i class="fa-solid fa-car"></i> Tiện ích bãi đỗ</a>
+        </div>
+        <div class="sidebar-item">
+            <a href="#"><i class="fa-solid fa-flag"></i> Quản lý báo cáo bài đăng</a>
         </div>
     </div>
 
+    <!-- JavaScript -->
+    <script src="scripts.js"></script>
 </body>
 
 </html>
