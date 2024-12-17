@@ -35,7 +35,9 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         bigtruck: 'Xe tải trung',
         supertruck: 'Xe siêu tải trọng'
     };
-    
+
+    $scope.selectedFiles = [];
+
     $scope.selectedAmenities = {}; // To keep track of selected amenities
     $scope.manualInput = ""; // For manual input of amenities
 
@@ -149,7 +151,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
                 // Populate form with data from API (province, district, ward)
 
                 $scope.selectedProvince = $scope.provinces.find(province => province.Name === $scope.post.provinceName);
-                
+
                 $scope.selectedDistrict = $scope.selectedProvince ? $scope.selectedProvince.Districts.find(district => district.Name === $scope.post.districtName) : null;
                 $scope.selectedWard = $scope.selectedDistrict ? $scope.selectedDistrict.Wards.find(ward => ward.Name === $scope.post.wardName) : null;
                 $scope.post.priceUnit = $scope.post.priceUnit
@@ -234,6 +236,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
     
     $scope.uploadImages = async function (postId) {
         const formData = new FormData();
+
     
         // Gửi danh sách ảnh bị xóa
         if ($scope.deletedImages.length > 0) {
@@ -249,6 +252,15 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
             });
         }
     
+
+        $scope.selectedFiles.forEach((image) => {
+            formData.append('imageFiles', image); // Attach the file to the request
+        });
+
+        // Send the postId along with the images to associate them
+        formData.append('postId', postId);
+        console.log("imgpostId: " + postId);
+
         try {
             const response = await $http.post(`http://localhost:8080/api/updatePosts/updateImage/${postId}`, formData, {
                 headers: { 'Content-Type': undefined, 'Authorization': `Bearer ${token}` },
