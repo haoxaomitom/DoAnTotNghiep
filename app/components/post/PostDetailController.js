@@ -289,8 +289,9 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
             const reportData = {
                 reportType: reportReason,
                 reportContent: reportDetails,
-                post: id_post,
-                user: userId
+                post: postId,
+                user: userId,
+                status: "Đang xử lý"
             };
 
             // Call your API service to submit the report
