@@ -2,9 +2,36 @@ let app = angular.module("app", [])
 app.controller("NotificationController", function ($scope, $http) {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId")
+    $scope.currentPage = 1;
+    $scope.pageSize = 10;
+
+    $scope.goToFirstPage = function () {
+        $scope.currentPage = 1;
+        $scope.loadUsers();
+    };
+
+    $scope.previousPage = function () {
+        if ($scope.currentPage > 1) {
+            $scope.currentPage--;
+            $scope.loadUsers();
+        }
+    };
+
+    $scope.nextPage = function () {
+        if ($scope.currentPage < $scope.totalPages) {
+            $scope.currentPage++;
+            $scope.loadUsers();
+        }
+    };
+
+    $scope.goToLastPage = function () {
+        $scope.currentPage = $scope.totalPages;
+        $scope.loadUsers();
+    };
+
     // lấy dữ liệu cho table
     $scope.getAll = function () {
-        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUser?userId=${userId}`, {
+        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUser?userId=${userId}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -12,6 +39,7 @@ app.controller("NotificationController", function ($scope, $http) {
             .then((response) => {
                 if (response.data.status) {
                     $scope.notifications = response.data.data;
+                    $scope.totalPages = response.data.totalPages;
                 } else {
                     console.log(response.data.message);
                 }
@@ -20,6 +48,27 @@ app.controller("NotificationController", function ($scope, $http) {
 
             });
     }
+    $scope.getByIsRead = function (isRead) {
+        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUserAndIsRead?userId=${userId}&isRead=${isRead}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((response) => {
+                if (response.data.status) {
+                    $scope.notifications = response.data.data;
+                    $scope.totalPages = response.data.totalPages;
+                    console.log($scope.notifications);
+
+                } else {
+                    console.log(response.data.message);
+                }
+            }).catch((err) => {
+                console.log(err);
+
+            });
+    }
+    // lấy dữ liệu cho modal
     $scope.detail = function (notificationId, isRead) {
         // cập nhật trạng thái đã xem
         if (!isRead) {
@@ -61,25 +110,7 @@ app.controller("NotificationController", function ($scope, $http) {
             });
     }
 
-    $scope.getByIsRead = function (isRead) {
-        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUserAndIsRead?userId=${userId}&isRead=${isRead}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((response) => {
-                if (response.data.status) {
-                    $scope.notifications = response.data.data;
-                    console.log($scope.notifications);
 
-                } else {
-                    console.log(response.data.message);
-                }
-            }).catch((err) => {
-                console.log(err);
-
-            });
-    }
     $scope.selectedOption = "1";
     // Hàm xử lý khi thay đổi giá trị trong <select>
     $scope.handleOptionChange = function () {

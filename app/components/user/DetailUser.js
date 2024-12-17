@@ -38,6 +38,7 @@ app.controller('detailUserController', function ($scope, $location, $http, $wind
             $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
         } else {
             $scope.districts = [];
+            $scope.wards = [];
         }
     };
 
@@ -56,7 +57,7 @@ app.controller('detailUserController', function ($scope, $location, $http, $wind
                     $scope.firstName = data.firstName;
                     $scope.lastName = data.lastName;
                     $scope.gender = data.gender;
-                    $scope.dateOfBirth = data.dateOfBirth;
+                    $scope.dateOfBirth = new Date(data.dateOfBirth).toLocaleDateString('en-GB');
                     $scope.phoneNumber = data.phoneNumber;
                     $scope.email = data.email;
                     $scope.fullName = data.lastName + ' ' + data.firstName;
@@ -92,7 +93,7 @@ app.controller('detailUserController', function ($scope, $location, $http, $wind
     $scope.logout = function () {
         localStorage.clear();
         // Chuyển hướng đến trang chủ
-        $window.location.href = '/app/index.html';
+        $window.location.href = '/';
     };
 
     // Khi chọn Quận/Huyện

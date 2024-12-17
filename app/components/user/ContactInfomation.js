@@ -12,9 +12,7 @@ app.controller('ContactController', function ($scope, $http, $window) {
     $scope.saveContactInfo = function () {
         const token = localStorage.getItem("token")
         const data = {
-            //fullName: $scope.fullName,
-            user: 6,
-            post: 1,
+            fullName: $scope.fullName,
             phoneNumber: $scope.phoneNumber,
             typeCar: $scope.typeCar,
             contactTime: $scope.contactTime,
@@ -22,7 +20,7 @@ app.controller('ContactController', function ($scope, $http, $window) {
         }
         console.log(data);
         if (token) {
-            $http.post("http://localhost:8080/api/contactInformation/create", data, {
+            $http.post(`http://localhost:8080/api/contactInformation/create/1`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
