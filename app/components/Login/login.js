@@ -1,4 +1,4 @@
-// let app = angular.module('parkingApp', []);
+let app = angular.module('parkingApp', []);
 
 app.controller('LoginController', function ($scope, $location, $http, $window) {
     $scope.login = {
@@ -6,43 +6,55 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
         password: ''
     }
 
-    $scope.submitFormLogin = function () {
-        const data = {
-            username: $scope.login.username,
-            password: $scope.login.password
+    $scope.submitFormRegister = function () {
+        // Kiểm tra mật khẩu và xác nhận mật khẩu không khớp
+        if ($scope.password !== $scope.confirmPassword) {
+            $scope.errorMessage = "Mật khẩu và xác nhận mật khẩu không khớp!";
+            return; // Dừng việc gửi form nếu có lỗi
         }
-        $http.post('http://localhost:8080/api/users/login', data)
-            .then(function (response) {
-                if (response.data.status) {
 
-                    const token = response.data.data.token;
-                    const userId = response.data.data.userId;
-                    localStorage.setItem('token', token);
-                    localStorage.setItem('username', $scope.login.username);
-                    localStorage.setItem('userId', userId);
-                    const redirectUrl = localStorage.getItem('redirectUrl');
-                    if (redirectUrl) {
-                        // Xóa URL đã lưu sau khi chuyển hướng
-                        localStorage.removeItem('redirectUrl');
-                        // Chuyển hướng đến trang trước đó
-                        $location.absUrl(redirectUrl);
-                    } else {
-                        // Mặc định 
-                        $window.location.href = '/';
-                    }
-                } else {
-                    $scope.message = response.data.message;
-                }
-            }, function (error) {
-                console.log(error);
-            }
-            )
-    }
-    $scope.checkEnterKey = function(event) {
-        if (event.keyCode === 13) { // Key code của phím Enter là 13
-            console.log('Đã nhấn Enter với giá trị:', $scope.searchQuery);
-            $scope.submitFormLogin(); // Gọi hàm xử lý
+        // Kiểm tra các trường khác nếu cần
+        if (!$scope.lastName || !$scope.firstName || !$scope.username || !$scope.phoneNumber) {
+            $scope.errorMessage = "Vui lòng điền đầy đủ thông tin!";
+            return; // Dừng việc gửi form nếu thiếu thông tin
         }
+
+        // Kiểm tra độ dài và tính hợp lệ của mật khẩu
+        var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{6,20}$/; // Mật khẩu từ 6-20 ký tự, có ít nhất 1 chữ và 1 số
+        if (!passwordRegex.test($scope.password)) {
+            $scope.errorMessage = "Mật khẩu phải từ 6-20 ký tự và chứa cả chữ cái và số!";
+            return; // Dừng việc gửi form nếu mật khẩu không hợp lệ
+        }
+
+        // Kiểm tra tính hợp lệ của số điện thoại (chỉ chứa số)
+        var phoneRegex = /^\d+$/; // Số điện thoại chỉ chứa chữ số
+        if (!phoneRegex.test($scope.phoneNumber)) {
+            $scope.errorMessage = "Số điện thoại chỉ được phép chứa các chữ số!";
+            return; // Dừng việc gửi form nếu số điện thoại không hợp lệ
+        }
+
+        // Xóa lỗi nếu không có lỗi
+        $scope.errorMessage = "";
+
+        // Gọi API đăng ký (sử dụng $http để gửi form)
+        $http.post('/api/register', {
+            lastName: $scope.lastName,
+            firstName: $scope.firstName,
+            username: $scope.username,
+            phoneNumber: $scope.phoneNumber,
+            password: $scope.password
+        }).then(function (response) {
+            if (response.data.status) {
+                // Xử lý nếu đăng ký thành công
+                console.log("Đăng ký thành công");
+            } else {
+                // Xử lý khi có lỗi từ server
+                $scope.errorMessage = response.data.message;
+            }
+        }).catch(function (error) {
+            $scope.errorMessage = "Có lỗi xảy ra, vui lòng thử lại sau.";
+            console.error(error);
+        });
     };
 
     $scope.submitFormRegister = function () {
@@ -50,7 +62,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             firstName: $scope.firstName,
             lastName: $scope.lastName,
             username: $scope.username,
-            email: $scope.email,
+            phoneNumber: $scope.phoneNumber,
             password: $scope.password,
             confirmPassword: $scope.confirmPassword
         }
@@ -141,7 +153,20 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             });
     }
 
+    $scope.sentForgotPasswordEmail = function (username) {
+        $http.post(`http://localhost:8080/api/email/forgot-password?username=${username}`)
+            .then((response) => {
+                if (response.data.status) {
+                    alert("Email đổi mật đã được gửi. Vui lòng kiểm tra email!")
+                } else {
+                    alert(response.data.message)
+                }
+            }).catch((err) => {
+                console.log(err);
 
+            });
+
+    }
 
 }
 )
