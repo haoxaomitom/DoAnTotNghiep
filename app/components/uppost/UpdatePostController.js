@@ -33,7 +33,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         bigtruck: 'Xe tải trung',
         supertruck: 'Xe siêu tải trọng'
     };
-    
+
     $scope.selectedFiles = [];
     $scope.selectedAmenities = {}; // To keep track of selected amenities
     $scope.manualInput = ""; // For manual input of amenities
@@ -168,7 +168,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
                 // Populate form with data from API (province, district, ward)
 
                 $scope.selectedProvince = $scope.provinces.find(province => province.Name === $scope.post.provinceName);
-                
+
                 $scope.selectedDistrict = $scope.selectedProvince ? $scope.selectedProvince.Districts.find(district => district.Name === $scope.post.districtName) : null;
                 $scope.selectedWard = $scope.selectedDistrict ? $scope.selectedDistrict.Wards.find(ward => ward.Name === $scope.post.wardName) : null;
                 $scope.post.priceUnit = $scope.post.priceUnit
@@ -240,7 +240,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
 
         // Send the postId along with the images to associate them
         formData.append('postId', postId);
-        console.log("imgpostId: "+postId);
+        console.log("imgpostId: " + postId);
         try {
             const url = `http://localhost:8080/api/images/upload/${postId}`;  // Update URL to match the correct endpoint
             const response = await $http.post(url, formData, {
