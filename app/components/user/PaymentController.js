@@ -10,6 +10,7 @@ app.controller('userPaymentController', function ($scope, $http) {
 
     // Lấy token từ localStorage
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
 
     // Cấu hình headers với token
     const config = {
@@ -71,7 +72,7 @@ app.controller('userPaymentController', function ($scope, $http) {
         }
     
         const params = {
-            userId: 1, // Thay bằng userId hiện tại
+            userId: userId, // Thay bằng userId hiện tại
             paymentId: null,
             postId: null,
             page: 0,
