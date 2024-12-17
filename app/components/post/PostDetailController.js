@@ -227,7 +227,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
 
 
     $scope.shareOnFacebook = function (postId) {
-        // const url = `http://127.0.0.1:5500/app/components/post/PostDetail.html?id=${postId}`;
+        // const url = `https://doantotnghiepbe-production.up.railway.app/app/components/post/PostDetail.html?id=${postId}`;
         const url = $location.absUrl();
         const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         window.open(facebookShareURL, '_blank', 'width=600,height=400');

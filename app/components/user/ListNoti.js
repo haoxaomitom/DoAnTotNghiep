@@ -31,7 +31,7 @@ app.controller("NotificationController", function ($scope, $http) {
 
     // lấy dữ liệu cho table
     $scope.getAll = function () {
-        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUser?userId=${userId}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/notifications/getAllByGlobalAndUser?userId=${userId}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -49,7 +49,7 @@ app.controller("NotificationController", function ($scope, $http) {
             });
     }
     $scope.getByIsRead = function (isRead) {
-        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUserAndIsRead?userId=${userId}&isRead=${isRead}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/notifications/getAllByGlobalAndUserAndIsRead?userId=${userId}&isRead=${isRead}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -72,7 +72,7 @@ app.controller("NotificationController", function ($scope, $http) {
     $scope.detail = function (notificationId, isRead) {
         // cập nhật trạng thái đã xem
         if (!isRead) {
-            $http.put(`http://localhost:8080/api/notifications/isRead/${notificationId}`, null, {
+            $http.put(`https://doantotnghiepbe-production.up.railway.app/api/notifications/isRead/${notificationId}`, null, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -93,7 +93,7 @@ app.controller("NotificationController", function ($scope, $http) {
                 });
         }
         // lấy dữ liệu cho modal
-        $http.get(`http://localhost:8080/api/notifications/getById?id=${notificationId}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/notifications/getById?id=${notificationId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

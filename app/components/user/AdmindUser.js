@@ -90,7 +90,7 @@ app.controller('AdminController', function ($scope, $http, $window) {
     const token = localStorage.getItem("token");
 
     if (token) {
-        $http.get('http://localhost:8080/api/users', {
+        $http.get('https://doantotnghiepbe-production.up.railway.app/api/users', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -109,7 +109,7 @@ app.controller('AdminController', function ($scope, $http, $window) {
     }
 
     $scope.getUserByUsername = function (username) {
-        $http.get(`http://localhost:8080/api/users/getUserByUsername?username=${username}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/users/getUserByUsername?username=${username}`, {
             headers: {
                 'Authorization': `Bearer ${token}` // Gửi token trong header
             }
@@ -163,10 +163,10 @@ app.controller('AdminController', function ($scope, $http, $window) {
         const dataInfoAccount = {
 
         }
-        $http.post('http://localhost:8080/api/users/login', dataAccount)
+        $http.post('https://doantotnghiepbe-production.up.railway.app/api/users/login', dataAccount)
             .then(function (response) {
                 if (response.data.status) {
-                    $http.put('http://localhost:8080/api/users/update', data, {
+                    $http.put('https://doantotnghiepbe-production.up.railway.app/api/users/update', data, {
                         headers: {
                             'Authorization': `Bearer ${token}` // Gửi token trong header
                         }

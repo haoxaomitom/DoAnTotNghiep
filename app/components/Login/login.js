@@ -9,7 +9,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             username: $scope.login.username,
             password: $scope.login.password
         }
-        $http.post('http://localhost:8080/api/users/login', data)
+        $http.post('https://doantotnghiepbe-production.up.railway.app/api/users/login', data)
             .then(function (response) {
                 if (response.data.status) {
 
@@ -98,7 +98,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             confirmPassword: $scope.confirmPassword
         }
         if (data.confirmPassword === data.password) {
-            $http.post('http://localhost:8080/api/users/register', data)
+            $http.post('https://doantotnghiepbe-production.up.railway.app/api/users/register', data)
                 .then(function (response) {
                     console.log(data);
                     if (response.data.status) {
@@ -123,7 +123,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             if (response.authResponse) {
                 const facebookToken = response.authResponse.accessToken;
                 // Send the Facebook token to the server for login
-                $http.post('http://localhost:8080/api/users/facebook-login', { token: facebookToken })
+                $http.post('https://doantotnghiepbe-production.up.railway.app/api/users/facebook-login', { token: facebookToken })
                     .then(function (response) {
                         if (response.data.status) {
                             const token = response.data.data.token;
@@ -153,7 +153,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             email: $scope.email,
             password: $scope.password
         };
-        $http.post('http://localhost:8080/api/users/register', user)
+        $http.post('https://doantotnghiepbe-production.up.railway.app/api/users/register', user)
             .then(function (response) {
                 console.log('User registered successfully:', response);
             }, function (error) {
@@ -163,7 +163,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
 
     $scope.loginWithGoogle = function () {
         const clientId = '326720550153-k9n1s1v6vdomueidjne4bggu8o6n2u6d.apps.googleusercontent.com';
-        const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
+        const redirectUri = 'https://doantotnghiepbe-production.up.railway.app/login/oauth2/code/google';
         const scope = 'openid profile email';
         const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline`;
 
@@ -185,7 +185,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
     }
 
     $scope.sentForgotPasswordEmail = function (username) {
-        $http.post(`http://localhost:8080/api/email/forgot-password?username=${username}`)
+        $http.post(`https://doantotnghiepbe-production.up.railway.app/api/email/forgot-password?username=${username}`)
             .then((response) => {
                 if (response.data.status) {
                     alert("Email đổi mật đã được gửi. Vui lòng kiểm tra email!")

@@ -4,7 +4,7 @@ var app = angular.module('app', []);
 app.service('PostService', ['$http', function ($http) {
     // Lưu bài đăng
     this.savePost = function (postData) {
-        return $http.post('http://localhost:8080/api/posts/saveUpPost', postData);
+        return $http.post('https://doantotnghiepbe-production.up.railway.app/api/posts/saveUpPost', postData);
     };
 }]);
 
@@ -229,7 +229,7 @@ app.controller('AmenitiesController', function ($scope, PostService) {
 });
 
 app.service('PostService', function ($http) {
-    const baseUrl = 'http://localhost:8080/api/amenities';
+    const baseUrl = 'https://doantotnghiepbe-production.up.railway.app/api/amenities';
 
     // Lưu tiện ích
     this.saveAmenities = function (postId, amenities) {
@@ -295,7 +295,7 @@ app.controller('ImagesController', ['$scope', 'ImageService', function($scope, I
 }]);
 
 app.service('ImageService', ['$http', function ($http) {
-    const baseUrl = 'http://localhost:8080/api/images';
+    const baseUrl = 'https://doantotnghiepbe-production.up.railway.app/api/images';
 
     // Upload ảnh
     this.uploadImages = function (images, postId) {

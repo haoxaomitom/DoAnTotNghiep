@@ -230,7 +230,7 @@
         var app = angular.module('myApp', []);
 
         app.service('ReportService', function ($http) {
-            var baseUrl = 'http://localhost:8080/api/admin/reports';
+            var baseUrl = 'https://doantotnghiepbe-production.up.railway.app/api/admin/reports';
 
             // Lấy tất cả báo cáo
             this.getReports = function () {

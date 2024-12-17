@@ -261,7 +261,7 @@
     <script>
         angular.module('paymentApp', [])
             .controller('PaymentController', function ($scope, $http) {
-                const apiBaseUrl = 'http://localhost:8080/api/admin/payments';
+                const apiBaseUrl = 'https://doantotnghiepbe-production.up.railway.app/api/admin/payments';
                 const token = localStorage.getItem("token");
                 $scope.payments = [];
                 $scope.filteredPayments = [];

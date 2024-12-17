@@ -10,7 +10,7 @@ app.controller('ApprovalPostController', function($scope, $http) {
 
     // Lấy tất cả bài viết với phân trang
     $scope.getAllApprovalPosts = function(page, size) {
-        $http.get('http://localhost:8080/api/approval-posts', { params: { page: page, size: size } })
+        $http.get('https://doantotnghiepbe-production.up.railway.app/api/approval-posts', { params: { page: page, size: size } })
             .then(function(response) {
                 // Lặp qua từng bài viết và chuyển đổi reviewedAt
                 $scope.approvalPosts = response.data.content.map(function(post) {
@@ -30,7 +30,7 @@ app.controller('ApprovalPostController', function($scope, $http) {
 
     // Duyệt bài viết
     $scope.approvePost = function(postId, userId) {
-        $http.post(`http://localhost:8080/api/approval-posts/approve/${postId}`, null, { params: { userId: userId } })
+        $http.post(`https://doantotnghiepbe-production.up.railway.app/api/approval-posts/approve/${postId}`, null, { params: { userId: userId } })
             .then(function(response) {
                 alert("Bài viết đã được duyệt!");
                 $scope.getAllApprovalPosts($scope.currentPage, $scope.pageSize); // Refresh danh sách
@@ -44,7 +44,7 @@ app.controller('ApprovalPostController', function($scope, $http) {
     $scope.rejectPost = function(postId, rejectionReason, userId) {
         rejectionReason = prompt("Nhập lý do từ chối:");
         if (rejectionReason) {
-            $http.post(`http://localhost:8080/api/approval-posts/reject/${postId}`, null, { 
+            $http.post(`https://doantotnghiepbe-production.up.railway.app/api/approval-posts/reject/${postId}`, null, { 
                 params: { rejectionReason: rejectionReason, userId: userId } 
             })
             .then(function(response) {

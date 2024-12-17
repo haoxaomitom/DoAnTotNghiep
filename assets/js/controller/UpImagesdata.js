@@ -40,7 +40,7 @@ app.service('ImagesService', ['$http', function ($http) {
         });
 
         // Gửi formData qua API
-        return $http.post('http://localhost:8080/api/images/uploadData', formData, {
+        return $http.post('https://doantotnghiepbe-production.up.railway.app/api/images/uploadData', formData, {
             headers: {
                 'Content-Type': undefined // Để Angular tự động xử lý multipart
             }

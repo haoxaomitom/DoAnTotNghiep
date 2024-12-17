@@ -10,7 +10,7 @@ angular.module('myApp', [])
       // Gửi yêu cầu GET đến API với các tham số trang và kích thước
       $http({
         method: 'GET',
-        url: 'http://127.0.0.1:8080/api/posts', // Thay đổi URL tùy theo cấu hình của bạn
+        url: 'https://doantotnghiepbe-production.up.railway.app/api/posts', // Thay đổi URL tùy theo cấu hình của bạn
         params: {
           page: $scope.page,
           size: $scope.size
@@ -45,7 +45,7 @@ angular.module('myApp', [])
       if ($scope.searchQuery) {
         $http({
           method: 'GET',
-          url: 'http://127.0.0.1:8080/api/posts/admin/search',
+          url: 'https://doantotnghiepbe-production.up.railway.app/api/posts/admin/search',
           params: {
             postId: $scope.searchQuery, // Đưa searchQuery vào params
             page: 0,

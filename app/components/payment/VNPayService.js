@@ -2,7 +2,7 @@
 // const token = localStorage.getItem('token');
 app.service('PaymentService', function($http) {
     this.getPrices = function() {
-        return $http.get('http://localhost:8080/api/prices/active', {
+        return $http.get('https://doantotnghiepbe-production.up.railway.app/api/prices/active', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -16,7 +16,7 @@ this.createPayment = function(priceId, postId) {
         }
         return $http({
             method: 'GET',
-            url: `http://127.0.0.1:8080/api/vnpay/payment/${priceId}/${postId}`,
+            url: `https://doantotnghiepbe-production.up.railway.app/api/vnpay/payment/${priceId}/${postId}`,
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -2,7 +2,7 @@ var app = angular.module('app', []);
 
 app.service('PostService', ['$http', function ($http) {
     this.savePost = function (postData) {
-        return $http.post('http://localhost:8080/api/upPosts/savePost', postData);
+        return $http.post('https://doantotnghiepbe-production.up.railway.app/api/upPosts/savePost', postData);
     };
 }]);
 

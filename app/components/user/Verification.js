@@ -9,7 +9,7 @@ app.controller('VerificationController', ['$scope', '$http', function ($scope, $
     var token = urlParams.get('token');
 
     if (token) {
-        $http.get(`http://localhost:8080/api/users/verified?token=${token}`)
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/users/verified?token=${token}`)
             .then(function (response) {
                 console.log(response.data.status);
                 if (response.data.status) {

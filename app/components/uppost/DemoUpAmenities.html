@@ -115,7 +115,7 @@
         const app = angular.module("app", []);
         app.service('AmenitiesService', function ($http) {
             this.saveAmenities = function (postId, amenities) {
-                return $http.post(`http://localhost:8080/api/amenities/${postId}`, amenities).then(response => response.data);
+                return $http.post(`https://doantotnghiepbe-production.up.railway.app/api/amenities/${postId}`, amenities).then(response => response.data);
             };
         });
 

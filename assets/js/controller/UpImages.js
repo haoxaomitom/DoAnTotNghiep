@@ -37,7 +37,7 @@ app.controller('ImagesController', ['$scope', 'ImageService', function($scope, I
 }]);
 
 app.service('ImageService', ['$http', function ($http) {
-    // const baseUrl = 'http://localhost:8080/api/images';
+    // const baseUrl = 'https://doantotnghiepbe-production.up.railway.app/api/images';
 
     // Upload ảnh
     this.uploadImages = function (images, postId) {
@@ -47,7 +47,7 @@ app.service('ImageService', ['$http', function ($http) {
         });
         formData.append('postId', postId);
 
-        return $http.post(`http://localhost:8080/api/images/upload`, formData, {
+        return $http.post(`https://doantotnghiepbe-production.up.railway.app/api/images/upload`, formData, {
             headers: { 'Content-Type': undefined }
         });
     };

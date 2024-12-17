@@ -13,7 +13,7 @@ angular.module('paymentApp').controller('SuccessController', function($scope, $h
         const txnRef = getTxnRef();
         console.log('Transaction Reference:', txnRef); // Debug log
         if (txnRef) {
-            $http.get(`http://127.0.0.1:8080/api/vnpay/payment/details/${txnRef}`,{
+            $http.get(`https://doantotnghiepbe-production.up.railway.app/api/vnpay/payment/details/${txnRef}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -57,7 +57,7 @@ app.controller("ForgotPasswordController", function ($scope, $http) {
         };
 
         // Gửi yêu cầu đến API
-        $http.post(`http://localhost:8080/api/users/reset-password?token=${payload.token}&newPassword=${payload.newPassword}`)
+        $http.post(`https://doantotnghiepbe-production.up.railway.app/api/users/reset-password?token=${payload.token}&newPassword=${payload.newPassword}`)
             .then(function (response) {
                 if (response.data.message) {
                     $scope.showToast("Đổi mật khẩu nhành công!");

@@ -21,7 +21,7 @@ app.controller('userPaymentController', function ($scope, $http) {
 
     // Load payments with pagination
     $scope.loadPayments = function (userId, page, size) {
-        $http.get(`http://localhost:8080/api/vnpay/user/${userId}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/vnpay/user/${userId}`, {
             params: { page: page, size: size },
             headers: config.headers
         }).then(function (response) {
@@ -88,7 +88,7 @@ app.controller('userPaymentController', function ($scope, $http) {
             return;
         }
     
-        $http.get('http://localhost:8080/api/vnpay/search', { 
+        $http.get('https://doantotnghiepbe-production.up.railway.app/api/vnpay/search', { 
             params: params, 
             headers: config.headers // Thêm headers vào request
         })

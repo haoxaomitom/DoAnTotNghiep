@@ -11,7 +11,7 @@ app.controller('userPaymentController', function ($scope, $http) {
     };
 
     // Gọi API lấy danh sách thanh toán
-    $http.get('http://localhost:8080/admin/payments/all', config).then(function (response) {
+    $http.get('https://doantotnghiepbe-production.up.railway.app/admin/payments/all', config).then(function (response) {
         $scope.payments = response.data;
         $scope.sortCriteria = 'paymentDate';
     }).catch(function (error) {
@@ -20,7 +20,7 @@ app.controller('userPaymentController', function ($scope, $http) {
 
     // Xem chi tiết thanh toán
     $scope.viewPayment = function (paymentId) {
-        $http.get(`http://localhost:8080/admin/payments/${paymentId}`, config).then(function (response) {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/admin/payments/${paymentId}`, config).then(function (response) {
             $scope.selectedPayment = response.data;
             $('#paymentModal').modal('show');
         }).catch(function (error) {

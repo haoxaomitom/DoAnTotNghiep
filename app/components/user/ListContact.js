@@ -31,7 +31,7 @@ app.controller("ContactController", function ($scope, $http) {
     };
 
     $scope.getAll = function () {
-        $http.get(`http://localhost:8080/api/contactInformation/getByUserId/${userId}?page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/getByUserId/${userId}?page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -50,7 +50,7 @@ app.controller("ContactController", function ($scope, $http) {
     }
 
     $scope.listWatched = function (watched) {
-        $http.get(`http://localhost:8080/api/contactInformation/getByUserIdAndWatched/${userId}?watched=${watched}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/getByUserIdAndWatched/${userId}?watched=${watched}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -69,7 +69,7 @@ app.controller("ContactController", function ($scope, $http) {
     }
 
     $scope.listContacted = function (contacted) {
-        $http.get(`http://localhost:8080/api/contactInformation/getByUserIdAndContacted/${userId}?contacted=${contacted}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/getByUserIdAndContacted/${userId}?contacted=${contacted}&page=${$scope.currentPage - 1}&size=${$scope.pageSize}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -89,7 +89,7 @@ app.controller("ContactController", function ($scope, $http) {
 
     $scope.detail = function (id, watched) {
         if (!watched) {
-            $http.put(`http://localhost:8080/api/contactInformation/watched/${id}`)
+            $http.put(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/watched/${id}`)
                 .then((response) => {
                     if (response.data.status) {
                         $scope.totalPages = response.data.totalPages;
@@ -104,7 +104,7 @@ app.controller("ContactController", function ($scope, $http) {
                     console.log("Lỗi cập nhật trạng thái watched:", err);
                 });
         }
-        $http.get(`http://localhost:8080/api/contactInformation/${id}`)
+        $http.get(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/${id}`)
             .then((response) => {
                 if (response.data.status) {
                     $scope.infoDetail = response.data.data;
@@ -123,7 +123,7 @@ app.controller("ContactController", function ($scope, $http) {
     $scope.updateContacted = function (contactInformationId, preContacted) {
         const contacted = $scope.contacted;
         if (contacted !== preContacted) {
-            $http.put(`http://localhost:8080/api/contactInformation/contacted/${contactInformationId}?contacted=${contacted}`)
+            $http.put(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/contacted/${contactInformationId}?contacted=${contacted}`)
                 .then((response) => {
                     if (response.data.status) {
                         const contactInfo = $scope.infos.find(info => info.contactInformationId === contactInformationId);
@@ -140,7 +140,7 @@ app.controller("ContactController", function ($scope, $http) {
     }
 
     $scope.delete = function (id) {
-        $http.delete(`http://localhost:8080/api/contactInformation/delete/${id}`, {
+        $http.delete(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/delete/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

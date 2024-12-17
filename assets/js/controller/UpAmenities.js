@@ -124,7 +124,7 @@ var app = angular.module('app', []);
         });
 
         app.service('PostService', function ($http) {
-            const baseUrl = 'http://localhost:8080/api/amenities';
+            const baseUrl = 'https://doantotnghiepbe-production.up.railway.app/api/amenities';
 
             // Lưu tiện ích
             this.saveAmenities = function (postId, amenities) {

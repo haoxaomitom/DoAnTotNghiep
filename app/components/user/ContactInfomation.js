@@ -28,7 +28,7 @@ app.controller('ContactController', function ($scope, $http, $window) {
         console.log(data);
         console.log(postId);
         if (token) {
-            $http.post(`http://localhost:8080/api/contactInformation/create/${postId}`, data, {
+            $http.post(`https://doantotnghiepbe-production.up.railway.app/api/contactInformation/create/${postId}`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
