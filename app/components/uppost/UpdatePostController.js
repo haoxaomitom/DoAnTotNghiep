@@ -15,17 +15,19 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
     $scope.vehicleTags = []; // Danh sách loại xe hiển thị
     $scope.manualVehicleInput = ""; // Loại xe nhập thủ công
 
+
     $scope.checkboxOptions = {
         camera: 'Camera giám sát',
         security247: 'Bảo vệ 24/7',
         privatePath: 'Bảo vệ 24/24',
         electricParking: 'Chỗ để / sạc xe điện',
         wifi: 'Có rửa xe',
-        key: 'Có khóa cổng riêng'
+        key: 'Có khóa cổng riêng',
+        cover: "Có mái che"
     };
 
     $scope.vehicleCheckboxOptions = {
-        car: 'Ô tô',
+        car: 'Xe oto',
         motorbike: 'Xe máy',
         bike: 'Xe du lịch 16 chỗ',
         electricCar: 'Xe oto điện',
@@ -35,6 +37,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
     };
 
     $scope.selectedFiles = [];
+
     $scope.selectedAmenities = {}; // To keep track of selected amenities
     $scope.manualInput = ""; // For manual input of amenities
 
@@ -135,32 +138,12 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         }
     };
 
-
-    // Xử lý khi chọn file ảnh
-    $scope.onFileSelect = function (files) {
-        $scope.$apply(function () {
-            // Add the new files to the selectedFiles array without removing old files
-            Array.from(files).forEach(function (file) {
-                file.preview = URL.createObjectURL(file); // Create preview URL for the file
-                $scope.selectedFiles.push(file); // Add file to the array
-                console.log(file)
-            });
-        });
-    };
-
-    $scope.removeImage = function (image) {
-        // Remove the image from selectedFiles array
-        const index = $scope.selectedFiles.indexOf(image);
-        if (index !== -1) {
-            $scope.selectedFiles.splice(index, 1);
-        }
-    };
-
-
     const apiUrl = `http://localhost:8080/api/posts/${postId}`;
 
     $scope.post = {};
-
+    $scope.imageUrls = []; // Danh sách URL ảnh cũ
+    $scope.newImages = []; // Danh sách file ảnh mới được chọn
+    $scope.deletedImages = []; // Danh sách ảnh bị xóa
     $scope.loadPostData = function () {
         $http.get(apiUrl)
             .then(function (response) {
@@ -202,22 +185,19 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
                 }
 
                 if ($scope.post.images) {
-                    $scope.selectedFiles = $scope.selectedFiles || []; // Initialize selectedFiles if it's undefined
+                    console.log($scope.post.images);
+                    $scope.imageUrls = []; // Khởi tạo mảng ảnh cũ
                     $scope.post.images.forEach(image => {
-                        // Add API images to the selectedFiles array
-                        const apiImage = {
-                            file: { name: image.idImage, preview: image.imageUrl } // Mock a file object for display
-                        };
-                        $scope.selectedFiles.push(apiImage);
+                        // Đẩy URL ảnh vào imageUrls
+                        $scope.imageUrls.push(image.imageUrl);
                     });
                 }
+                
 
-
-                console.log("Post data loaded:", $scope.post);
             })
             .catch(function (error) {
                 console.error("Error loading post data:", error);
-                alert("Không thể tải dữ liệu bài đăng. Vui lòng thử lại.");
+                $scope.showToast("Không thể tải dữ liệu bài đăng. Vui lòng thử lại.");
             });
     };
 
@@ -225,15 +205,54 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
     $scope.amenities = {}; // Để ánh xạ tiện ích đến checkbox
     $scope.vehicleTypes = {}; // Để ánh xạ loại xe đến checkbox
 
-    // Hàm upload ảnh lên server
-    $scope.uploadImages = async function (postId) {
-        console.log("run upload img");
-        if ($scope.selectedFiles.length === 0) {
-            alert('Vui lòng chọn ít nhất một ảnh!');
-            return [];
+    
+    
+    $scope.onFileSelect = function (files) {
+        $scope.$apply(function () {
+            Array.from(files).forEach(function (file) {
+                file.preview = URL.createObjectURL(file); // Tạo preview URL cho file
+                $scope.newImages.push(file); // Lưu vào newImages
+            });
+        });
+    };
+    
+    $scope.removeImage = function (image) {
+        if (image.preview) {
+            // Nếu là ảnh mới
+            const index = $scope.newImages.indexOf(image);
+            if (index !== -1) {
+                $scope.newImages.splice(index, 1); // Xóa khỏi danh sách ảnh mới
+            }
+        } else {
+            // Nếu là ảnh cũ
+            const index = $scope.imageUrls.indexOf(image);
+            if (index !== -1) {
+                $scope.deletedImages.push(image); // Đánh dấu là đã xóa
+                $scope.imageUrls.splice(index, 1); // Xóa khỏi danh sách ảnh cũ
+            }
         }
-
+    };
+    
+    
+    $scope.uploadImages = async function (postId) {
         const formData = new FormData();
+
+    
+        // Gửi danh sách ảnh bị xóa
+        if ($scope.deletedImages.length > 0) {
+            $scope.deletedImages.forEach(url => {
+                formData.append('deletedImages', JSON.stringify(url)); // Gửi URL ảnh bị xóa
+            });
+        }
+    
+        // Gửi danh sách ảnh mới
+        if ($scope.newImages.length > 0) {
+            $scope.newImages.forEach(file => {
+                formData.append('newImages', file);
+            });
+        }
+    
+
         $scope.selectedFiles.forEach((image) => {
             formData.append('imageFiles', image); // Attach the file to the request
         });
@@ -241,32 +260,31 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
         // Send the postId along with the images to associate them
         formData.append('postId', postId);
         console.log("imgpostId: " + postId);
+
         try {
-            const url = `http://localhost:8080/api/images/upload/${postId}`;  // Update URL to match the correct endpoint
-            const response = await $http.post(url, formData, {
-                headers: { 'Content-Type': undefined, 'Authorization': `Bearer ${token}` }, // Add token in header
+            const response = await $http.post(`http://localhost:8080/api/updatePosts/updateImage/${postId}`, formData, {
+                headers: { 'Content-Type': undefined, 'Authorization': `Bearer ${token}` },
                 transformRequest: angular.identity
             });
-            console.log("Images uploaded:", response.data);
-            return response.data; // Return image URLs to update the form
+            $scope.showToast('Upload thành công !');
+            return response.data.imageUrls || [];
         } catch (error) {
-            console.error('Upload ảnh thất bại:', error);
-            alert('Có lỗi xảy ra khi tải ảnh lên.');
+            alert('Có lỗi xảy ra trong quá trình upload!');
+            console.error(error);
             return [];
         }
     };
-
-
+    
     $scope.submitPost = async function () {
-        if ($scope.isLoading || $scope.isSubmitted) return; // Prevent submission if already loading or submitted
-
-        $scope.isLoading = true; // Start loading state
-        $scope.isSubmitted = true; // Mark as submitted
-
+        if ($scope.isLoading || $scope.isSubmitted) return;
+    
+        $scope.isLoading = true;
+        $scope.isSubmitted = true;
+    
         try {
-            // Prepare the post data
+            // Cập nhật thông tin bài đăng
             const postData = {
-                parkingName: $scope.post.parking_name,
+                parkingName: $scope.post.parkingName,
                 description: $scope.post.description,
                 street: $scope.post.street,
                 wardName: $scope.selectedWard ? $scope.selectedWard.Name : null,
@@ -277,48 +295,40 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
                 capacity: $scope.post.capacity,
                 latitude: $scope.post.latitude,
                 longitude: $scope.post.longitude,
-                amenities: $scope.tags.map(tag => {
-                    return { amenitiesName: tag }; // Format amenities correctly
-                }),
-                vehicleTypes: $scope.vehicleTags.map(tag => {
-                    return { vehicleTypesName: tag }; // Format vehicle types correctly
-                }),
-                userId: $scope.user_id, // Include the userId to associate the post
+                amenities: $scope.tags.map(tag => ({ amenitiesName: tag })),
+                vehicleTypes: $scope.vehicleTags.map(tag => ({ vehicleTypesName: tag }))
             };
-
-            // Send the request to update the post
-            const url = `http://localhost:8080/api/updatePosts/${postId}`; // Ensure the endpoint is correct
-            const response = await $http.put(url, postData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
+    
+            const url = `http://localhost:8080/api/updatePosts/${postId}`;
+            await $http.put(url, postData, {
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
             });
-
-            // if ($scope.selectedFiles.length > 0) {
-            //     const imageUrls = await $scope.uploadImages(postId);
-            //     if (imageUrls.length > 0) {
-            //         console.log('Ảnh đã upload:', imageUrls);
-            //     }
-            // } else {
-            //     console.log('Không có ảnh nào được chọn.');
-            // }
-
-            // Notify success and redirect
+    
+            // Kiểm tra và upload ảnh nếu cần
+            if ($scope.newImages.length > 0 || $scope.deletedImages.length > 0) {
+                const uploadedImages = await $scope.uploadImages(postId);
+                console.log('Ảnh đã upload:', uploadedImages);
+            }
+    
+            // Xử lý kết quả thành công
             alert('Bài đăng đã được cập nhật thành công!');
-            console.log('Cập nhật bài đăng thành công:', response.data);
             $location.path('/user/my-post');
-
         } catch (error) {
             console.error('Lỗi khi cập nhật bài đăng:', error);
             alert('Có lỗi xảy ra, vui lòng thử lại.');
         } finally {
             $scope.isLoading = false;
-            $scope.isSubmitted = false; // Reset submitted state to allow for resubmission
+            $scope.isSubmitted = false;
             $scope.$apply();
         }
     };
 
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
     $scope.loadPostData();
 });
 

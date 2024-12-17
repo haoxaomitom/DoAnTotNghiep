@@ -16,7 +16,7 @@ app.directive("fileModel", ["$parse", function ($parse) {
     };
 }]);
 
-app.controller('detailUserController', function ($scope, $location,  $http, $window) {
+app.controller('detailUserController', function ($scope, $location, $http, $window) {
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
@@ -38,6 +38,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
             $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
         } else {
             $scope.districts = [];
+            $scope.wards = [];
         }
     };
 
@@ -50,39 +51,39 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
                 'Authorization': `Bearer ${token}` // Gửi token trong header
             }
         })
-        .then(function (response) {
-            if (response.data.status) {
-                const data = response.data.data;
-                $scope.firstName = data.firstName;
-                $scope.lastName = data.lastName;
-                $scope.gender = data.gender;
-                $scope.dateOfBirth = data.dateOfBirth;
-                $scope.phoneNumber = data.phoneNumber;
-                $scope.email = data.email;
-                $scope.fullName = data.lastName + ' ' + data.firstName;
-                $scope.avatar = data.avatar;
-                $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email";
+            .then(function (response) {
+                if (response.data.status) {
+                    const data = response.data.data;
+                    $scope.firstName = data.firstName;
+                    $scope.lastName = data.lastName;
+                    $scope.gender = data.gender;
+                    $scope.dateOfBirth = new Date(data.dateOfBirth).toLocaleDateString('en-GB');
+                    $scope.phoneNumber = data.phoneNumber;
+                    $scope.email = data.email;
+                    $scope.fullName = data.lastName + ' ' + data.firstName;
+                    $scope.avatar = data.avatar;
+                    $scope.isVerified = data.verified ? "Đã xác thực" : "Xác thực email";
 
-                // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
-                $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
-                if ($scope.selectedProvince) {
-                    $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
+                    // Đổ dữ liệu Tỉnh/Thành Phố, Quận/Huyện, Phường/Xã
+                    $scope.selectedProvince = $scope.provinces.find(province => province.Name === data.provinceName);
+                    if ($scope.selectedProvince) {
+                        $scope.inputProvince = $scope.selectedProvince.Name; // Gán giá trị cho input
 
-                    $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
+                        $scope.districts = $scope.selectedProvince.Districts; // Lấy danh sách Quận/Huyện
 
-                    $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
-                    if ($scope.selectedDistrict) {
-                        $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
+                        $scope.selectedDistrict = $scope.districts.find(district => district.Name === data.districtName);
+                        if ($scope.selectedDistrict) {
+                            $scope.wards = $scope.selectedDistrict.Wards; // Lấy danh sách Phường/Xã
 
-                        $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
+                            $scope.selectedWard = $scope.wards.find(ward => ward.Name === data.wardName);
+                        }
                     }
+                } else {
+                    console.log(response.data.message);
                 }
-            } else {
-                console.log(response.data.message);
-            }
-        }, function (error) {
-            console.log(error);
-        })
+            }, function (error) {
+                console.log(error);
+            })
     } else {
         // Nếu chưa đăng nhập, không chuyển hướng, chỉ hiển thị các tùy chọn đăng nhập
         $scope.isLoggedIn = false;
@@ -92,7 +93,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     $scope.logout = function () {
         localStorage.clear();
         // Chuyển hướng đến trang chủ
-        // $window.location.href = '/index.html';
+        $window.location.href = 'index.html';
     };
 
     // Khi chọn Quận/Huyện
@@ -128,42 +129,50 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     };
 
     // load avata
-    $scope.avatar = 'https://via.placeholder.com/100'; // Avatar mặc định
-    $scope.file = null; // File người dùng chọn
-
-    // Hàm upload ảnh
-    $scope.uploadAvatar = function (file) {
-        console.log("Run avt");
-        if (!file) {
-            // alert('Vui lòng chọn một file hợp lệ!');
+    $scope.uploadAvatar = function () {
+        const formData = new FormData();
+        formData.append("file", $scope.file);
+        console.log(formData);
+        if (!$scope.file || !/^image\//.test($scope.file.type)) {
+            console.error("Chỉ chấp nhận các định dạng ảnh.");
+            $scope.uploadResult = {
+                status: false,
+                message: "Chỉ chấp nhận các định dạng ảnh.",
+            };
             return;
         }
 
-        // Tạo FormData để gửi file
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const apiUrl = `http://localhost:8080/api/users/avatar/${$scope.username}`; // Thay $scope.username bằng username người dùng
-
-        // Gửi request POST
-        $http.post(apiUrl, formData, {
-            headers: { 'Content-Type': undefined } // Để trình duyệt tự set Content-Type
-        })
+        // Gửi yêu cầu PUT đến API
+        $http
+            .put(`http://localhost:8080/api/users/avatar/${username}`, formData, {
+                headers: {
+                    "Content-Type": undefined,
+                    'Authorization': `Bearer ${token}`
+                },
+                transformRequest: angular.identity,
+            })
             .then(function (response) {
-                // Cập nhật avatar mới sau khi upload thành công
-                $scope.avatar = response.data.avatarUrl;
-                // alert('Ảnh đã được cập nhật thành công!');
-                $scope.showToast("Ảnh đã được cập nhật thành công !");
+                $scope.uploadResult = response.data;
+                console.log($scope.uploadResult.message);
+
+
+                // Cập nhật URL của avatar nếu upload thành công
+                if ($scope.uploadResult.status) {
+                    $scope.avatar = $scope.uploadResult.data.avatar;
+                    console.log("thành công");
+                }
             })
             .catch(function (error) {
-                console.error('Upload lỗi:', error);
-                alert('Đã xảy ra lỗi khi upload ảnh!');
+                console.error("Lỗi tải ảnh:", error);
+                $scope.uploadResult = {
+                    status: false,
+                    message: "Tải ảnh thất bại. Vui lòng thử lại.",
+                };
             });
     };
 
     // Gọi hàm upload khi người dùng chọn một file
     $scope.$watch("file", function (newFile) {
-        console.log("File selected:", newFile);
         if (newFile) {
             $scope.uploadAvatar();
         }
@@ -193,7 +202,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
             .then(function (response) {
                 if (response.data.status) {
                     // alert("Cập nhật thành công!");
-                
+
                     $scope.showToast("Cập nhật thông tin thành công !");
                 } else {
                     $scope.message = response.data.message
@@ -202,10 +211,10 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
     }
     $scope.isLoading = false; // Biến để kiểm soát trạng thái loading
     $scope.isVerified = "Chưa xác thực"; // Trạng thái nút
-    
+
     $scope.verified = function () {
         $scope.isLoading = true; // Hiển thị hiệu ứng loading
-    
+
         $http.get(`http://localhost:8080/api/email/send-verification-email?userId=${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -225,7 +234,7 @@ app.controller('detailUserController', function ($scope, $location,  $http, $win
             console.error("Lỗi:", error);
         });
     };
-    
+
     $scope.showToast = function (message) {
         $scope.toastMessage = message;
         const toastElement = document.getElementById('toast');

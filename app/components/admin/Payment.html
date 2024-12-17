@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Management</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script> -->
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -71,7 +71,7 @@
     </style>
 </head>
 
-<body ng-app="paymentApp" ng-controller="paymentController">
+<body ng-controller="userPaymentController">
     <div class="container">
         <h1 class="my-4 text-center text-primary">Payment Management</h1>
 
@@ -101,7 +101,7 @@
                 <tr ng-repeat="payment in payments | filter: searchQuery | orderBy: sortCriteria">
                     <td>{{ payment.paymentId }}</td>
                     <td>{{ payment.postName }}</td>
-                    <td>{{ payment.paymentAmount | currency }}</td>
+                    <td>{{formatCurrency(payment.paymentAmount) + " " + payment.currency}}</td>
                     <td>{{ payment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td>{{ payment.paymentStatus }}</td>
                     <td>
@@ -140,25 +140,25 @@
     </div>
 
     <!-- Bootstrap and AngularJS Scripts -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> -->
     <script>
-        var app = angular.module('paymentApp', []);
+        // var app = angular.module('paymentApp', []);
 
-        app.controller('paymentController', function ($scope, $http) {
-            $http.get('http://localhost:8080/admin/payments/all').then(function (response) {
-                $scope.payments = response.data;
-                $scope.sortCriteria = 'paymentDate';
-            });
+        // app.controller('userPaymentController', function ($scope, $http) {
+        //     $http.get('http://localhost:8080/admin/payments/all').then(function (response) {
+        //         $scope.payments = response.data;
+        //         $scope.sortCriteria = 'paymentDate';
+        //     });
 
-            $scope.viewPayment = function (paymentId) {
-                $http.get('http://localhost:8080/admin/payments/' + paymentId).then(function (response) {
-                    $scope.selectedPayment = response.data;
-                    $('#paymentModal').modal('show');
-                });
-            };
+        //     $scope.viewPayment = function (paymentId) {
+        //         $http.get('http://localhost:8080/admin/payments/' + paymentId).then(function (response) {
+        //             $scope.selectedPayment = response.data;
+        //             $('#paymentModal').modal('show');
+        //         });
+        //     };
 
-            $scope.sortPayments = function () {};
-        });
+        //     $scope.sortPayments = function () {};
+        // });
     </script>
 </body>
 

@@ -131,7 +131,8 @@
                                         <h5 class="card-title">Các loại xe được gửi</h5>
                                         <ul class="list-unstyled row">
                                             <div class="col-sm-6" ng-repeat="vehicleType in post.vehicleTypes">
-                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypesName}}</li>
+                                                <li><i class="fa-solid fa-car"></i> {{vehicleType.vehicleTypesName}}
+                                                </li>
                                             </div>
                                         </ul>
                                     </div>
@@ -328,6 +329,7 @@
                             <div class="modal-body">
                                 <form id="reportForm" ng-submit="submitReport()">
                                     <div class="mb-3">
+                                        <p>ID bài đăng: {{post.postId}}</p>
                                         <label for="reportReason" class="form-label">Lý do báo cáo</label>
                                         <select class="form-select" id="reportReason" ng-change="checkReportReason()"
                                             ng-model="reportReason" required>
@@ -434,7 +436,6 @@
                             lại</small>
                     </div>
 
-
                 </div>
 
             </div>
@@ -465,7 +466,7 @@
                                     </div>
                                     <div class="card-body flex-fill">
                                         <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                            {{vehicleType.vehicleTypeName}}
+                                            {{vehicleType.vehicleTypesName}}
                                             <span ng-if="!$last"> - </span>
                                         </span>
                                         <h5 class="card-text text-danger">

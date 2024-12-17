@@ -30,7 +30,7 @@
     <script src="https://kit.fontawesome.com/5c73425aee.js" async crossorigin="anonymous"></script>
     <!-- Application Scripts -->
     <script src="app.js"></script>
-    <base href="/"> 
+    <base href="/">
 </head>
 
 <body ng-controller="ParkingController">
@@ -60,39 +60,42 @@
                         <ul class="navbar-nav ms-auto">
                             <!-- Link Đăng nhập/Đăng kí nếu người dùng chưa đăng nhập -->
                             <li class="nav-item" ng-if="!isLoggedIn">
-                                <a class="nav-link text-dark" ng-click="redirectToLogin()" ng-href="/Login-and-Register">Đăng nhập / Đăng kí</a>
+                                <a class="nav-link text-dark" ng-click="redirectToLogin()"
+                                    ng-href="/Login-and-Register">Đăng nhập / Đăng kí</a>
                             </li>
                             <li class="nav-item dropdown" ng-if="isLoggedIn">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- Dropdown chào và các tùy chọn -->
+                                <a class="nav-link dropdown-toggle position-relative" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Xin chào {{ fullName }}
+                                    <!-- Dấu chấm đỏ biểu thị thông báo trên đầu dropdown -->
+                                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" ng-if="hasUnreadNotifications">
+                                        <span class="visually-hidden">New alerts</span>
+                                    </span>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="/user/information"><i
-                                                class="fa-regular fa-user"></i> Thông tin cá nhân</a></li>
-                                    <li><a class="dropdown-item" href="/user/my-post"><i
-                                                class="fa-solid fa-sheet-plastic"></i> Bài đăng của tôi</a></li>
-                                    <li><a class="dropdown-item" href="/user/save-post"><i
-                                                class="fa-regular fa-bookmark"></i> Bài đăng đã lưu</a></li>
+                                    <li><a class="dropdown-item" href="/user/information"><i class="fa-regular fa-user"></i> Thông tin cá nhân</a></li>
+                                    <li><a class="dropdown-item" href="/user/my-post"><i class="fa-solid fa-sheet-plastic"></i> Bài đăng của tôi</a></li>
+                                    <li><a class="dropdown-item" href="/user/save-post"><i class="fa-regular fa-bookmark"></i> Bài đăng đã lưu</a></li>
+                                    <!-- Mục thông báo với dấu chấm đỏ -->
+                                    <li>
+                                        <a class="dropdown-item position-relative" href="/user/notification">
+                                            <i class="fa-regular fa-bell"></i> Thông báo
+                                            <!-- Dấu chấm đỏ biểu thị thông báo mới -->
+                                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="font-size: 0.6rem; width: 8px; height: 8px;" ng-if="hasUnreadNotifications"></span>
+                                        </a>
+                                    </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="/user/change-password"><i
-                                                class="fa-solid fa-rotate-right"></i> Đổi mật khẩu </a></li>
-                                    <li><a class="dropdown-item" href="#" ng-click="logout()"><i
-                                                class="fa-solid fa-right-to-bracket"></i> Đăng xuất</a></li>
+                                    <li><a class="dropdown-item" href="/user/change-password"><i class="fa-solid fa-rotate-right"></i> Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" href="#" ng-click="logout()"><i class="fa-solid fa-right-to-bracket"></i> Đăng xuất</a></li>
                                 </ul>
                             </li>
-
                             <!-- Nút Đăng tin -->
-                            <!-- <li class="nav-item">
-                                <a class="nav-link btn btn-outline-primary px-3" ng-href="/dang-tin">Đăng tin</a>
-                            </li> -->
-                            <!-- Nút Đăng tin -->
-                            <li class="nav-item">
-                                <a class="nav-link btn btn-outline-primary px-3" ng-click="checkLoginBeforePost()">Đăng tin</a>
+                            <li class="nav-item ms-3">
+                                <a class="btn btn btn-outline-info px-3" ng-click="checkLoginBeforePost()">Đăng tin</a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 </div>
@@ -137,20 +140,6 @@
                         <p class="mb-0">2024 PFR &copy; All Rights Reserved</p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col text-center">
-                        <a href="#" class="text-light mx-2">Privacy Policy</a>
-                        <a href="#" class="text-light mx-2">Terms of Service</a>
-                        <a href="#" class="text-light mx-2">Contact Us</a>
-                    </div>
-                </div>
-                <!-- <div class="row mt-3">
-                <div class="col text-center">
-                    <a href="#" class="text-light mx-2"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-light mx-2"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-light mx-2"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div> -->
             </div>
         </footer>
     </div>
@@ -177,5 +166,8 @@
 <script src="/app/components/user/ChangePassword.js" defer></script>
 <script src="/app/components/uppost/UpPostController.js" defer></script>
 <script src="/app/components/uppost/UpdatePostController.js" defer></script>
+<script src="/app/components/user/PaymentController.js" defer></script>
+<script src="/app/components/user/ListContact.js" defer></script>
+<script src="/app/components/user/ListNoti.js" defer></script>
 
 </html>

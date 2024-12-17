@@ -51,11 +51,10 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
 
     $scope.getPosts = function (status) {
         $scope.loading = true;
-    
+console.log("run");
         PostsService.getPostsByStatus(userId, status, $scope.page, $scope.size)
             .then(function (response) {
                 const data = response.data;
-    
                 // Thêm từng bài viết mới vào cuối mảng bài viết cũ
                 data.content.forEach(post => {
                     $scope.posts.push(post); // Thêm vào danh sách chung
@@ -68,7 +67,7 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
                         $scope.cancelledPosts.push(post);
                     }
                 });
-    
+
                 // Kiểm tra còn dữ liệu không
                 $scope.hasMoreData = $scope.page < data.totalPages - 1;
                 $scope.page++;
@@ -80,9 +79,9 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
                 console.error('Error fetching posts by status:', error);
             });
     };
-    
-    
-    
+
+
+
     $scope.selectTab = function (status) {
         // Reset về trang đầu tiên và các mảng dữ liệu
         $scope.page = 0; // Reset trang
@@ -91,7 +90,7 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
         $scope.pendingPosts = []; // Reset bài viết chờ duyệt
         $scope.cancelledPosts = []; // Reset bài viết bị hủy
         $scope.selectedStatus = status; // Lưu trạng thái đã chọn
-    
+
         $scope.getPosts(status); // Gọi API lấy bài viết theo trạng thái
     };
 
@@ -161,15 +160,23 @@ app.controller('PostsController', ['$scope', '$window', 'PostsService', function
         PostsService.deletePost(postIdToDelete, token)
             .then(function (response) {
                 $('#deleteModal').modal('hide'); // Đóng modal
-                alert("Bài đăng đã được xóa thành công!");
-                $scope.getPosts(); // Làm mới danh sách bài viết
+                $scope.showToast('Bài đăng đã được xóa thành công !');
+                $scope.page = 0; // Reset trang
+            $scope.activePosts = []; // Reset danh sách ACTIVE
+            $scope.getPosts('ACTIVE'); // Gọi lại API để lấy dữ liệu mới
             })
             .catch(function (error) {
                 console.error('Error deleting post:', error);
-                alert("Có lỗi xảy ra khi xóa bài đăng!");
+                $scope.showToast('Có lỗi xảy ra khi xóa bài đăng !');
             });
     };
 
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
     // Gọi hàm để lấy dữ liệu bài viết khi controller được khởi tạo
     $scope.getPosts();
 

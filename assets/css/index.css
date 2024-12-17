@@ -12,7 +12,7 @@
 }
 
 .sb-ft {
-    min-height: 68vh;
+    min-height: 73vh;
     height: auto !important;
     height: 100%;
 }
@@ -109,3 +109,96 @@
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
+
+      /* Đánh dấu dấu * màu đỏ cho các trường required */
+      label.required::after {
+        content: " *";
+        color: red; /* Màu đỏ cho dấu * */
+    }
+
+    /* Thêm border đỏ cho input khi không điền dữ liệu */
+    /* input:required:invalid {
+        border: 2px solid red;
+    } */
+
+    /* Dropdown menu với viền nét đứt */
+.nav-item .dropdown-menu {
+    border: 2px dashed #6c757d; /* Viền nét đứt */
+    border-radius: 8px; /* Bo góc */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    transition: all 0.3s ease-in-out; /* Hiệu ứng mở dropdown */
+    background-color: white; /* Nền trắng */
+}
+
+
+.nav-item .dropdown-menu .dropdown-item:hover {
+    background-color: #17a2b8; /* Màu nền xanh nhạt */
+    color: white; /* Chữ trắng */
+}
+
+/* Hiệu ứng khi dropdown mở */
+.nav-item .dropdown-menu.show {
+    transform: scale(1); /* Hiển thị đầy đủ */
+    opacity: 1;
+}
+
+.nav-item .dropdown-menu:not(.show) {
+    transform: scale(0.9); /* Thu nhỏ khi ẩn */
+    opacity: 0;
+}
+
+/* Dấu chấm đỏ trên dropdown */
+.nav-item .dropdown-toggle .position-absolute {
+    width: 10px;
+    height: 10px;
+    content: "";
+    display: inline-block;
+    z-index: 10;
+}
+
+/* Biểu tượng trong dropdown */
+.nav-item .dropdown-menu .dropdown-item i {
+    margin-right: 10px;
+}
+/* Viền nét đứt bao quanh dropdown user */
+.nav-item .dropdown-toggle {
+  border: 2px dashed #17a2b8; /* Viền nét đứt màu xanh info */
+  border-radius: 8px; /* Bo góc nhẹ */
+  padding: 5px 10px; /* Tạo khoảng cách giữa chữ và viền */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Hiệu ứng mượt */
+}
+
+/* Hiệu ứng khi hover vào dropdown user */
+.nav-item .dropdown-toggle:hover {
+  background-color: #e3f7f9; /* Nền xanh nhạt */
+  border-color: #00ddff; /* Đổi màu viền khi hover */
+  cursor: pointer; /* Đổi con trỏ thành chỉ tay */
+}
+
+/* Dấu chấm đỏ trên đầu dropdown */
+.nav-item .dropdown-toggle .position-absolute {
+  width: 10px;
+  height: 10px;
+  content: "";
+  display: inline-block;
+  z-index: 10;
+}
+
+/* Dropdown menu vẫn giữ hiệu ứng mượt */
+.nav-item .dropdown-menu {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-item .dropdown-item .position-absolute {
+  font-size: 0.6rem; /* Kích thước nhỏ */
+  width: 8px; /* Kích thước dấu chấm */
+  height: 8px;
+  top: 0px; /* Đặt dấu chấm ở góc trên bên phải */
+  right: 10px; /* Khoảng cách từ bên phải */
+  background-color: #dc3545; /* Màu đỏ */
+  border-radius: 50%; /* Hình tròn */
+  border: 2px solid #ffffff; /* Viền trắng */
+}

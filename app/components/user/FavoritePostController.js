@@ -29,7 +29,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
 
     $scope.loadMoreFavorites = function () {
         if ($scope.loading || !$scope.hasMoreData) return;
-    
+
         $scope.loading = true;
         FavoritesService.getFavoritesByUserId(userId, $scope.page, $scope.size)
             .then(function (response) {
@@ -53,7 +53,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
                 }
             });
     };
-    
+
 
     // Sự kiện khi cuộn xuống cuối trang
     $scope.onScroll = function () {
@@ -81,7 +81,7 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
     // Show confirmation modal and set the post to unfavorite
     $scope.confirmUnfavorite = function (post) {
         console.log(post); // Kiểm tra dữ liệu
-        
+
         $scope.postToUnfavorite = post;
         $('#confirmationModal').modal('show');
     };
@@ -89,19 +89,19 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
     // Perform the unfavorite action after user confirms
     $scope.toggleFavorite = function () {
         const postId = $scope.postToUnfavorite.postId;
-    
+
         // Gọi API để hủy lưu bài đăng
         FavoritesService.toggleFavorite(userId, postId)
             .then(function (response) {
                 const actionMessage = 'Đã hủy lưu bài đăng';
                 $scope.showToast(actionMessage);
-    
+
                 // Ẩn modal xác nhận
                 $('#confirmationModal').modal('hide');
     
                 // Loại bỏ bài đăng khỏi danh sách $scope.posts
                 $scope.posts = $scope.posts.filter(post => post.postId !== postId);
-    
+
                 // Nếu danh sách rỗng, đánh dấu là không còn dữ liệu
                 if ($scope.posts.length === 0) {
                     $scope.isEmpty = true;
@@ -112,8 +112,8 @@ app.controller('FavoritesController', ['$scope', '$window', 'FavoritesService', 
                 console.error("Lỗi khi thay đổi trạng thái yêu thích:", error);
                 $scope.showToast('Lỗi khi thay đổi trạng thái yêu thích');
             });
-    };  
-    
+    };
+
     // Show success toast
     $scope.showToast = function (message) {
         $scope.toastMessage = message;

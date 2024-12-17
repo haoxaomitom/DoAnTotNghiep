@@ -16,24 +16,16 @@
                 <div class="profile-sidebar rounded border p-3">
                     <div class="row">
                         <div class="col-sm-3 avatar" ng-controller="detailUserController">
-                            <label for="fileInput">
-                                <!-- Hiển thị avatar hoặc hình mặc định -->
+                            <label for="file">
                                 <img ng-src="{{ avatar ? avatar : 'https://via.placeholder.com/100' }}"
-                                     class="rounded-circle" 
-                                     alt="User Avatar" 
-                                     style="max-width: 100px; cursor: pointer;">
+                                    class="rounded-circle" alt="User Avatar" style="max-width: 100px; cursor: pointer;">
                             </label>
-                        
+
                             <!-- Input file ẩn -->
-                            <input 
-                                type="file" 
-                                id="fileInput" 
-                                style="display: none;" 
-                                accept="image/*" 
-                                ng-model="file"
-                                onchange="uploadAvatar(file)">
+                            <input type="file" id="file" name="file" file-model="file" style="display: none;"
+                                accept="image/*">
                         </div>
-                        
+
 
                         <div class=" col-sm-9 pt-4">
                             <h4 class="text-center"> {{fullName}} </h4>
@@ -53,8 +45,21 @@
                             <a class="nav-link" href="/user/save-post"><i class="fa-regular fa-bookmark"></i> Bài đăng
                                 đã lưu</a>
                         </li>
+                        <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/notification')}">
+                            <a class="nav-link" href="/user/notification"><i class="fa-regular fa-bell"></i> Thông
+                                báo</a>
+                        </li>
+                        <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/list-contact')}">
+                            <a class="nav-link" href="/user/list-contact"><i class="fa-solid fa-inbox"></i></i> Thông
+                                tin liên hệ để lại</a>
+                        </li>
+                        <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/payment')}">
+                            <a class="nav-link" href="/user/payment"><i class="fas fa-receipt me-2"></i> Thanh toán của
+                                bạn</a>
+                        </li>
                         <li class="mb-2 mt-2 nav-item" ng-class="{'active': isActive('/change-password')}">
-                            <a class="nav-link" href="/user/change-password">Đổi mật khẩu</a>
+                            <a class="nav-link" href="/user/change-password"><i class="fa-solid fa-rotate-right"></i> Đổi
+                                    mật khẩu</a>
                         </li>
                         <li class="mb-2 mt-2 nav-item">
                             <a class="nav-link" ng-click="logout()"><i class="fa-solid fa-right-to-bracket"></i> Đăng

@@ -1,5 +1,3 @@
-// let app = angular.module('parkingApp', []);
-
 app.controller('LoginController', function ($scope, $location, $http, $window) {
     $scope.login = {
         username: '',
@@ -23,12 +21,12 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
                     const redirectUrl = localStorage.getItem('redirectUrl');
                     if (redirectUrl) {
                         // Xóa URL đã lưu sau khi chuyển hướng
-                        localStorage.removeItem('redirectUrl'); 
+                        localStorage.removeItem('redirectUrl');
                         // Chuyển hướng đến trang trước đó
                         $location.absUrl(redirectUrl);
                     } else {
                         // Mặc định 
-                        $window.location.href = 'index.html';
+                        $window.location.href = '/';
                     }
                 } else {
                     $scope.message = response.data.message;
@@ -38,12 +36,64 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             }
             )
     }
+
+    $scope.submitFormRegister = function () {
+        // Kiểm tra mật khẩu và xác nhận mật khẩu không khớp
+        if ($scope.password !== $scope.confirmPassword) {
+            $scope.errorMessage = "Mật khẩu và xác nhận mật khẩu không khớp!";
+            return; // Dừng việc gửi form nếu có lỗi
+        }
+
+        // Kiểm tra các trường khác nếu cần
+        if (!$scope.lastName || !$scope.firstName || !$scope.username || !$scope.phoneNumber) {
+            $scope.errorMessage = "Vui lòng điền đầy đủ thông tin!";
+            return; // Dừng việc gửi form nếu thiếu thông tin
+        }
+
+        // Kiểm tra độ dài và tính hợp lệ của mật khẩu
+        var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{6,20}$/; // Mật khẩu từ 6-20 ký tự, có ít nhất 1 chữ và 1 số
+        if (!passwordRegex.test($scope.password)) {
+            $scope.errorMessage = "Mật khẩu phải từ 6-20 ký tự và chứa cả chữ cái và số!";
+            return; // Dừng việc gửi form nếu mật khẩu không hợp lệ
+        }
+
+        // Kiểm tra tính hợp lệ của số điện thoại (chỉ chứa số)
+        var phoneRegex = /^\d+$/; // Số điện thoại chỉ chứa chữ số
+        if (!phoneRegex.test($scope.phoneNumber)) {
+            $scope.errorMessage = "Số điện thoại chỉ được phép chứa các chữ số!";
+            return; // Dừng việc gửi form nếu số điện thoại không hợp lệ
+        }
+
+        // Xóa lỗi nếu không có lỗi
+        $scope.errorMessage = "";
+
+        // Gọi API đăng ký (sử dụng $http để gửi form)
+        $http.post('/api/register', {
+            lastName: $scope.lastName,
+            firstName: $scope.firstName,
+            username: $scope.username,
+            phoneNumber: $scope.phoneNumber,
+            password: $scope.password
+        }).then(function (response) {
+            if (response.data.status) {
+                // Xử lý nếu đăng ký thành công
+                console.log("Đăng ký thành công");
+            } else {
+                // Xử lý khi có lỗi từ server
+                $scope.errorMessage = response.data.message;
+            }
+        }).catch(function (error) {
+            $scope.errorMessage = "Có lỗi xảy ra, vui lòng thử lại sau.";
+            console.error(error);
+        });
+    };
+
     $scope.submitFormRegister = function () {
         const data = {
             firstName: $scope.firstName,
             lastName: $scope.lastName,
             username: $scope.username,
-            email: $scope.email,
+            phoneNumber: $scope.phoneNumber,
             password: $scope.password,
             confirmPassword: $scope.confirmPassword
         }
@@ -65,7 +115,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
         } else {
             $scope.message = "Mật khẩu và xác nhận mật khẩu ko giống nhau";
             return;
-        } 
+        }
     }
 
     $scope.loginWithFacebook = function () {
@@ -111,7 +161,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             });
     };
 
-    $scope.loginWithGoogle = function() {
+    $scope.loginWithGoogle = function () {
         const clientId = '326720550153-k9n1s1v6vdomueidjne4bggu8o6n2u6d.apps.googleusercontent.com';
         const redirectUri = 'http://localhost:8080/login/oauth2/code/google';
         const scope = 'openid profile email';
@@ -122,19 +172,32 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
     };
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    
+
     if (code) {
         $http.post('/api/auth/google', { code: code })
-            .then(function(response) {
+            .then(function (response) {
                 console.log('User Info:', response.data);
                 $scope.user = response.data;
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error('Login error:', error);
             });
     }
-    
-    
+
+    $scope.sentForgotPasswordEmail = function (username) {
+        $http.post(`http://localhost:8080/api/email/forgot-password?username=${username}`)
+            .then((response) => {
+                if (response.data.status) {
+                    alert("Email đổi mật đã được gửi. Vui lòng kiểm tra email!")
+                } else {
+                    alert(response.data.message)
+                }
+            }).catch((err) => {
+                console.log(err);
+
+            });
+
+    }
 
 }
 )

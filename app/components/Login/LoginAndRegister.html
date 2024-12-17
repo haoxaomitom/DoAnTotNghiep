@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" ng-app="parkingApp">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập & Đăng ký</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/css/login.css">
-    <!-- <script src="https://kit.fontawesome.com/5c73425aee.js" crossorigin="anonymous"></script> -->
+    <script src="https://kit.fontawesome.com/5c73425aee.js" crossorigin="anonymous"></script>
 </head>
 
 <body ng-controller="LoginController">
-<!-- <body ng-app="parkingApp" ng-controller="loginController"> -->
+    <!-- <body ng-app="parkingApp" ng-controller="loginController"> -->
     <div class="container mt-5 sb-ft" ng-class="{'fade-in': !loading}">
         <ul class="nav nav-underline" id="myTab" role="tablist">
             <li class="nav-item">
@@ -26,65 +26,35 @@
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-                <div class="row">
-                    <!-- Form Section -->
-                    <div class="col-lg-8 mb-3 mb-lg-0 form-input pe-3">
-                        <form ng-submit="submitFormLogin()" name="loginForm" novalidate>
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Tên tài khoản</label>
-                                <input type="text" id="username" class="form-control border-bottom border-secondary"
-                                    placeholder="Nhập tên tài khoản" ng-model="login.username" ng-required="true"
-                                    ng-minlength="6" ng-maxlength="20">
-                                <span class="text-danger"
-                                    ng-show="loginForm.username.$touched && loginForm.username.$error.required">
-                                    Vui lòng nhập tên tài khoản
-                                </span>
-                                <span class="text-danger"
-                                    ng-show="loginForm.username.$touched && (loginForm.username.$error.minlength || loginForm.username.$error.maxlength)">
-                                    Tên tài khoản phải từ 6 đến 50 ký tự
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <label for="loginPassword" class="form-label">Mật khẩu</label>
-                                <input type="password" class="form-control border-bottom border-secondary"
-                                    id="loginPassword" placeholder="Nhập mật khẩu" ng-model="login.password"
-                                    name="password" ng-required="true" ng-minlength="6" ng-maxlength="20"
-                                    ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/">
-
-                                <!-- Lỗi nhập mật khẩu rỗng -->
-                                <span class="text-danger"
-                                    ng-show="loginForm.password.$touched && loginForm.password.$error.required">
-                                    Vui lòng nhập mật khẩu
-                                </span>
-
-                                <!-- Lỗi mật khẩu không đạt độ dài yêu cầu -->
-                                <span class="text-danger"
-                                    ng-show="loginForm.password.$touched && (loginForm.password.$error.minlength || loginForm.password.$error.maxlength)">
-                                    Mật khẩu phải từ 6 đến 20 ký tự
-                                </span>
-
-                                <!-- Lỗi mật khẩu không bao gồm cả chữ và số -->
-                                <span class="text-danger"
-                                    ng-show="loginForm.password.$touched && loginForm.password.$error.pattern">
-                                    Mật khẩu phải bao gồm cả chữ và số
-                                </span>
-                            </div>
-
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary" ng-disabled="loginForm.$invalid">Đăng
-                                    nhập</button>
-                            </div>
-                        </form>
-
-                        <div class="mt-3 text-center">
-                            <a href="#">Quên mật khẩu?</a>
-                        </div>
-                        <div class="mt-3 text-center">
-                            <p>Bạn chưa có tài khoản? <a href="#register" data-bs-toggle="tab">Đăng ký</a></p>
-                        </div>
+                <!-- Form Section -->
+                <!-- <div class="col-lg-8 mb-3 mb-lg-0 form-input pe-3"> -->
+                <form ng-submit="submitFormLogin()">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Tên tài khoản</label>
+                        <input type="text" id="username" class="form-control border-bottom border-secondary"
+                            placeholder="Nhập tên tài khoản" ng-model="login.username">
                     </div>
-                    <!-- Social Buttons Section -->
-                    <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label" ng-keypress="checkEnterKey($event)">Mật
+                            khẩu</label>
+                        <input type="password" class="form-control border-bottom border-secondary" id="loginPassword"
+                            placeholder="Nhập mật khẩu" ng-model="login.password">
+                    </div>
+                    <div class="mb-3" style="color: red;">
+                        {{message}}
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                    </div>
+                </form>
+                <div class="mt-3 text-center">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Quên mật khẩu?</a>
+                </div>
+                <!-- <div class="mt-3 text-center">
+                            <p>Bạn chưa có tài khoản? <a href="#register" data-bs-toggle="tab">Đăng ký</a></p>
+                        </div> -->
+                <!-- Social Buttons Section -->
+                <!-- <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
                         <h1 class="">Hoặc</h1>
                         <button type="button"
                             class="btn btn-primary mb-2 w-100 d-flex align-items-center justify-content-center"
@@ -96,129 +66,99 @@
                             ng-click="loginWithGoogle()">
                             <i class="fa-brands fa-google me-2"></i>Đăng nhập bằng Google
                         </button>
-                    </div>
-                </div>
+                    </div> -->
             </div>
             <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
                 <div class="row">
-                    <div class="col-lg-8 mb-3 mb-lg-0 form-input pe-3">
-                        <form class="mt-3" ng-submit="submitFormRegister()" name="registerForm" novalidate>
-                            <div class="row">
-                                <div class="col-sm-6 mb-3">
-                                    <label for="registerLastName" class="form-label">Họ</label>
-                                    <input type="text" class="form-control border-bottom border-secondary"
-                                        id="registerLastName" placeholder="Nhập họ" ng-model="lastName"
-                                        ng-required="true">
-                                    <span class="text-danger"
-                                        ng-show="registerForm.registerLastName.$touched && registerForm.registerLastName.$error.required">
-                                        Vui lòng nhập họ
-                                    </span>
-                                </div>
-                                <div class="col-sm-6 mb-3">
-                                    <label for="registerFirstName" class="form-label">Tên</label>
-                                    <input type="text" class="form-control border-bottom border-secondary"
-                                        id="registerFirstName" placeholder="Nhập tên" ng-model="firstName"
-                                        ng-required="true">
-                                    <span class="text-danger"
-                                        ng-show="registerForm.registerFirstName.$touched && registerForm.registerFirstName.$error.required">
-                                        Vui lòng nhập tên
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="registerUsername" class="form-label">Tên tài khoản</label>
+                    <!-- <div class="col-lg-8 mb-3 mb-lg-0 form-input pe-3"> -->
+                    <form class="mt-3" ng-submit="submitFormRegister()">
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="registerLastName" class="form-label">Họ</label>
                                 <input type="text" class="form-control border-bottom border-secondary"
-                                    id="registerUsername" placeholder="Nhập tên tài khoản" ng-model="username"
-                                    ng-required="true" ng-minlength="6" ng-maxlength="20">
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerUsername.$touched && registerForm.registerUsername.$error.required">
-                                    Vui lòng nhập tên tài khoản
-                                </span>
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerUsername.$touched && (registerForm.registerUsername.$error.minlength || registerForm.registerUsername.$error.maxlength)">
-                                    Tên tài khoản phải từ 6 đến 20 ký tự
-                                </span>
+                                    id="registerLastName" placeholder="Nhập họ" ng-model="lastName" required>
                             </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="registerFirstName" class="form-label">Tên</label>
+                                <input type="text" class="form-control border-bottom border-secondary"
+                                    id="registerFirstName" placeholder="Nhập tên" ng-model="firstName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">Tên tài khoản</label>
+                            <input type="text" class="form-control border-bottom border-secondary" id="registerUsername"
+                                placeholder="Nhập tên tài khoản" ng-model="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPhoneNumber" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control border-bottom border-secondary"
+                                id="registerPhoneNumber" placeholder="Nhập số điện thoại" ng-model="phoneNumber"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control border-bottom border-secondary"
+                                id="registerPassword" placeholder="Nhập mật khẩu" ng-model="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control border-bottom border-secondary"
+                                id="registerConfirmPassword" placeholder="Xác nhận mật khẩu" ng-model="confirmPassword"
+                                required>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="registerEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control border-bottom border-secondary"
-                                    id="registerEmail" placeholder="Nhập Email" ng-model="email" ng-required="true">
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required">
-                                    Vui lòng nhập email
-                                </span>
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email">
-                                    Email không hợp lệ
-                                </span>
-                            </div>
+                        <!-- Phần thông báo lỗi -->
+                        <div class="mb-3" style="color: red;">
+                            <p ng-if="errorMessage">{{ errorMessage }}</p>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="registerPassword" class="form-label">Mật khẩu</label>
-                                <input type="password" class="form-control border-bottom border-secondary"
-                                    id="registerPassword" placeholder="Nhập mật khẩu" ng-model="password"
-                                    ng-required="true" ng-minlength="6" ng-maxlength="20">
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerPassword.$touched && registerForm.registerPassword.$error.required">
-                                    Vui lòng nhập mật khẩu
-                                </span>
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerPassword.$touched && (registerForm.registerPassword.$error.minlength || registerForm.registerPassword.$error.maxlength)">
-                                    Mật khẩu phải từ 6 đến 20 ký tự
-                                </span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="registerConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
-                                <input type="password" class="form-control border-bottom border-secondary"
-                                    id="registerConfirmPassword" placeholder="Xác nhận mật khẩu"
-                                    ng-model="confirmPassword" ng-required="true" ng-pattern="password">
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerConfirmPassword.$touched && registerForm.registerConfirmPassword.$error.required">
-                                    Vui lòng xác nhận mật khẩu
-                                </span>
-                                <span class="text-danger"
-                                    ng-show="registerForm.registerConfirmPassword.$touched && registerForm.registerConfirmPassword.$error.pattern">
-                                    Mật khẩu xác nhận không khớp
-                                </span>
-                            </div>
-
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary" ng-disabled="registerForm.$invalid">Đăng
-                                    ký</button>
-                            </div>
-                            <div class="mt-3 text-center">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        </div>
+                        <!-- <div class="mt-3 text-center">
                                 <p>Đã có tài khoản? <a href="#login" data-bs-toggle="tab">Đăng nhập</a></p>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
+                            </div> -->
+                    </form>
+                    <!-- <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
                         <h1>Hoặc</h1>
                         <button type="button"
                             class="btn btn-primary mb-2 w-100 d-flex align-items-center justify-content-center">
                             <i class="fa-brands fa-facebook me-2"></i>Đăng ký bằng Facebook
                         </button>
                         <button type="button"
-                        class="btn btn-danger w-100 d-flex align-items-center justify-content-center"
-                        onclick="registerWithGoogle()">
-                    <i class="fa-brands fa-google me-2"></i>Đăng ký bằng Google
-                </button>
-                
+                            class="btn btn-danger w-100 d-flex align-items-center justify-content-center"
+                            onclick="registerWithGoogle()">
+                            <i class="fa-brands fa-google me-2"></i>Đăng ký bằng Google
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Quên mật khẩu</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="username" class="label-form">Tên đăng nhập</label>
+                        <input type="text" name="username" id="username" class="form-control" ng-model="username">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            ng-click="sentForgotPasswordEmail(username)">Xác
+                            nhận</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/angular/angular.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script> -->
-    <!-- <script src="https://kit.fontawesome.com/5c73425aee.js" crossorigin="anonymous"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="/app/components/Login/login.js"></script> -->
+
 </body>
 
 </html>

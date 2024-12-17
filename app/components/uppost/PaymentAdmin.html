@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html ng-app="paymentApp">
+
+<head>
+    <title>Danh sách Thanh Toán</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Thêm khoảng cách xung quanh body */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            color: #343a40;
+        }
+
+        /* Tiêu đề chính */
+        h1 {
+            font-size: 2.5rem;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Cải thiện giao diện cho các input và select */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border-radius: 0.375rem;
+            /* Đảm bảo có các góc bo tròn đẹp mắt */
+            padding: 0.75rem;
+            font-size: 1rem;
+        }
+
+        /* Sắp xếp và tạo sự tương phản cho các phần tử tìm kiếm và sắp xếp */
+        .row {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Thêm màu nền nhẹ cho các ô trong bảng */
+        .table tbody tr:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+
+        .table thead th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Cải thiện style cho các nút trong bảng */
+        .btn {
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        /* Style cho modal */
+        .modal-content {
+            border-radius: 0.375rem;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+        }
+
+        .modal-body p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .pagination .page-link {
+            border-radius: 0.375rem;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: #e9ecef;
+            border-color: #e9ecef;
+        }
+
+        /* Định dạng cho các ô trong bảng */
+        .table td {
+            text-align: center;
+        }
+
+        /* Các phần tử input tìm kiếm và sắp xếp */
+        .col-sm-2 {
+            font-weight: bold;
+        }
+
+        /* Styling cho các modal buttons */
+        .modal-footer button {
+            font-size: 1rem;
+        }
+
+        /* Thêm bóng đổ cho bảng để tạo chiều sâu */
+        .table-bordered {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cải thiện phần header của trang */
+        .header-container {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        td.d-flex {
+            gap: 10px;
+            /* Khoảng cách giữa các nút */
+        }
+    </style>
+
+</head>
+
+<body ng-controller="PaymentController" class="container mt-4">
+    <h1 class="mb-4">Danh sách Thanh Toán</h1>
+
+    <!-- Tìm kiếm và Sắp xếp nằm ngang -->
+<div class="form-group row d-flex justify-content-between">
+    <div class="col-sm-5">
+        <label for="search">Tìm kiếm:</label>
+        <input type="text" id="search" class="form-control" ng-model="searchQuery" placeholder="Nhập để tìm kiếm" ng-change="filterPayments()">
+    </div>
+
+    <div class="col-sm-5">
+        <label for="sort">Sắp xếp:</label>
+        <div class="d-flex">
+            <select id="sort" class="form-control" ng-model="sortOption" ng-change="filterPayments()">
+                <option value="priceAmount">Giá</option>
+                <option value="paymentStatus">Trạng thái</option>
+                <option value="paymentDate">Ngày</option>
+            </select>
+            <select class="form-control ml-2" ng-model="sortDirection" ng-change="filterPayments()">
+                <option value="asc">Tăng dần</option>
+                <option value="desc">Giảm dần</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+   
+    <!-- Bảng danh sách thanh toán -->
+    <table class="table table-bordered table-hover">
+        <thead class="">
+            <tr>
+                <th>Payment ID</th>
+                <th>Post Name</th>
+                <th>Price Amount</th>
+                <th>Payment Amount</th>
+                <th>Currency</th>
+                <th>Bank Code</th>
+                <th>Payment Date</th>
+                <th>Top Post End</th>
+                <th>Payment Status</th>
+                <th>VNP Transaction ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr
+                ng-repeat="payment in filteredPayments | orderBy:sortOption:reverseOrder | limitTo:pageSize:(currentPage-1)*pageSize">
+                <td>{{payment.paymentId}}</td>
+                <td>{{payment.postName}}</td>
+                <td>{{payment.priceAmount}}</td>
+                <td>{{payment.paymentAmount}}</td>
+                <td>{{payment.currency}}</td>
+                <td>{{payment.bankCode}}</td>
+                <td>{{payment.paymentDate | date:'yyyy-MM-dd HH:mm'}}</td>
+                <td>{{payment.topPostEnd | date:'yyyy-MM-dd HH:mm'}}</td>
+                <td>{{payment.paymentStatus}}</td>
+                <td>{{payment.vnpTransactionId}}</td>
+                <td class="d-flex justify-content-between">
+                    <button class="btn  btn-primary" ng-click="loadPaymentDetails(payment.paymentId)"
+                        data-toggle="modal" data-target="#paymentDetailsModal">Xem Chi Tiết</button>
+                    <button class="btn btn-success btn-sm"
+                        ng-click="updatePaymentStatus(payment.paymentId, 'Completed')">Cập Nhật</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal for payment details -->
+    <div class="modal fade" id="paymentDetailsModal" tabindex="-1" role="dialog"
+        aria-labelledby="paymentDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentDetailsModalLabel">Chi Tiết Thanh Toán</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Payment ID:</strong> {{paymentDetails.paymentId}}</p>
+                    <p><strong>Post Name:</strong> {{paymentDetails.postName}}</p>
+                    <p><strong>Price Amount:</strong> {{paymentDetails.priceAmount}}</p>
+                    <p><strong>Payment Amount:</strong> {{paymentDetails.paymentAmount}}</p>
+                    <p><strong>Currency:</strong> {{paymentDetails.currency}}</p>
+                    <p><strong>Bank Code:</strong> {{paymentDetails.bankCode}}</p>
+                    <p><strong>Payment Date:</strong> {{paymentDetails.paymentDate | date:'yyyy-MM-dd HH:mm'}}</p>
+                    <p><strong>Top Post End:</strong> {{paymentDetails.topPostEnd | date:'yyyy-MM-dd HH:mm'}}</p>
+                    <p><strong>Payment Status:</strong> {{paymentDetails.paymentStatus}}</p>
+                    <p><strong>VNP Transaction ID:</strong> {{paymentDetails.vnpTransactionId}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phân trang -->
+    <nav aria-label="Pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" ng-class="{'disabled': currentPage === 1}">
+                <a class="page-link" href="#" ng-click="prevPage()">Trang trước</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">Trang {{currentPage}} / {{totalPages}}</span>
+            </li>
+            <li class="page-item" ng-class="{'disabled': currentPage === totalPages}">
+                <a class="page-link" href="#" ng-click="nextPage()">Trang sau</a>
+            </li>
+        </ul>
+    </nav>
+    <script>
+        angular.module('paymentApp', [])
+            .controller('PaymentController', function ($scope, $http) {
+                const apiBaseUrl = 'http://localhost:8080/api/admin/payments';
+                const token = localStorage.getItem("token");
+                $scope.payments = [];
+                $scope.filteredPayments = [];
+                $scope.newPayment = {};
+                $scope.sortOption = 'paymentDate';
+                $scope.sortDirection = 'asc';
+                $scope.pageSize = 10; // Số bản ghi mỗi trang
+                $scope.currentPage = 1;
+
+                // Lấy danh sách thanh toán
+                $scope.loadPayments = function () {
+                    $http.get(apiBaseUrl + '/all', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }).then(function (response) {
+                        $scope.payments = response.data;
+                        $scope.filteredPayments = $scope.payments; // Khởi tạo filteredPayments
+                        $scope.totalPages = Math.ceil($scope.filteredPayments.length / $scope.pageSize);
+                    }, function (error) {
+                        console.error("Error loading payments: ", error);
+                    });
+                };
+
+                // Lọc danh sách thanh toán theo tìm kiếm và sắp xếp
+                $scope.filterPayments = function () {
+                    $scope.filteredPayments = $scope.payments.filter(function (payment) {
+                        return payment.postName.toLowerCase().includes($scope.searchQuery?.toLowerCase() || '') ||
+                            payment.paymentStatus.toLowerCase().includes($scope.searchQuery?.toLowerCase() || '');
+                    });
+
+                    // Sắp xếp theo lựa chọn
+                    $scope.filteredPayments = $scope.filteredPayments.sort(function (a, b) {
+                        if ($scope.sortDirection === 'asc') {
+                            return a[$scope.sortOption] > b[$scope.sortOption] ? 1 : -1;
+                        } else {
+                            return a[$scope.sortOption] < b[$scope.sortOption] ? 1 : -1;
+                        }
+                    });
+
+                    // Cập nhật tổng số trang sau khi lọc
+                    $scope.totalPages = Math.ceil($scope.filteredPayments.length / $scope.pageSize);
+                };
+
+                // Cập nhật trạng thái thanh toán
+                $scope.updatePaymentStatus = function (paymentId, status) {
+                    $http.put(apiBaseUrl + '/' + paymentId + '/status', null, {
+                        params: { status: status },
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }).then(function (response) {
+                        $scope.loadPayments();
+                        alert("Payment status updated successfully!");
+                    }, function (error) {
+                        console.error("Error updating payment status: ", error);
+                    });
+                };
+
+                // Tạo mới thanh toán
+                $scope.createPayment = function () {
+                    $http.post(apiBaseUrl + '/create', $scope.newPayment, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }).then(function (response) {
+                        alert("Payment created successfully!");
+                        $scope.loadPayments();
+                    }, function (error) {
+                        console.error("Error creating payment: ", error);
+                    });
+                };
+
+                // Chuyển trang
+                $scope.prevPage = function () {
+                    if ($scope.currentPage > 1) {
+                        $scope.currentPage--;
+                    }
+                };
+
+                $scope.nextPage = function () {
+                    if ($scope.currentPage < $scope.totalPages) {
+                        $scope.currentPage++;
+                    }
+                };
+
+                // Xử lý khi nhấn nút "Xem Chi Tiết"
+                $scope.loadPaymentDetails = function (paymentId) {
+                    $http.get(apiBaseUrl + '/' + paymentId, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }).then(function (response) {
+                        $scope.paymentDetails = response.data;
+                        $scope.modalVisible = true; // Hiển thị modal
+                    }, function (error) {
+                        console.error("Error loading payment details: ", error);
+                    });
+                };
+
+                // Đóng modal
+                $scope.closeModal = function () {
+                    $scope.modalVisible = false; // Ẩn modal
+                };
+
+                // Khởi tạo dữ liệu
+                $scope.loadPayments();
+            });
+
+    </script>
+</body>
+
+</html>
