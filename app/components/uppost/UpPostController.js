@@ -217,7 +217,7 @@ app.controller('UpPostController', function ($scope, $http,$window, $location) {
                     .map(key => ({ vehicleTypesName: $scope.vehicleCheckboxOptions[key] || key })),
                 userId: $scope.user_id,
             };
-    
+            
             console.log("Dữ liệu gửi lên:", postData);
     
             // Gửi request tạo bài đăng
@@ -298,23 +298,24 @@ function placeMarker(location) {
     // Cập nhật tọa độ vào scope
     if (!scope.$$phase) {
         scope.$apply(() => {
-            // Truy cập trực tiếp các thuộc tính lat và lng
-            scope.post.latitude = location.lat;  // Không cần gọi location.lat()
-            scope.post.longitude = location.lng; // Không cần gọi location.lng()
+            // Truy cập giá trị của getter và ép kiểu thành số
+            scope.post.latitude = Number(location.lat());
+            scope.post.longitude = Number(location.lng());
         });
     } else {
-        scope.post.latitude = location.lat;
-        scope.post.longitude = location.lng;
+        scope.post.latitude = Number(location.lat());
+        scope.post.longitude = Number(location.lng());
     }
 }
+
 
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const location = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
+                    lat: Number(position.coords.latitude), // Ép kiểu thành số
+                    lng: Number(position.coords.longitude)
                 };
                 placeMarker(location);
                 map.setCenter(location);
@@ -345,6 +346,7 @@ function getCurrentLocation() {
         alert("Trình duyệt của bạn không hỗ trợ Geolocation.");
     }
 }
+
 
 
 window.onload = initMap;

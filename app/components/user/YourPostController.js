@@ -161,7 +161,9 @@ console.log("run");
             .then(function (response) {
                 $('#deleteModal').modal('hide'); // Đóng modal
                 $scope.showToast('Bài đăng đã được xóa thành công !');
-                $scope.getPosts(ACTIVE); // Làm mới danh sách bài viết
+                $scope.page = 0; // Reset trang
+            $scope.activePosts = []; // Reset danh sách ACTIVE
+            $scope.getPosts('ACTIVE'); // Gọi lại API để lấy dữ liệu mới
             })
             .catch(function (error) {
                 console.error('Error deleting post:', error);
