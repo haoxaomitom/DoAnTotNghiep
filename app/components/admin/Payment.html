@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script> -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .search-sort-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 70%;
+        }
+
+        .sort-select {
+            width: 25%;
+        }
+
+        table {
+            margin-top: 20px;
+        }
+
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .modal-footer button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal-footer button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body ng-controller="userPaymentController">
+    <div class="container">
+        <h1 class="my-4 text-center text-primary">Payment Management</h1>
+
+        <!-- Search and Sort Section -->
+        <div class="search-sort-container">
+            <input type="text" ng-model="searchQuery" class="form-control search-input" placeholder="Tìm kiếm thanh toán...">
+            <select ng-model="sortCriteria" class="form-control sort-select" ng-change="sortPayments()">
+                <option value="paymentDate">Sắp xếp theo ngày thanh toán</option>
+                <option value="paymentAmount">Sắp xếp theo số tiền</option>
+                <option value="paymentStatus">Sắp xếp theo trạng thái thanh toán</option>
+            </select>
+        </div>
+
+        <!-- Payment Table -->
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên bài đăng</th>
+                    <th>Số tiền</th>
+                    <th>Ngày thanh toán</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="payment in payments | filter: searchQuery | orderBy: sortCriteria">
+                    <td>{{ payment.paymentId }}</td>
+                    <td>{{ payment.postName }}</td>
+                    <td>{{formatCurrency(payment.paymentAmount) + " " + payment.currency}}</td>
+                    <td>{{ payment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{ payment.paymentStatus }}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" ng-click="viewPayment(payment.paymentId)">Xem chi tiết</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Modal View Details -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="paymentModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chi tiết thanh toán</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>ID:</strong> {{ selectedPayment.paymentId }}</p>
+                        <p><strong>Tên bài đăng:</strong> {{ selectedPayment.postName }}</p>
+                        <p><strong>Số tiền:</strong> {{ selectedPayment.paymentAmount | currency }}</p>
+                        <p><strong>Thông tin thanh toán:</strong> {{ selectedPayment.paymentInfo }}</p>
+                        <p><strong>Ngày thanh toán:</strong> {{ selectedPayment.paymentDate | date:'dd/MM/yyyy HH:mm' }}</p>
+                        <p><strong>Trạng thái:</strong> {{ selectedPayment.paymentStatus }}</p>
+                        <p><strong>Ngân hàng:</strong> {{ selectedPayment.bankCode }}</p>
+                        <p><strong>TxnRef:</strong> {{ selectedPayment.vnpTxnRef }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and AngularJS Scripts -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> -->
+    <script>
+        // var app = angular.module('paymentApp', []);
+
+        // app.controller('userPaymentController', function ($scope, $http) {
+        //     $http.get('http://localhost:8080/admin/payments/all').then(function (response) {
+        //         $scope.payments = response.data;
+        //         $scope.sortCriteria = 'paymentDate';
+        //     });
+
+        //     $scope.viewPayment = function (paymentId) {
+        //         $http.get('http://localhost:8080/admin/payments/' + paymentId).then(function (response) {
+        //             $scope.selectedPayment = response.data;
+        //             $('#paymentModal').modal('show');
+        //         });
+        //     };
+
+        //     $scope.sortPayments = function () {};
+        // });
+    </script>
+</body>
+
+</html>

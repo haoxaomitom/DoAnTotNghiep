@@ -1,8 +1,8 @@
 var app = angular.module('app', []);
 
 app.controller('ImagesController', ['$scope', 'ImageService', function($scope, ImageService) {
-    // Danh sách file ảnh đã chọn
-    $scope.selectedFiles = [];
+    // Danh sách file ảnh đã chọn 
+   $scope.selectedFiles = [];
 
     // Hàm xử lý khi người dùng chọn ảnh
     $scope.onFileSelect = function(files) {

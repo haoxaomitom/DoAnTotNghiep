@@ -1,0 +1,390 @@
+/* Basic Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    width: calc(100% - 280px);
+    background-color: #fff;
+    padding: 10px 20px;
+    z-index: 5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .search-bar-navbar {
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+}
+
+.navbar .search-bar-navbar input[type="text"] {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    margin-right: 10px;
+}
+
+.navbar .search-bar-navbar button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar .search-bar-navbar button:hover {
+    background-color: #2980b9;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background-color: #2d98da;
+    padding: 20px;
+    color: white;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar .logo h2 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #45aaf2;
+}
+
+.sidebar ul {
+    list-style: none;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+/* Main Content Styling */
+.main-container {
+    margin-left: auto;
+    margin-top: 60px;
+    padding: 20px;
+    width: calc(100% - 280px);
+}
+
+/* Table Controls Styling */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.table-controls .left-controls input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.table-controls button {
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.table-controls .refresh-btn {
+    background-color: #2ecc71;
+}
+
+.table-controls .refresh-btn:hover {
+    background-color: #27ae60;
+}
+
+.table-controls .add-btn {
+    background-color: #3498db;
+}
+
+.table-controls .add-btn:hover {
+    background-color: #2980b9;
+}
+
+.table-controls .delete-btn {
+    background-color: #e74c3c;
+    margin-left: 5px;
+}
+
+.table-controls .delete-btn:hover {
+    background-color: #c0392b;
+}
+
+.table-controls .page-info {
+    margin: 0 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.table-controls .prev-page,
+.table-controls .next-page {
+    background-color: #3498db;
+}
+
+.table-controls .prev-page:hover,
+.table-controls .next-page:hover {
+    background-color: #2980b9;
+}
+
+/* Table Styling */
+.post-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-table th, .post-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.post-table th {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+}
+
+.post-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.post-table tbody tr td:first-child {
+    text-align: center;
+}
+
+.detail-btn {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.detail-btn:hover {
+    background-color: #e67e22;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.left-controls input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.right-controls .add-btn,
+.right-controls .delete-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.right-controls .page-info {
+    margin: 0 10px;
+}
+
+.right-controls .prev-page,
+.right-controls .next-page {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.post-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.post-table th,
+.post-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.detail-btn {
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Pagination Button Styling */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 10px 5px;
+}
+
+/* Previous Button */
+button[ng-click*="page = page - 1"] {
+    background-color: #3498db;
+    color: #fff;
+}
+
+button[ng-click*="page = page - 1"]:hover {
+    background-color: #2980b9;
+}
+
+/* Next Button */
+button[ng-click*="page = page + 1"] {
+    background-color: #2ecc71;
+    color: #fff;
+}
+
+button[ng-click*="page = page + 1"]:hover {
+    background-color: #27ae60;
+}
+
+/* Disabled Button */
+button[ng-disabled="page <= 1"] {
+    background-color: #bdc3c7;
+    color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Mờ nền */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 1200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.modal-content input,
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.modal-content button {
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #2980b9;
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.modal-content .close:hover {
+    color: #333;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

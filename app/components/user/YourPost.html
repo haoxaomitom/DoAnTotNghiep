@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Posts</title>
     <link rel="stylesheet" href="/assets/css/YourPost.css">
-    <base href="/user/your-post">
 </head>
 
 <body ng-controller="PostsController">
@@ -19,19 +18,21 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="active-posts-tab" data-bs-toggle="tab"
                     data-bs-target="#active-posts" type="button" role="tab" aria-controls="active-posts"
-                    aria-selected="true">
+                    aria-selected="true" ng-click="selectTab('ACTIVE')">
                     Bài đăng đang hoạt động
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pending-posts-tab" data-bs-toggle="tab" data-bs-target="#pending-posts"
-                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false">
+                    type="button" role="tab" aria-controls="pending-posts" aria-selected="false"
+                    ng-click="selectTab('WAITING')">
                     Bài đăng chờ duyệt
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="cancelled-posts-tab" data-bs-toggle="tab" data-bs-target="#cancelled-posts"
-                    type="button" role="tab" aria-controls="cancelled-posts" aria-selected="false">
+                    type="button" role="tab" aria-controls="cancelled-posts" aria-selected="false"
+                    ng-click="selectTab('REJECT')">
                     Bài đăng bị từ chối
                 </button>
             </li>
@@ -76,7 +77,8 @@
                         <div class="shimmer-wrapper" style="height: auto;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <div class="shimmer-block m-2" style="width: 100%; height: 250px; background: #e0e0e0;"></div>
+                                    <div class="shimmer-block m-2"
+                                        style="width: 100%; height: 250px; background: #e0e0e0;"></div>
                                 </div>
                                 <div class="col-md-8 d-flex flex-column">
                                     <div class="card-title mb-0">
@@ -84,15 +86,20 @@
                                             <div class="shimmer-block" style="height: 50px; background: #e0e0e0;"></div>
                                         </div>
                                         <div class="card-body flex-grow-1">
-                                            <div class="shimmer-block mt-2" style="width: 90%; height: 20px; background: #e0e0e0;">
+                                            <div class="shimmer-block mt-2"
+                                                style="width: 90%; height: 20px; background: #e0e0e0;">
                                             </div>
-                                            <div class="shimmer-block mt-2" style="width: 50%; height: 30px; background: #e0e0e0;">
+                                            <div class="shimmer-block mt-2"
+                                                style="width: 50%; height: 30px; background: #e0e0e0;">
                                             </div>
-                                            <div class="shimmer-block mt-2" style="width: 90%; height: 20px; background: #e0e0e0;">
+                                            <div class="shimmer-block mt-2"
+                                                style="width: 90%; height: 20px; background: #e0e0e0;">
                                             </div>
                                         </div>
-                                        <div class="card-footer d-flex justify-content-between mt-auto bg-transparent border-0">
-                                            <div class="shimmer-block" style="width: 100%; height: 50px; background: #e0e0e0;">
+                                        <div
+                                            class="card-footer d-flex justify-content-between mt-auto bg-transparent border-0">
+                                            <div class="shimmer-block"
+                                                style="width: 100%; height: 50px; background: #e0e0e0;">
                                             </div>
                                         </div>
                                     </div>
@@ -104,7 +111,8 @@
                         <div class="shimmer-wrapper" style="height: auto;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <div class="shimmer-block m-2" style="width: 100%; height: 250px; background: #e0e0e0;"></div>
+                                    <div class="shimmer-block m-2"
+                                        style="width: 100%; height: 250px; background: #e0e0e0;"></div>
                                 </div>
                                 <div class="col-md-8 d-flex flex-column">
                                     <div class="card-title mb-0">
@@ -112,15 +120,20 @@
                                             <div class="shimmer-block" style="height: 50px; background: #e0e0e0;"></div>
                                         </div>
                                         <div class="card-body flex-grow-1">
-                                            <div class="shimmer-block mt-2" style="width: 90%; height: 20px; background: #e0e0e0;">
+                                            <div class="shimmer-block mt-2"
+                                                style="width: 90%; height: 20px; background: #e0e0e0;">
                                             </div>
-                                            <div class="shimmer-block mt-2" style="width: 50%; height: 30px; background: #e0e0e0;">
+                                            <div class="shimmer-block mt-2"
+                                                style="width: 50%; height: 30px; background: #e0e0e0;">
                                             </div>
-                                            <div class="shimmer-block mt-2" style="width: 90%; height: 20px; background: #e0e0e0;">
+                                            <div class="shimmer-block mt-2"
+                                                style="width: 90%; height: 20px; background: #e0e0e0;">
                                             </div>
                                         </div>
-                                        <div class="card-footer d-flex justify-content-between mt-auto bg-transparent border-0">
-                                            <div class="shimmer-block" style="width: 100%; height: 50px; background: #e0e0e0;">
+                                        <div
+                                            class="card-footer d-flex justify-content-between mt-auto bg-transparent border-0">
+                                            <div class="shimmer-block"
+                                                style="width: 100%; height: 50px; background: #e0e0e0;">
                                             </div>
                                         </div>
                                     </div>
@@ -135,7 +148,7 @@
                 <div ng-repeat="post in activePosts" ng-class="{'fade-in': !loading}" class="card mb-3 post-item">
                     <!-- Reuse your post HTML -->
                     <!-- Nội dung bài đăng của bạn -->
-                    <a href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+                    <a href="/post-detail?id={{post.postId}}" style="text-decoration: none; color: inherit;">
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <div class="d-flex align-items-center justify-content-center"
@@ -151,20 +164,19 @@
                                 </div>
                             </div>
                             <div class="col-md-8 d-flex flex-column">
-                                <div class="card h-100 d-flex flex-column">
+                                <div class="card-title mb-0">
                                     <div class="card-header bg-transparent border-0">
                                         <h4 class="font-weight-bold">{{post.parkingName}}</h4>
                                     </div>
                                     <div class="card-body flex-grow-1">
                                         <h7 class="card-text district d-flex mb-2">
-                                            {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                            {{post.provinceName}}
+                                            {{post.wardName}}, {{post.districtName}}, {{post.provinceName}}
                                         </h7>
                                         <h4 class="card-text text-danger">
                                             {{formatCurrency(post.price) + " " + post.priceUnit}}
                                         </h4>
                                         <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                            {{vehicleType.vehicleTypeName}}
+                                            {{vehicleType.vehicleTypesName}}
                                             <span ng-if="!$last"> - </span>
                                         </span>
                                     </div>
@@ -176,7 +188,9 @@
                                         <p class="card-text text-muted mb-0">
                                             <i class="fa-regular fa-comment"></i> {{post.commentCount}}
                                         </p>
+
                                     </div>
+                                    <span class="ms-3">ID bài đăng: {{post.postId}}</span>
                                 </div>
                             </div>
 
@@ -186,11 +200,12 @@
 
                     <div class="row">
                         <div class="col text-center">
-                            
-                            <a ng-href="#" class="btn btn-success m-2">Chỉnh sửa bài đăng</a>
-                            <a ng-href="/payment?postId={{post.idPost}}" class="btn btn-primary m-2">Đẩy top</a>
-                            <a ng-href="#" class="btn btn-info m-2">Xem lịch sử thanh toán</a>
-                            <a ng-href="#" class="btn btn-danger m-2" ng-click="openDeleteModal(post.idPost)">Xóa bài
+
+                            <a ng-href="/update-post?postId={{post.postId}}" class="btn btn-success m-2">Chỉnh sửa bài
+                                đăng</a>
+                            <a ng-href="/payment?postId={{post.postId}}" class="btn btn-primary m-2">Đẩy top</a>
+                            <!-- <a ng-href="#" class="btn btn-info m-2">Xem lịch sử thanh toán</a> -->
+                            <a ng-href="#" class="btn btn-danger m-2" ng-click="openDeleteModal(post.postId)">Xóa bài
                                 đăng</a>
                         </div>
                     </div>
@@ -200,13 +215,13 @@
                         style="display: none;">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="modal-header">
+                                <div class="modal-header bg-warning">
                                     <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa bài đăng</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Bạn có chắc chắn muốn xóa bài đăng này không?
+                                    Bạn có chắc chắn muốn xóa bài đăng này không ? Sau khi xóa bài đăng, bạn sẽ không thể hoàn tác.
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -279,7 +294,7 @@
                                         {{formatCurrency(post.price) + " " + post.priceUnit}}
                                     </h4>
                                     <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                        {{vehicleType.vehicleTypeName}}
+                                        {{vehicleType.vehicleTypesName}}
                                         <span ng-if="!$last"> - </span>
                                     </span>
                                 </div>
@@ -287,103 +302,118 @@
                                     <p class="card-text username font-weight-bold mb-0">
                                         Đăng bởi: {{post.user.firstName}} {{post.user.lastName}}
                                         <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                    </p>
-                                    <p class="card-text text-muted mb-0">
-                                        <i class="fa-regular fa-comment"></i> {{post.commentCount}}
-                                    </p>
                                 </div>
+                                <span class="ms-3">ID bài đăng: {{post.postId}}</span>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <!-- Cancelled Posts -->
-            <div class="tab-pane fade" id="cancelled-posts" role="tabpanel" aria-labelledby="cancelled-posts-tab">
-                <div ng-if="loading" class="text-center">
-                    <div class="card mb-3 post-item">
-                        <div class="shimmer-wrapper" style="height: auto;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <div class="shimmer-block m-2"
-                                        style="width: 100%; height: 250px; background: #e0e0e0;"></div>
+        <!-- Cancelled Posts -->
+        <div class="tab-pane fade" id="cancelled-posts" role="tabpanel" aria-labelledby="cancelled-posts-tab">
+            <div ng-if="loading" class="text-center">
+                <div class="card mb-3 post-item">
+                    <div class="shimmer-wrapper" style="height: auto;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="shimmer-block m-2" style="width: 100%; height: 250px; background: #e0e0e0;">
                                 </div>
-                                <div class="col-md-8 d-flex flex-column">
-                                    <div class="card-title mb-0">
-                                        <div class="card-header bg-transparent border-0">
-                                            <div class="shimmer-block" style="height: 50px; background: #e0e0e0;"></div>
-                                        </div>
-                                        <div class="card-body flex-grow-1">
-                                            <div class="shimmer-block mt-2"
-                                                style="width: 90%; height: 20px; background: #e0e0e0;"></div>
-                                            <div class="shimmer-block mt-2"
-                                                style="width: 50%; height: 30px; background: #e0e0e0;"></div>
-                                            <div class="shimmer-block mt-2"
-                                                style="width: 90%; height: 20px; background: #e0e0e0;"></div>
-                                        </div>
-                                        <div
-                                            class="card-footer d-flex justify-content-between mt-auto bg-transparent border-0">
-                                            <div class="shimmer-block"
-                                                style="width: 100%; height: 50px; background: #e0e0e0;"></div>
-                                        </div>
+                            </div>
+                            <div class="col-md-8 d-flex flex-column">
+                                <div class="card-title mb-0">
+                                    <div class="card-header bg-transparent border-0">
+                                        <div class="shimmer-block" style="height: 50px; background: #e0e0e0;"></div>
+                                    </div>
+                                    <div class="card-body flex-grow-1">
+                                        <div class="shimmer-block mt-2"
+                                            style="width: 90%; height: 20px; background: #e0e0e0;"></div>
+                                        <div class="shimmer-block mt-2"
+                                            style="width: 50%; height: 30px; background: #e0e0e0;"></div>
+                                        <div class="shimmer-block mt-2"
+                                            style="width: 90%; height: 20px; background: #e0e0e0;"></div>
+                                    </div>
+                                    <div
+                                        class="card-footer d-flex justify-content-between mt-auto bg-transparent border-0">
+                                        <div class="shimmer-block"
+                                            style="width: 100%; height: 50px; background: #e0e0e0;"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div ng-if="!loading && cancelledPosts.length === 0" class="text-center">Không có bài đăng bị hủy.</div>
-                <div ng-repeat="post in cancelledPosts" class="card mb-3 post-item">
+            <div ng-if="!loading && cancelledPosts.length === 0" class="text-center">Không có bài đăng bị hủy.</div>
+            <div ng-repeat="post in cancelledPosts" class="card mb-3 post-item">
 
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <div class="d-flex align-items-center justify-content-center"
-                                style="height: 100%; background: #f8f9fa;">
-                                <img ng-src="{{post.images[0].imageUrl}}" loading="lazy" class="img-fluid rounded-start"
-                                    alt="Images" />
-                            </div>
-                        </div>
-                        <div class="col-md-8 d-flex flex-column">
-                            <div class="card h-100 d-flex flex-column">
-                                <div class="card-header bg-transparent border-0">
-                                    <h4 class="font-weight-bold">{{post.parkingName}}</h4>
-                                </div>
-                                <div class="card-body flex-grow-1">
-                                    <h7 class="card-text district d-flex mb-2">
-                                        {{post.street}} {{post.wardName}}, {{post.districtName}},
-                                        {{post.provinceName}}
-                                    </h7>
-                                    <h4 class="card-text text-danger">
-                                        {{formatCurrency(post.price) + " " + post.priceUnit}}
-                                    </h4>
-                                    <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                        {{vehicleType.vehicleTypeName}}
-                                        <span ng-if="!$last"> - </span>
-                                    </span>
-                                </div>
-                                <div class="card-footer bg-transparent d-flex justify-content-between mt-auto">
-                                    <p class="card-text username font-weight-bold mb-0">
-                                        Đăng bởi: {{post.user.firstName}} {{post.user.lastName}}
-                                        <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
-                                    </p>
-                                    <p class="card-text text-muted mb-0">
-                                        <i class="fa-regular fa-comment"></i> {{post.commentCount}}
-                                    </p>
-                                </div>
-                            </div>
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center justify-content-center"
+                            style="height: 100%; background: #f8f9fa;">
+                            <img ng-src="{{post.images[0].imageUrl}}" loading="lazy" class="img-fluid rounded-start"
+                                alt="Images" />
                         </div>
                     </div>
+                    <div class="col-md-8 d-flex flex-column">
+                        <div class="card h-100 d-flex flex-column">
+                            <div class="card-header bg-transparent border-0">
+                                <h4 class="font-weight-bold">{{post.parkingName}}</h4>
+                            </div>
+                            <div class="card-body flex-grow-1">
+                                <h7 class="card-text district d-flex mb-2">
+                                    {{post.street}} {{post.wardName}}, {{post.districtName}},
+                                    {{post.provinceName}}
+                                </h7>
+                                <h4 class="card-text text-danger">
+                                    {{formatCurrency(post.price) + " " + post.priceUnit}}
+                                </h4>
+                                <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
+                                    {{vehicleType.vehicleTypeName}}
+                                    <span ng-if="!$last"> - </span>
+                                </span>
+                            </div>
+                            <div class="card-footer bg-transparent d-flex justify-content-between mt-auto">
+                                <p class="card-text username font-weight-bold mb-0">
+                                    Đăng bởi: {{post.user.firstName}} {{post.user.lastName}}
+                                    <small class="text-muted">{{formatTimeAgo(post.createdAt)}}</small>
+                                </p>
+                                <p class="card-text text-muted mb-0">
+                                    <i class="fa-regular fa-comment"></i> {{post.commentCount}}
+                                </p>
+                            </div>
+                            <span class="ms-3">ID bài đăng: {{post.postId}}</span>
+                            <span class="ms-3 mb-3" style="color:red">Lý do từ chối: {{post.rejectReason}} </span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div ng-show="posts.length > 0 && !hasMoreData && !loading" class="text-center">
-                <p>Không còn bài đăng nào để hiển thị.</p>
+        </div>
+        <div ng-show="posts.length > 0 && !hasMoreData && !loading" class="text-center">
+            <p>Không còn bài đăng nào để hiển thị.</p>
+        </div>
+
+    </div>
+    </div>
+    <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="https://res.cloudinary.com/dqzfuomvj/image/upload/v1730822083/1_au4rfg.jpg"
+                    style="height:auto; width:50px" class="rounded me-2" alt="logo">
+                <strong class="me-auto">Thông báo</strong>
+                <!-- <small>11 mins ago</small> -->
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            
+            <div class="toast-body">
+                {{ toastMessage }}
+            </div>
         </div>
     </div>
-
 </body>
 
 </html>

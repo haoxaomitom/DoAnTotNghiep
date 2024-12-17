@@ -1,0 +1,215 @@
+/* Basic Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    width: calc(100% - 280px);
+    background-color: #fff;
+    padding: 10px 20px;
+    z-index: 5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .search-bar-navbar {
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+}
+
+.navbar .search-bar-navbar input[type="text"] {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    margin-right: 10px;
+}
+
+.navbar .search-bar-navbar button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navbar .search-bar-navbar button:hover {
+    background-color: #2980b9;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background-color: #2d98da;
+    padding: 20px;
+    color: white;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar .logo h2 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #45aaf2;
+}
+
+.sidebar ul {
+    list-style: none;
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+/* Table Styling */
+.Approval-table {
+    margin-top: 100px;
+    margin-left: 300px;
+    width: 100%;
+    width: 1600px;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.Approval-table thead {
+    background-color: #9dc9e7;
+    color: white;
+}
+
+.Approval-table th,
+.Approval-table td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+.Approval-table th:first-child,
+.Approval-table td:first-child {
+    text-align: center;
+}
+
+.Approval-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.Approval-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.Approval-table tbody td:last-child {
+    text-align: center;
+}
+
+/* Checkbox Styling */
+.Approval-table th:first-child input[type="checkbox"],
+.Approval-table td:first-child input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+/* Nút màu xanh lá */
+.btn-green {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-green:hover {
+    background-color: #218838;
+}
+
+/* Nút màu đỏ */
+.btn-red {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-red:hover {
+    background-color: #c82333;
+}
+
+/* Nút bị vô hiệu hóa */
+button[disabled] {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.fa-arrow-up {
+    color: rgb(110, 226, 110);
+    margin-left: 5px;
+}
+
+.fa-arrow-down {
+    color: red;
+    margin-left: 5px;
+}
+
+th {
+    cursor: pointer;
+}
+
+.table-light {
+    background-color: #f8f9fa; /* Light color for Pending */
+}
+
+.table-success {
+    background-color: #d1e7dd; /* Greenish background for Approved */
+}
+
+.table-danger {
+    background-color: #f8d7da; /* Reddish background for Reject */
+}
+

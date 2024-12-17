@@ -14,6 +14,7 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
+    $scope.hasUnreadNotifications = false;
 
         // Chờ tải xong tất cả tài nguyên
         angular.element(document).ready(function () {
@@ -46,22 +47,22 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
     };
 
     $scope.checkLoginBeforePost = function() {
-        if (!$scope.isLoggedIn()) {
-            // If the user is not logged in, show the modal
+        if (userId == null) {
+            // Show modal if not logged in
             $('#loginPromptModal').modal('show');
         } else {
             // If the user is logged in, redirect to the post page
             $location.path('/dang-tin');  // Change the URL based on your app's routing
         }
     };
-
+    
     $scope.redirectToLogin = function () {
         // Hide modal and redirect to login page
         $('#loginPromptModal').modal('hide');
         localStorage.setItem('redirectUrl', $location.path());  // Store current URL to redirect after login
         $location.path('/Login-and-Register');  // Change this URL based on your app's routing
     };
-
+    
     $scope.logout = function () {
         // Lưu URL hiện tại
         const currentPath = $location.path();
@@ -154,27 +155,33 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
 
     // Search posts based on search term and selected district
     $scope.searchPosts = function () {
-        PostService.searchPosts($scope.searchTerm, $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
-            .then(function (response) {
-                const posts = response.data.content || []; // Get the content from the response
-
-                // Check if posts array is empty
-                if (posts.length === 0) {
-                    $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
-                    $scope.posts = []; // Clear posts if no data found
-                } else {
-                    $scope.notFoundMessage = ''; // Clear the not found message if results are found
-                    $scope.posts = posts; // Update posts list with search results
-                }
-            })
-            .catch(function (error) {
-                console.error('Error fetching posts:', error);
-                $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
-                $scope.posts = []; // Clear posts on error
-            });
+        if (!$scope.searchTerm || $scope.searchTerm.trim() === '') {
+            // Nếu ô tìm kiếm trống, gọi lại getPosts để tải tất cả bài đăng
+            $scope.notFoundMessage = ''; // Xóa thông báo lỗi nếu có
+            $scope.getPosts();
+        } else {
+            // Nếu có từ khóa tìm kiếm, gọi phương thức tìm kiếm
+            PostService.searchPosts($scope.searchTerm.trim(), $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
+                .then(function (response) {
+                    const posts = response.data.content || []; // Get the content from the response
+    
+                    // Check if posts array is empty
+                    if (posts.length === 0) {
+                        $scope.notFoundMessage = 'Không tìm thấy kết quả nào'; // Set not found message
+                        $scope.posts = []; // Clear posts if no data found
+                    } else {
+                        $scope.notFoundMessage = ''; // Clear the not found message if results are found
+                        $scope.posts = posts; // Update posts list with search results
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error fetching posts:', error);
+                    $scope.notFoundMessage = 'Đã xảy ra lỗi khi tìm kiếm. Vui lòng thử lại.'; // Set an error message
+                    $scope.posts = []; // Clear posts on error
+                });
+        }
     };
-
-    // Load the count of posts by district  
+    
     // Load the count of posts by district  
     $scope.loadDistrictPostCounts = function () {
         PostService.getPostsCountByDistrict().then(function (response) {
@@ -249,7 +256,26 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
         }
     };
 
-
+    $scope.getByIsRead = function (isRead) {
+        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUserAndIsRead?userId=${userId}&isRead=${isRead}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((response) => {
+                console.log("check status noti");
+                if (response.data.status) {
+                    $scope.notifications = response.data.data;
+                    // Kiểm tra nếu có thông báo chưa đọc
+                    $scope.hasUnreadNotifications = $scope.notifications.some(noti => !noti.isRead);
+                } else {
+                    console.log(response.data.message);
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+    };
+console.log($scope.hasUnreadNotifications);
     // Sorting function triggered when the user selects a sort option
     $scope.onSortChange = function () {
         $scope.selectedDistrict = ""; // Reset dropdown quận/huyện

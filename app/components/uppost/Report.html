@@ -8,7 +8,7 @@
 
     <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <!-- jQuery and Bootstrap JS -->
+    <!-- jQuery and Bootstrap JS (Bundle includes Popper.js) -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <!-- Bootstrap CSS -->
@@ -37,91 +37,123 @@
             white-space: nowrap;
         }
 
-        /* Thêm CSS cho phân trang */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+        .modal-footer .btn {
+            border-radius: 20px;
         }
 
-        .pagination button {
+        .action-buttons button {
             margin: 0 5px;
-            padding: 8px 16px;
-            font-size: 14px;
         }
 
-        /* Modal cải tiến */
-        .modal-dialog {
-            max-width: 800px;
+        .filter-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
         }
 
-        .modal-content {
-            padding: 20px;
-        }
-
-        /* Cải thiện giao diện cho các thông báo */
-        .alert {
-            margin-top: 20px;
+        .form-group label {
+            font-weight: bold;
         }
     </style>
 </head>
 
-<body ng-controller="ReportController as vm">
-    <div class="container mt-4">
-        <h2>Quản lý Báo cáo</h2>
+<body ng-controller="ReportController">
 
-        <!-- Tìm kiếm và Sắp xếp -->
-        <div class="form-row mb-4">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="search">Tìm kiếm:</label>
-                    <input type="text" class="form-control" ng-model="vm.searchQuery" placeholder="Tìm kiếm báo cáo...">
-                </div>
-            </div>
+    <div class="container">
+        <h2 class="mt-3">Quản lý Báo cáo</h2>
 
-            <div class="col-md-6">
+        <!-- Form Tìm kiếm và Lọc -->
+        <form ng-submit="searchReports()" class="row mb-3">
+            <div class="col-md-4">
                 <div class="form-group">
-                    <label for="sort">Sắp xếp theo:</label>
-                    <select class="form-control" ng-model="vm.sortBy" ng-change="vm.sortReports()">
-                        <option value="createdAt">Ngày tạo</option>
-                        <option value="status">Trạng thái</option>
+                    <label for="status">Trạng thái:</label>
+                    <select id="status" class="form-control" ng-model="filters.status">
+                        <option value="">Tất cả</option>
+                        <option value="Đang xử lý">Đang xử lý</option>
+                        <option value="Đã duyệt">Đã duyệt</option>
+                        <option value="Bị từ chối">Bị từ chối</option>
                     </select>
                 </div>
             </div>
-        </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="reportType">Loại báo cáo:</label>
+                    <input type="text" id="reportType" class="form-control" ng-model="filters.reportType"
+                        placeholder="Nhập loại báo cáo">
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="reportContent">Nội dung báo cáo:</label>
+                    <input type="text" id="reportContent" class="form-control" ng-model="filters.reportContent"
+                        placeholder="Nhập nội dung báo cáo">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="startDate">Từ ngày:</label>
+                    <input type="date" id="startDate" class="form-control" ng-model="filters.startDate">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="endDate">Đến ngày:</label>
+                    <input type="date" id="endDate" class="form-control" ng-model="filters.endDate">
+                </div>
+            </div>
+
+            <div class="col-md-12 d-flex justify-content-between align-items-end">
+                <div>
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    <button type="button" class="btn btn-secondary" ng-click="resetFilters()">Xóa bộ lọc</button>
+                </div>
+                <!-- Sắp xếp -->
+                <div class="form-group">
+                    <label for="sortBy">Sắp xếp:</label>
+                    <select class="form-control" id="sortBy" ng-model="filters.sortBy" ng-change="sortReports()">
+                        <option value="">Chọn...</option>
+                        <option value="createdAt_asc">Ngày tạo (Cũ nhất trước)</option>
+                        <option value="createdAt_desc">Ngày tạo (Mới nhất trước)</option>
+                        <option value="reportType_asc">Loại báo cáo (A-Z)</option>
+                        <option value="reportType_desc">Loại báo cáo (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+        </form>
 
         <!-- Bảng báo cáo -->
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>ID Báo Cáo</th>
-                    <th>Loại Báo Cáo</th>
-                    <th>ID Người Dùng</th>
-                    <th>ID Bài Đăng</th>
-                    <th>Thông Tin Báo Cáo</th>
-                    <th>Ngày Tạo</th>
-                    <th>Trạng Thái</th>
-                    <th>Lý do từ chối</th>
+                    <th>ID</th>
+                    <th>Loại báo cáo</th>
+                    <th>Nội dung</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Người báo cáo</th>
                     <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="report in vm.filteredReports">
+                <tr ng-repeat="report in filteredReports">
                     <td>{{ report.reportId }}</td>
                     <td>{{ report.reportType }}</td>
-                    <td>{{ report.user }}</td>
-                    <td>{{ report.post }}</td>
                     <td>{{ report.reportContent }}</td>
-                    <td>{{ report.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
-                    <td>{{ report.status }}</td>
-                    <td>{{ report.rejectedReason || 'N/A' }}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-info btn-sm" ng-click="vm.viewReportDetails(report)">Xem chi
-                            tiết</button>
-                        <button class="btn btn-success btn-sm" ng-click="vm.approveReport(report.reportId)"
-                            ng-disabled="report.status === 'Đã duyệt'">Duyệt</button>
-                        <button class="btn btn-danger btn-sm" ng-click="vm.openRejectModal(report)"
-                            ng-disabled="report.status === 'Bị từ chối'">Từ chối</button>
+                    <td>
+                        {{ report.status }}
+                        <span ng-if="report.status.startsWith('Bị từ chối')"> - Lý do: {{ report.rejectedReason }}</span>
+                    </td>
+                    <td>{{ report.createdAt | date:'dd-MM-yyyy HH:mm' }}</td>
+                    <td>{{ report.user.username }}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" ng-click="viewDetails(report)">Xem chi tiết</button>
+                        <button class="btn btn-success btn-sm" ng-click="approveReport(report.reportId)">Duyệt</button>
+                        <button class="btn btn-danger btn-sm" ng-click="rejectReport(report)">Từ chối</button>
                     </td>
                 </tr>
             </tbody>
@@ -167,6 +199,7 @@
             <button class="btn btn-secondary" ng-disabled="vm.currentPage === vm.totalPages"
                 ng-click="vm.changePage(vm.totalPages)">Cuối</button>
         </div>
+
     </div>
 
     <script src="/app/components/uppost/Report.js"></script>

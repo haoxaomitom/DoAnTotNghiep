@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="/assets/css/FavoritePost.css">
     <!-- <link rel="stylesheet" href="/assets/css/home.css"> -->
 
-
-    <base href="/user/save-post">
 </head>
 
 <body ng-controller="FavoritesController">
@@ -106,11 +104,11 @@
     <div ng-if="posts.length === 0 && !loading" class="text-center mt-3">
         <p>Bạn chưa lưu bài đăng nào.</p>
     </div>
-    
+
 
     <!-- Listings -->
     <div class="card mb-3 post-item" ng-repeat="post in posts" ng-class="{'fade-in': !loading}">
-        <a href="/post-detail?id={{post.idPost}}" style="text-decoration: none; color: inherit;">
+        <a href="/post-detail?id={{post.postId}}" style="text-decoration: none; color: inherit;">
             <div class="row g-0">
 
                 <div class="col-md-4">
@@ -137,7 +135,7 @@
                                 {{formatCurrency(post.price) + " " + post.priceUnit}}
                             </h4>
                             <span ng-repeat="vehicleType in post.vehicleTypes" class="vehicle-type-inline">
-                                {{vehicleType.vehicleTypeName}}
+                                {{vehicleType.vehicleTypesName}}
                                 <span ng-if="!$last"> - </span>
                             </span>
                         </div>
@@ -163,7 +161,7 @@
             <button class="btn btn-danger" ng-click="confirmUnfavorite(post)">
                 <i class="fa fa-solid fa-bookmark"></i> Hủy lưu bài đăng
             </button>
-        </div>    
+        </div>
     </div>
 
 

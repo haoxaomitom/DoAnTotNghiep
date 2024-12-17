@@ -19,6 +19,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
     // Extract post ID from URL
     const params = new URLSearchParams(window.location.search);
     const id_post = params.get('id');
+    const postId = params.get('id');
 
     const userId = localStorage.getItem('userId');
     if (userId) {
@@ -81,7 +82,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
                 .then(function (response) {
                     if (response && response.content) {
                         // Lọc bài viết loại trừ bài viết hiện tại
-                        $scope.relatedPosts = response.content.filter(relatedPost => relatedPost.idPost !== $scope.post.idPost);
+                        $scope.relatedPosts = response.content.filter(relatedPost => relatedPost.postId !== $scope.post.postId);
                         $scope.totalPagesCount = response.totalPages;
                     } else {
                         console.error('Unexpected response structure:', response);
@@ -251,6 +252,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
 
 
     $scope.generateQRCode = function () {
+        console.log("run generate");
         const url = $location.absUrl(); // Lấy URL hiện tại
         const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(url)}&size=200x200`;
 
@@ -287,8 +289,9 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
             const reportData = {
                 reportType: reportReason,
                 reportContent: reportDetails,
-                post: id_post,
-                user: userId
+                post: postId,
+                user: userId,
+                status: "Đang xử lý"
             };
 
             // Call your API service to submit the report
@@ -348,9 +351,11 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
 
 
     $scope.saveContactInfo = function () {
+
         const data = {
-            user: userId,
-            post: id_post,
+            fullName: $scope.fullName,
+            // user: userId,
+            // post: id_post,
             phoneNumber: $scope.phoneNumber,
             typeCar: $scope.typeCar,
             contactTime: $scope.contactTime,
@@ -359,7 +364,7 @@ app.controller('PostController', ['$scope', '$location', '$sce', '$window', 'Pos
 
         console.log(data);
 
-        PostDetailService.saveContactInfo(data).then((response) => {
+        PostDetailService.saveContactInfo(postId, data).then((response) => {
             if (response.data.status) {
                 $scope.showToast("Đã gửi thông tin thành công !");
                 $('#leaveInfModal').modal('hide'); // Close the modal
