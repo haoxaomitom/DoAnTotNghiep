@@ -195,7 +195,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
             })
             .catch(function (error) {
                 console.error("Error loading post data:", error);
-                alert("Không thể tải dữ liệu bài đăng. Vui lòng thử lại.");
+                $scope.showToast("Không thể tải dữ liệu bài đăng. Vui lòng thử lại.");
             });
     };
 
@@ -254,8 +254,7 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
                 headers: { 'Content-Type': undefined, 'Authorization': `Bearer ${token}` },
                 transformRequest: angular.identity
             });
-    
-            alert('Upload thành công!');
+            $scope.showToast('Upload thành công !');
             return response.data.imageUrls || [];
         } catch (error) {
             alert('Có lỗi xảy ra trong quá trình upload!');
@@ -311,7 +310,13 @@ app.controller('UpdatePostController', function ($scope, $http, $location) {
             $scope.$apply();
         }
     };
-    
+
+    $scope.showToast = function (message) {
+        $scope.toastMessage = message;
+        const toastElement = document.getElementById('toast');
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    };
     $scope.loadPostData();
 });
 

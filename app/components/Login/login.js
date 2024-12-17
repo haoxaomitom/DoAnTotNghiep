@@ -28,7 +28,7 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
                         $location.absUrl(redirectUrl);
                     } else {
                         // Mặc định 
-                        $window.location.href = 'index.html';
+                        $window.location.href = '/';
                     }
                 } else {
                     $scope.message = response.data.message;
@@ -38,6 +38,13 @@ app.controller('LoginController', function ($scope, $location, $http, $window) {
             }
             )
     }
+    $scope.checkEnterKey = function(event) {
+        if (event.keyCode === 13) { // Key code của phím Enter là 13
+            console.log('Đã nhấn Enter với giá trị:', $scope.searchQuery);
+            $scope.submitFormLogin(); // Gọi hàm xử lý
+        }
+    };
+
     $scope.submitFormRegister = function () {
         const data = {
             firstName: $scope.firstName,

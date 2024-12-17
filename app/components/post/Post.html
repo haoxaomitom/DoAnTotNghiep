@@ -12,11 +12,12 @@
         <div class="row">
             <div class="col-md-9">
                 <form class="d-flex mb-3" role="search" ng-submit="searchPosts()">
-                    <input class="form-control me-2" type="search" ng-model="searchTerm" ng-change="searchPosts()" 
+                    <input class="form-control me-2" type="search" ng-model="searchTerm" ng-change="searchPosts()"
                         placeholder="Tìm kiếm theo nội dung đăng, quận,..." aria-label="Search">
-                    <button class="btn btn-outline-success flex-shrink-0" type="submit">Tìm kiếm</button>
+
+                    <button class="btn btn-outline-info flex-shrink-0" type="submit">Tìm kiếm</button>
                 </form>
-                
+
                 <div class="filter-group d-flex mb-4">
                     <select id="district" class="form-select me-2" ng-model="selectedDistrict"
                         ng-options="district as district.Name for district in districts" ng-change="onDistrictChange()">

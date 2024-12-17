@@ -14,6 +14,7 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
+    $scope.hasUnreadNotifications = false;
 
         // Chờ tải xong tất cả tài nguyên
         angular.element(document).ready(function () {
@@ -154,12 +155,13 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
 
     // Search posts based on search term and selected district
     $scope.searchPosts = function () {
-        if ($scope.searchTerm === null) {
-            // Nếu ô tìm kiếm trống, gọi lại getPosts
+        if (!$scope.searchTerm || $scope.searchTerm.trim() === '') {
+            // Nếu ô tìm kiếm trống, gọi lại getPosts để tải tất cả bài đăng
+            $scope.notFoundMessage = ''; // Xóa thông báo lỗi nếu có
             $scope.getPosts();
         } else {
             // Nếu có từ khóa tìm kiếm, gọi phương thức tìm kiếm
-            PostService.searchPosts($scope.searchTerm, $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
+            PostService.searchPosts($scope.searchTerm.trim(), $scope.selectedDistrict ? $scope.selectedDistrict.Name : null, $scope.currentPage)
                 .then(function (response) {
                     const posts = response.data.content || []; // Get the content from the response
     
@@ -254,7 +256,26 @@ app.controller('ParkingController', ['$scope', '$http','$window', '$location', '
         }
     };
 
-
+    $scope.getByIsRead = function (isRead) {
+        $http.get(`http://localhost:8080/api/notifications/getAllByGlobalAndUserAndIsRead?userId=${userId}&isRead=${isRead}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((response) => {
+                console.log("check status noti");
+                if (response.data.status) {
+                    $scope.notifications = response.data.data;
+                    // Kiểm tra nếu có thông báo chưa đọc
+                    $scope.hasUnreadNotifications = $scope.notifications.some(noti => !noti.isRead);
+                } else {
+                    console.log(response.data.message);
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+    };
+console.log($scope.hasUnreadNotifications);
     // Sorting function triggered when the user selects a sort option
     $scope.onSortChange = function () {
         $scope.selectedDistrict = ""; // Reset dropdown quận/huyện
